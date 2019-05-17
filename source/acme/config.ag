@@ -1,0 +1,14 @@
+{
+	Config: {
+		agree_to_tos: boolean,
+		contact: string[],
+		directories: {
+			staging: string,
+			production: string
+		},
+		domains: {
+			hostname: string,
+			wildcard: boolean
+		}[]
+	}
+}

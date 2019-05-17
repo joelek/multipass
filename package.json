@@ -1,0 +1,24 @@
+{
+	"bin": {
+		"certhero": "./bin.js"
+	},
+	"dependencies": {
+		"@joelek/ts-autoguard": "github:joelek/ts-autoguard",
+		"@types/node": "^13",
+		"typescript": "^3"
+	},
+	"license": "MIT",
+	"main": "./build/source/index.js",
+	"name": "@joelek/certhero",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/joelek/certhero.git"
+	},
+	"scripts": {
+		"build": "rm -rf ./build/ && npm run codegen && npx tsc --build",
+		"clean": "rm -rf ./build/ ./node_modules/",
+		"codegen": "npx autoguard",
+		"install": "npm run build"
+	},
+	"version": "0.0.0"
+}

@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"composite": true,
+		"module": "none",
+		"moduleResolution": "node",
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"outDir": "./build/",
+		"rootDir": "./",
+		"strictNullChecks": true,
+		"target": "es6"
+	}
+}

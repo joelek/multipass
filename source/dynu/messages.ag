@@ -1,0 +1,40 @@
+{
+	Domain: {
+		id: number,
+		name: string
+	},
+	GenericRecord: {
+		id: number,
+		domainId: number,
+		nodeName: string,
+		state: boolean,
+		recordType: string
+	},
+	TextRecord: (@GenericRecord & {
+		recordType: "TXT",
+		textData: string
+	}),
+	Record: (
+		@GenericRecord |
+		@TextRecord
+	),
+	GetDomainsResponse: {
+		body: {
+			domains: @Domain[]
+		}
+	},
+	GetRecordsResponse: {
+		body: {
+			dnsRecords: @Record[]
+		}
+	},
+	CreateRecordResponse: {
+		body: @Record
+	},
+	UpdateRecordResponse: {
+		body: @Record
+	},
+	DeleteRecordResponse: {
+		body: {}
+	}
+}

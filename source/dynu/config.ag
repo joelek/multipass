@@ -1,0 +1,6 @@
+{
+	Config: {
+		api_key: string,
+		hostname: string
+	}
+}

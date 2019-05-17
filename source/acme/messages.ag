@@ -1,0 +1,44 @@
+{
+	AccountBase: {
+		contact?: string[],
+		termsOfServiceAgreed?: boolean,
+		externalAccountBinding?: {}
+	},
+	Account: (@AccountBase & {
+		status: ("valid" | "deactivated" | "revoked"),
+		orders: string
+	}),
+	NewAccountJWSPayload: (@AccountBase & {
+		onlyReturnExisting?: boolean
+	}),
+	GetDirectoryResponse: {
+		body: {
+			keyChange: string,
+			meta?: {
+				caaIdentities?: string[],
+				externalAccountRequired?: boolean,
+				termsOfService?: string,
+				website?: string
+			},
+			newAccount: string,
+			newAuthz?: string,
+			newNonce: string,
+			newOrder: string,
+			revokeCert: string
+		}
+	},
+	NewNonceResponse: {
+		status: 200,
+		headers: {
+			"Replay-Nonce": [string]
+		}
+	},
+	NewAccountResponse: {
+		status: 201,
+		headers: {
+			"Replay-Nonce": [string],
+			"Location": [string]
+		},
+		body: @Account
+	}
+}
