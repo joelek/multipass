@@ -1119,7 +1119,7 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 										});
 									});
 								} else {
-									setTimeout(done, 10000);
+									setTimeout(done, 60 * 1000);
 								}
 							});
 						};
@@ -1157,7 +1157,7 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 														if (response.body.status === 'valid') {
 															nextauth();
 														} else {
-															setTimeout(attempt_to_finalize, 10000);
+															setTimeout(attempt_to_finalize, 60 * 1000);
 														}
 													});
 												};
