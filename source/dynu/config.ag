@@ -1,6 +1,4 @@
-{
-	Config: {
-		api_key: string,
-		hostname: string
-	}
-}
+guard Config: {
+	"api_key": string,
+	"hostname": string
+};
