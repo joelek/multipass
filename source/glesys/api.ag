@@ -1,0 +1,100 @@
+guard Status: {
+	"code": number,
+	"timestamp": string,
+	"text": string,
+	"transactionid": any | null
+};
+
+# ==============================================================================
+
+guard Domain: {
+	"domainname": string,
+	"createtime": string,
+	"displayname": string,
+	"recordcount": number,
+	"resolvednameservers": string[],
+	"usingglesysnameserver": string,
+	"registrarinfo": {
+		"state": string,
+		"expire": string,
+		"autorenew": string,
+		"configurednameservers": string[]
+	}
+};
+
+route listDomains(): POST:/domain/list
+	<=
+	=> {
+		"response": {
+			"status": Status,
+			"domains": Domain[]
+		}
+	};
+
+# ==============================================================================
+
+guard DomainRecordHost: "@" | string;
+
+guard DomainRecordType: "A" | "NS" | "MX" | "TXT" | string;
+
+guard DomainRecord: {
+	"recordid": number,
+	"domainname": string,
+	"host": DomainRecordHost,
+	"type": DomainRecordType,
+	"data": string,
+	"ttl": number
+};
+
+route listDomainRecords(): POST:/domain/listrecords
+	<= {
+		"domainname": string
+	}
+	=> {
+		"response": {
+			"status": Status,
+			"records": DomainRecord[]
+		}
+	};
+
+route createDomainRecord(): POST:/domain/addrecord
+	<= {
+		"domainname": string,
+		"host": DomainRecordHost,
+		"type": DomainRecordType,
+		"data": string,
+		"ttl"?: number
+	}
+	=> {
+		"response": {
+			"status": Status,
+			"record": DomainRecord
+		}
+	};
+
+route updateDomainRecord(): POST:/domain/updaterecord
+	<= {
+		"recordid": number,
+		"host"?: DomainRecordHost,
+		"type"?: DomainRecordType,
+		"data"?: string,
+		"ttl"?: number
+	}
+	=> {
+		"response": {
+			"status": Status,
+			"record": DomainRecord
+		}
+	};
+
+route deleteDomainRecord(): POST:/domain/deleterecord
+	<= {
+		"recordid": number
+	}
+	=> {
+		"response": {
+			"status": Status
+		}
+	};
+
+# ==============================================================================
