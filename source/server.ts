@@ -4,6 +4,7 @@ import * as libfs from 'fs';
 import * as libhttp from 'http';
 import * as libhttps from 'https';
 import * as libpath from 'path';
+import * as glesys from "./glesys";
 import { Config as AcmeConfig } from "./acme/config";
 import { Config as DynuConfig } from "./dynu/config";
 
@@ -1080,10 +1081,11 @@ let acme_download_certificate = (url: string, kid: string, nonce: string, privat
 };
 
 let acme_get_certificate = (cb: Callback<string>): void => {
+	let glesysClient = glesys.makeNodeClient();
 	get_key('account_key.pem', (account_key) => {
 		let buffer = convert_to_der_from_pem(account_key);
 		let jwk = convert_to_key_object(buffer[0].data);
-		get_domain_id((domain_id) => {
+		//get_domain_id((domain_id) => {
 			acme_get_new_nonce((nonce) => {
 				acme_add_account(nonce, jwk, account_key, (response) => {
 					nonce = response.nonce;
@@ -1107,7 +1109,15 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 												let next = () => {
 													if (record_ids.length > 0) {
 														let record_id = record_ids.pop() as number;
-														dynu_delete_record(domain_id, record_id, () => {
+/* 														dynu_delete_record(domain_id, record_id, () => {
+															next();
+														}); */
+														glesysClient.deleteDomainRecord({
+															headers: glesys.makeDefaultHeaders(),
+															payload: {
+																recordid: record_id
+															}
+														}).then((response) => {
 															next();
 														});
 													} else {
@@ -1133,9 +1143,22 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 										throw new Error();
 									}
 									let key_authorization = compute_key_authorization(challenge.token, jwk);
-									add_domain_record_for_domain_id(domain_id, key_authorization, (response) => {
+/* 									add_domain_record_for_domain_id(domain_id, key_authorization, (response) => {
 										let record_id = response.body.id;
 										record_ids.push(record_id);
+										next();
+									}); */
+									glesysClient.createDomainRecord({
+										headers: glesys.makeDefaultHeaders(),
+										payload: {
+											domainname: glesys.CONFIG.domainname,
+											host: "@", // "@" if CNAME was used to delegate, "_acme-challenge" otherwise
+											type: "TXT",
+											data: key_authorization
+										}
+									}).then(async (response) => {
+										let payload = await response.payload();
+										record_ids.push(payload.response.record.recordid);
 										next();
 									});
 								});
@@ -1175,7 +1198,7 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 					});
 				});
 			});
-		});
+		//});
 	});
 };
 

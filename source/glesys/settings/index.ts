@@ -3,6 +3,7 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
 export const Config = autoguard.guards.Object.of({
+	"domainname": autoguard.guards.String,
 	"username": autoguard.guards.String,
 	"password": autoguard.guards.String
 });
