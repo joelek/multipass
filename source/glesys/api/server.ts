@@ -3,7 +3,7 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
 import * as shared from "./index";
 
-export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Requests, shared.Autoguard.Responses>, options?: Partial<{ urlPrefix: string }>): autoguard.api.RequestListener => {
+export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Requests, shared.Autoguard.Responses>, serverOptions?: autoguard.api.MakeServerOptions): autoguard.api.RequestListener => {
 	let endpoints = new Array<autoguard.api.Endpoint>();
 	endpoints.push((raw, auxillary) => {
 		let method = "POST";
@@ -32,7 +32,7 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 								let headers = new Array<[string, string]>();
 								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
 								let payload = autoguard.api.serializePayload(response.payload);
-								let defaultHeaders = new Array<[string, string]>();
+								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
 								defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 								return autoguard.api.finalizeResponse({ status, headers, payload }, defaultHeaders);
 							}
@@ -69,7 +69,7 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 								let headers = new Array<[string, string]>();
 								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
 								let payload = autoguard.api.serializePayload(response.payload);
-								let defaultHeaders = new Array<[string, string]>();
+								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
 								defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 								return autoguard.api.finalizeResponse({ status, headers, payload }, defaultHeaders);
 							}
@@ -106,7 +106,7 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 								let headers = new Array<[string, string]>();
 								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
 								let payload = autoguard.api.serializePayload(response.payload);
-								let defaultHeaders = new Array<[string, string]>();
+								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
 								defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 								return autoguard.api.finalizeResponse({ status, headers, payload }, defaultHeaders);
 							}
@@ -143,7 +143,7 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 								let headers = new Array<[string, string]>();
 								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
 								let payload = autoguard.api.serializePayload(response.payload);
-								let defaultHeaders = new Array<[string, string]>();
+								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
 								defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 								return autoguard.api.finalizeResponse({ status, headers, payload }, defaultHeaders);
 							}
@@ -180,7 +180,7 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 								let headers = new Array<[string, string]>();
 								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
 								let payload = autoguard.api.serializePayload(response.payload);
-								let defaultHeaders = new Array<[string, string]>();
+								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
 								defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 								return autoguard.api.finalizeResponse({ status, headers, payload }, defaultHeaders);
 							}
@@ -190,5 +190,5 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 			}
 		};
 	});
-	return (request, response) => autoguard.api.route(endpoints, request, response, options?.urlPrefix);
+	return (request, response) => autoguard.api.route(endpoints, request, response, serverOptions);
 };

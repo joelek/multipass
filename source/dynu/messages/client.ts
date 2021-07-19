@@ -3,8 +3,5 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-client";
 import * as shared from "./index";
 
-export const makeClient = (options?: Partial<{
-	urlPrefix: string,
-	requestHandler: autoguard.api.RequestHandler
-}>): autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses> => ({
+export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses> => ({
 });

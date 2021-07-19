@@ -3,10 +3,7 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-client";
 import * as shared from "./index";
 
-export const makeClient = (options?: Partial<{
-	urlPrefix: string,
-	requestHandler: autoguard.api.RequestHandler
-}>): autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses> => ({
+export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses> => ({
 	"listDomains": async (request) => {
 		let guard = shared.Autoguard.Requests["listDomains"];
 		guard.as(request, "request");
@@ -19,11 +16,11 @@ export const makeClient = (options?: Partial<{
 		let headers = new Array<[string, string]>();
 		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
 		let payload = request.payload ?? [];
-		let requestHandler = options?.requestHandler ?? autoguard.api.xhr;
-		let defaultHeaders = new Array<[string, string]>();
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/octet-stream"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), options?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
@@ -46,11 +43,11 @@ export const makeClient = (options?: Partial<{
 		let headers = new Array<[string, string]>();
 		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
 		let payload = autoguard.api.serializePayload(request.payload);
-		let requestHandler = options?.requestHandler ?? autoguard.api.xhr;
-		let defaultHeaders = new Array<[string, string]>();
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), options?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
@@ -73,11 +70,11 @@ export const makeClient = (options?: Partial<{
 		let headers = new Array<[string, string]>();
 		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
 		let payload = autoguard.api.serializePayload(request.payload);
-		let requestHandler = options?.requestHandler ?? autoguard.api.xhr;
-		let defaultHeaders = new Array<[string, string]>();
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), options?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
@@ -100,11 +97,11 @@ export const makeClient = (options?: Partial<{
 		let headers = new Array<[string, string]>();
 		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
 		let payload = autoguard.api.serializePayload(request.payload);
-		let requestHandler = options?.requestHandler ?? autoguard.api.xhr;
-		let defaultHeaders = new Array<[string, string]>();
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), options?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
@@ -127,11 +124,11 @@ export const makeClient = (options?: Partial<{
 		let headers = new Array<[string, string]>();
 		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
 		let payload = autoguard.api.serializePayload(request.payload);
-		let requestHandler = options?.requestHandler ?? autoguard.api.xhr;
-		let defaultHeaders = new Array<[string, string]>();
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), options?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
