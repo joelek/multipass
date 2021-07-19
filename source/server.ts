@@ -1315,6 +1315,7 @@ let get_duration_from_ms = (ms: number): string => {
 };
 
 function observeCertificate(observer: Callback<CertificateAndKey>): void {
+	libfs.mkdirSync(certificate_path, { mode: 0o700, recursive: true });
 	get_certificate_and_key((credentials) => {
 		let validity = get_validity_from_certificate(credentials.full_chain);
 		process.stdout.write(`Current time is ${new Date(validity.now).toUTCString()}.\n`);
