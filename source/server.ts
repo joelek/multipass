@@ -1113,7 +1113,6 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 															next();
 														}); */
 														glesysClient.deleteDomainRecord({
-															headers: glesys.makeDefaultHeaders(),
 															payload: {
 																recordid: record_id
 															}
@@ -1149,7 +1148,6 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 										next();
 									}); */
 									glesysClient.createDomainRecord({
-										headers: glesys.makeDefaultHeaders(),
 										payload: {
 											domainname: glesys.CONFIG.domainname,
 											host: "@", // "@" if CNAME was used to delegate, "_acme-challenge" otherwise
