@@ -17,9 +17,11 @@
 		"url": "https://github.com/joelek/certhero.git"
 	},
 	"scripts": {
-		"build": "rm -rf ./build/ && npm run codegen && npx tsc --build",
+		"build": "npm run codegen && npm run compile && npm run package",
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"codegen": "npx autoguard",
+		"compile": "rm -rf ./build/* && npx tsc --build",
+		"package": "rm -rf ./dist/* && cp -r ./build/* ./dist/"
 	},
 	"version": "0.0.0"
 }
