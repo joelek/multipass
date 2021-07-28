@@ -1,14 +1,19 @@
 {
 	"compilerOptions": {
 		"composite": true,
-		"module": "none",
-		"moduleResolution": "node",
-		"noImplicitAny": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
+		"module": "commonjs",
 		"outDir": "./build/",
-		"rootDir": "./",
-		"strictNullChecks": true,
+		"rootDir": "./source/",
+		"strict": true,
 		"target": "es6"
-	}
+	},
+	"include": [],
+	"references": [
+		{
+			"path": "./source/cli/"
+		},
+		{
+			"path": "./source/lib/"
+		}
+	]
 }

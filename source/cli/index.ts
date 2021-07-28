@@ -1,15 +1,15 @@
+#!/usr/bin/env node
+
 import * as libcrypto from 'crypto';
 import * as libcp from 'child_process';
 import * as libfs from 'fs';
 import * as libhttp from 'http';
 import * as libhttps from 'https';
 import * as libpath from 'path';
-import * as glesys from "./glesys";
-import { Config as AcmeConfig } from "./acme/config";
-import { Config as DynuConfig } from "./dynu/config";
+import * as lib from "../lib";
 
-let cfgacme = AcmeConfig.as(JSON.parse(libfs.readFileSync("./private/config/acme.json", "utf8")));
-let cfgdynu = DynuConfig.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf8")));
+let cfgacme = lib.acme.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/acme.json", "utf8")));
+let cfgdynu = lib.dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf8")));
 
 interface DnsDomain {
 	readonly id: number;
@@ -1081,7 +1081,7 @@ let acme_download_certificate = (url: string, kid: string, nonce: string, privat
 };
 
 let acme_get_certificate = (cb: Callback<string>): void => {
-	let glesysClient = glesys.makeNodeClient();
+	let glesysClient = lib.glesys.makeNodeClient();
 	get_key('account_key.pem', (account_key) => {
 		let buffer = convert_to_der_from_pem(account_key);
 		let jwk = convert_to_key_object(buffer[0].data);
@@ -1149,7 +1149,7 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 									}); */
 									glesysClient.createDomainRecord({
 										payload: {
-											domainname: glesys.CONFIG.domainname,
+											domainname: lib.glesys.CONFIG.domainname,
 											host: "@", // "@" if CNAME was used to delegate, "_acme-challenge" otherwise
 											type: "TXT",
 											data: key_authorization

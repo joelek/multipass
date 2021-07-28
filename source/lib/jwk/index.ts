@@ -16,16 +16,16 @@ class Key {
 	}
 
 	async getWebKey(): Promise<WebKey> {
-		let nodes = await asno.parse(this.der);
+		let nodes = await asno.parse(this.private_key);
 		let data = nodes[0].data;
 		if (data instanceof Buffer) {
 			return Promise.reject("Unexpected buffer!");
 		}
-		let n = data[1].data;
+		let n = (data[1] as any).data;
 		if (!(n instanceof Buffer)) {
 			return Promise.reject("Expected a buffer!");
 		}
-		let e = data[2].data;
+		let e = (data[2] as any).data;
 		if (!(e instanceof Buffer)) {
 			return Promise.reject("Expected a buffer!");
 		}
@@ -37,7 +37,7 @@ class Key {
 	}
 
 	async save(path: string): Promise<void> {
-		return $fs.writeBufferToFile(path, this.der);
+		return $fs.writeBufferToFile(path, this.private_key);
 	}
 
 	static async load(path: string): Promise<Key> {
