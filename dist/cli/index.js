@@ -18,6 +18,7 @@ const libpath = require("path");
 const lib = require("../lib");
 let cfgacme = lib.acme.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/acme.json", "utf8")));
 let cfgdynu = lib.dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf8")));
+let cfgglesys = lib.glesys.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/glesys.json", "utf8")));
 let read_utf8_file = (filename, cb) => {
     libfs.readFile(libpath.join(certificate_path, filename), { encoding: 'utf8' }, (error, content) => {
         if (error) {
@@ -767,7 +768,7 @@ let acme_download_certificate = (url, kid, nonce, private_key, cb) => {
     }, url);
 };
 let acme_get_certificate = (cb) => {
-    let glesysClient = lib.glesys.makeNodeClient();
+    let glesysClient = lib.glesys.makeClient(cfgglesys);
     get_key('account_key.pem', (account_key) => {
         let buffer = convert_to_der_from_pem(account_key);
         let jwk = convert_to_key_object(buffer[0].data);
@@ -837,7 +838,7 @@ let acme_get_certificate = (cb) => {
                                                                     }); */
                                 glesysClient.createDomainRecord({
                                     payload: {
-                                        domainname: lib.glesys.CONFIG.domainname,
+                                        domainname: cfgglesys.domainname,
                                         host: "@",
                                         type: "TXT",
                                         data: key_authorization

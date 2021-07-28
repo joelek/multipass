@@ -1,6 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.messages = exports.config = exports.api = void 0;
-exports.api = require("./api");
+exports.makeClient = exports.config = void 0;
+const autoguard = require("@joelek/ts-autoguard/dist/lib-server");
+const api = require("./api/client");
 exports.config = require("./config");
-exports.messages = require("./messages");
+const URL_PREFIX = "https://api.dynu.com/v2";
+function makeClient(config) {
+    let client = api.makeClient({
+        urlPrefix: URL_PREFIX,
+        requestHandler: autoguard.api.makeNodeRequestHandler(),
+        defaultHeaders: [
+            ["API-Key", config.api_key]
+        ]
+    });
+    return client;
+}
+exports.makeClient = makeClient;
+;

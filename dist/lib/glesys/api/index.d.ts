@@ -1,24 +1,46 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
-export declare const Status: autoguard.serialization.MessageGuard<{
-    code: number;
-    timestamp: string;
-    text: string;
-    transactionid?: any;
+export declare const DomainPrice: autoguard.serialization.MessageGuard<{
+    amount: number;
+    currency: string;
+    years: number;
 }>;
-export declare type Status = ReturnType<typeof Status["as"]>;
+export declare type DomainPrice = ReturnType<typeof DomainPrice["as"]>;
+export declare const RegistrarInfo: autoguard.serialization.MessageGuard<{
+    autorenew: string;
+    state: string;
+    statedescription?: string | undefined;
+    expire?: string | undefined;
+    tld?: string | undefined;
+    invoicenumber?: string | undefined;
+}>;
+export declare type RegistrarInfo = ReturnType<typeof RegistrarInfo["as"]>;
 export declare const Domain: autoguard.serialization.MessageGuard<{
     domainname: string;
-    createtime: string;
-    displayname: string;
-    recordcount: number;
-    resolvednameservers: string[];
-    usingglesysnameserver: string;
-    registrarinfo: {
-        state: string;
-        expire: string;
+    expire?: number | undefined;
+    available?: boolean | undefined;
+    createtime?: string | undefined;
+    displayname?: string | undefined;
+    minimum?: number | undefined;
+    prices?: {
+        amount: number;
+        currency: string;
+        years: number;
+    }[] | undefined;
+    primarynameserver?: string | undefined;
+    recordcount?: number | undefined;
+    refresh?: number | undefined;
+    registrarinfo?: {
         autorenew: string;
-        configurednameservers: string[];
-    };
+        state: string;
+        statedescription?: string | undefined;
+        expire?: string | undefined;
+        tld?: string | undefined;
+        invoicenumber?: string | undefined;
+    } | undefined;
+    responsibleperson?: string | undefined;
+    retry?: number | undefined;
+    ttl?: number | undefined;
+    usingglesysnameserver?: string | undefined;
 }>;
 export declare type Domain = ReturnType<typeof Domain["as"]>;
 export declare const DomainRecordHost: autoguard.serialization.MessageGuard<string>;
@@ -28,43 +50,64 @@ export declare type DomainRecordType = ReturnType<typeof DomainRecordType["as"]>
 export declare const DomainRecord: autoguard.serialization.MessageGuard<{
     data: string;
     host: string;
-    domainname: string;
     recordid: number;
-    type: string;
+    domainname: string;
     ttl: number;
+    type: string;
 }>;
 export declare type DomainRecord = ReturnType<typeof DomainRecord["as"]>;
 export declare namespace Autoguard {
     const Guards: {
-        Status: autoguard.serialization.MessageGuard<{
-            code: number;
-            timestamp: string;
-            text: string;
-            transactionid?: any;
+        DomainPrice: autoguard.serialization.MessageGuard<{
+            amount: number;
+            currency: string;
+            years: number;
+        }>;
+        RegistrarInfo: autoguard.serialization.MessageGuard<{
+            autorenew: string;
+            state: string;
+            statedescription?: string | undefined;
+            expire?: string | undefined;
+            tld?: string | undefined;
+            invoicenumber?: string | undefined;
         }>;
         Domain: autoguard.serialization.MessageGuard<{
             domainname: string;
-            createtime: string;
-            displayname: string;
-            recordcount: number;
-            resolvednameservers: string[];
-            usingglesysnameserver: string;
-            registrarinfo: {
-                state: string;
-                expire: string;
+            expire?: number | undefined;
+            available?: boolean | undefined;
+            createtime?: string | undefined;
+            displayname?: string | undefined;
+            minimum?: number | undefined;
+            prices?: {
+                amount: number;
+                currency: string;
+                years: number;
+            }[] | undefined;
+            primarynameserver?: string | undefined;
+            recordcount?: number | undefined;
+            refresh?: number | undefined;
+            registrarinfo?: {
                 autorenew: string;
-                configurednameservers: string[];
-            };
+                state: string;
+                statedescription?: string | undefined;
+                expire?: string | undefined;
+                tld?: string | undefined;
+                invoicenumber?: string | undefined;
+            } | undefined;
+            responsibleperson?: string | undefined;
+            retry?: number | undefined;
+            ttl?: number | undefined;
+            usingglesysnameserver?: string | undefined;
         }>;
         DomainRecordHost: autoguard.serialization.MessageGuard<string>;
         DomainRecordType: autoguard.serialization.MessageGuard<string>;
         DomainRecord: autoguard.serialization.MessageGuard<{
             data: string;
             host: string;
-            domainname: string;
             recordid: number;
-            type: string;
+            domainname: string;
             ttl: number;
+            type: string;
         }>;
     };
     type Guards = {
@@ -111,8 +154,8 @@ export declare namespace Autoguard {
                 recordid: number;
                 data?: string | undefined;
                 host?: string | undefined;
-                type?: string | undefined;
                 ttl?: number | undefined;
+                type?: string | undefined;
             };
             headers?: {
                 [x: string]: autoguard.api.JSON;
@@ -140,25 +183,33 @@ export declare namespace Autoguard {
         listDomains: autoguard.serialization.MessageGuard<{
             payload: {
                 response: {
-                    status: {
-                        code: number;
-                        timestamp: string;
-                        text: string;
-                        transactionid?: any;
-                    };
                     domains: {
                         domainname: string;
-                        createtime: string;
-                        displayname: string;
-                        recordcount: number;
-                        resolvednameservers: string[];
-                        usingglesysnameserver: string;
-                        registrarinfo: {
-                            state: string;
-                            expire: string;
+                        expire?: number | undefined;
+                        available?: boolean | undefined;
+                        createtime?: string | undefined;
+                        displayname?: string | undefined;
+                        minimum?: number | undefined;
+                        prices?: {
+                            amount: number;
+                            currency: string;
+                            years: number;
+                        }[] | undefined;
+                        primarynameserver?: string | undefined;
+                        recordcount?: number | undefined;
+                        refresh?: number | undefined;
+                        registrarinfo?: {
                             autorenew: string;
-                            configurednameservers: string[];
-                        };
+                            state: string;
+                            statedescription?: string | undefined;
+                            expire?: string | undefined;
+                            tld?: string | undefined;
+                            invoicenumber?: string | undefined;
+                        } | undefined;
+                        responsibleperson?: string | undefined;
+                        retry?: number | undefined;
+                        ttl?: number | undefined;
+                        usingglesysnameserver?: string | undefined;
                     }[];
                 };
             };
@@ -170,19 +221,13 @@ export declare namespace Autoguard {
         listDomainRecords: autoguard.serialization.MessageGuard<{
             payload: {
                 response: {
-                    status: {
-                        code: number;
-                        timestamp: string;
-                        text: string;
-                        transactionid?: any;
-                    };
                     records: {
                         data: string;
                         host: string;
-                        domainname: string;
                         recordid: number;
-                        type: string;
+                        domainname: string;
                         ttl: number;
+                        type: string;
                     }[];
                 };
             };
@@ -194,19 +239,13 @@ export declare namespace Autoguard {
         createDomainRecord: autoguard.serialization.MessageGuard<{
             payload: {
                 response: {
-                    status: {
-                        code: number;
-                        timestamp: string;
-                        text: string;
-                        transactionid?: any;
-                    };
                     record: {
                         data: string;
                         host: string;
-                        domainname: string;
                         recordid: number;
-                        type: string;
+                        domainname: string;
                         ttl: number;
+                        type: string;
                     };
                 };
             };
@@ -218,19 +257,13 @@ export declare namespace Autoguard {
         updateDomainRecord: autoguard.serialization.MessageGuard<{
             payload: {
                 response: {
-                    status: {
-                        code: number;
-                        timestamp: string;
-                        text: string;
-                        transactionid?: any;
-                    };
                     record: {
                         data: string;
                         host: string;
-                        domainname: string;
                         recordid: number;
-                        type: string;
+                        domainname: string;
                         ttl: number;
+                        type: string;
                     };
                 };
             };
@@ -241,14 +274,7 @@ export declare namespace Autoguard {
         }>;
         deleteDomainRecord: autoguard.serialization.MessageGuard<{
             payload: {
-                response: {
-                    status: {
-                        code: number;
-                        timestamp: string;
-                        text: string;
-                        transactionid?: any;
-                    };
-                };
+                response: {};
             };
             status?: number | undefined;
             headers?: {
