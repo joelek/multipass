@@ -1,32 +1,42 @@
-guard Status: {
-	"code": number,
-	"timestamp": string,
-	"text": string,
-	"transactionid": any | null
+# ==============================================================================
+
+guard DomainPrice: {
+	"amount": number,
+	"currency": string,
+	"years": number
 };
 
-# ==============================================================================
+guard RegistrarInfo: {
+	"autorenew": string,
+	"state": string,
+	"statedescription"?: string,
+	"expire"?: string,
+	"tld"?: string,
+	"invoicenumber"?: string
+};
 
 guard Domain: {
 	"domainname": string,
-	"createtime": string,
-	"displayname": string,
-	"recordcount": number,
-	"resolvednameservers": string[],
-	"usingglesysnameserver": string,
-	"registrarinfo": {
-		"state": string,
-		"expire": string,
-		"autorenew": string,
-		"configurednameservers": string[]
-	}
+	"available"?: boolean,
+	"createtime"?: string,
+	"displayname"?: string,
+	"expire"?: number,
+	"minimum"?: number,
+	"prices"?: DomainPrice[],
+	"primarynameserver"?: string,
+	"recordcount"?: number,
+	"refresh"?: number,
+	"registrarinfo"?: RegistrarInfo,
+	"responsibleperson"?: string,
+	"retry"?: number,
+	"ttl"?: number,
+	"usingglesysnameserver"?: string
 };
 
 route listDomains(): POST:/domain/list
 	<=
 	=> {
 		"response": {
-			"status": Status,
 			"domains": Domain[]
 		}
 	};
@@ -38,12 +48,12 @@ guard DomainRecordHost: "@" | string;
 guard DomainRecordType: "A" | "NS" | "MX" | "TXT" | string;
 
 guard DomainRecord: {
-	"recordid": number,
 	"domainname": string,
-	"host": DomainRecordHost,
-	"type": DomainRecordType,
 	"data": string,
-	"ttl": number
+	"host": DomainRecordHost,
+	"recordid": number,
+	"ttl": number,
+	"type": DomainRecordType
 };
 
 route listDomainRecords(): POST:/domain/listrecords
@@ -52,7 +62,6 @@ route listDomainRecords(): POST:/domain/listrecords
 	}
 	=> {
 		"response": {
-			"status": Status,
 			"records": DomainRecord[]
 		}
 	};
@@ -60,14 +69,13 @@ route listDomainRecords(): POST:/domain/listrecords
 route createDomainRecord(): POST:/domain/addrecord
 	<= {
 		"domainname": string,
+		"data": string,
 		"host": DomainRecordHost,
 		"type": DomainRecordType,
-		"data": string,
 		"ttl"?: number
 	}
 	=> {
 		"response": {
-			"status": Status,
 			"record": DomainRecord
 		}
 	};
@@ -75,14 +83,13 @@ route createDomainRecord(): POST:/domain/addrecord
 route updateDomainRecord(): POST:/domain/updaterecord
 	<= {
 		"recordid": number,
+		"data"?: string,
 		"host"?: DomainRecordHost,
 		"type"?: DomainRecordType,
-		"data"?: string,
 		"ttl"?: number
 	}
 	=> {
 		"response": {
-			"status": Status,
 			"record": DomainRecord
 		}
 	};
@@ -92,9 +99,7 @@ route deleteDomainRecord(): POST:/domain/deleterecord
 		"recordid": number
 	}
 	=> {
-		"response": {
-			"status": Status
-		}
+		"response": {}
 	};
 
 # ==============================================================================

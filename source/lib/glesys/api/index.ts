@@ -2,31 +2,95 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
-export const Status = autoguard.guards.Object.of({
-	"code": autoguard.guards.Number,
-	"timestamp": autoguard.guards.String,
-	"text": autoguard.guards.String,
-	"transactionid": autoguard.guards.Union.of(
-		autoguard.guards.Any,
-		autoguard.guards.Null
+export const DomainPrice = autoguard.guards.Object.of({
+	"amount": autoguard.guards.Number,
+	"currency": autoguard.guards.String,
+	"years": autoguard.guards.Number
+});
+
+export type DomainPrice = ReturnType<typeof DomainPrice["as"]>;
+
+export const RegistrarInfo = autoguard.guards.Object.of({
+	"autorenew": autoguard.guards.String,
+	"state": autoguard.guards.String,
+	"statedescription": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"expire": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"tld": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"invoicenumber": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
 	)
 });
 
-export type Status = ReturnType<typeof Status["as"]>;
+export type RegistrarInfo = ReturnType<typeof RegistrarInfo["as"]>;
 
 export const Domain = autoguard.guards.Object.of({
 	"domainname": autoguard.guards.String,
-	"createtime": autoguard.guards.String,
-	"displayname": autoguard.guards.String,
-	"recordcount": autoguard.guards.Number,
-	"resolvednameservers": autoguard.guards.Array.of(autoguard.guards.String),
-	"usingglesysnameserver": autoguard.guards.String,
-	"registrarinfo": autoguard.guards.Object.of({
-		"state": autoguard.guards.String,
-		"expire": autoguard.guards.String,
-		"autorenew": autoguard.guards.String,
-		"configurednameservers": autoguard.guards.Array.of(autoguard.guards.String)
-	})
+	"available": autoguard.guards.Union.of(
+		autoguard.guards.Boolean,
+		autoguard.guards.Undefined
+	),
+	"createtime": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"displayname": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"expire": autoguard.guards.Union.of(
+		autoguard.guards.Number,
+		autoguard.guards.Undefined
+	),
+	"minimum": autoguard.guards.Union.of(
+		autoguard.guards.Number,
+		autoguard.guards.Undefined
+	),
+	"prices": autoguard.guards.Union.of(
+		autoguard.guards.Array.of(autoguard.guards.Reference.of(() => DomainPrice)),
+		autoguard.guards.Undefined
+	),
+	"primarynameserver": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"recordcount": autoguard.guards.Union.of(
+		autoguard.guards.Number,
+		autoguard.guards.Undefined
+	),
+	"refresh": autoguard.guards.Union.of(
+		autoguard.guards.Number,
+		autoguard.guards.Undefined
+	),
+	"registrarinfo": autoguard.guards.Union.of(
+		autoguard.guards.Reference.of(() => RegistrarInfo),
+		autoguard.guards.Undefined
+	),
+	"responsibleperson": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	),
+	"retry": autoguard.guards.Union.of(
+		autoguard.guards.Number,
+		autoguard.guards.Undefined
+	),
+	"ttl": autoguard.guards.Union.of(
+		autoguard.guards.Number,
+		autoguard.guards.Undefined
+	),
+	"usingglesysnameserver": autoguard.guards.Union.of(
+		autoguard.guards.String,
+		autoguard.guards.Undefined
+	)
 });
 
 export type Domain = ReturnType<typeof Domain["as"]>;
@@ -49,19 +113,20 @@ export const DomainRecordType = autoguard.guards.Union.of(
 export type DomainRecordType = ReturnType<typeof DomainRecordType["as"]>;
 
 export const DomainRecord = autoguard.guards.Object.of({
-	"recordid": autoguard.guards.Number,
 	"domainname": autoguard.guards.String,
-	"host": autoguard.guards.Reference.of(() => DomainRecordHost),
-	"type": autoguard.guards.Reference.of(() => DomainRecordType),
 	"data": autoguard.guards.String,
-	"ttl": autoguard.guards.Number
+	"host": autoguard.guards.Reference.of(() => DomainRecordHost),
+	"recordid": autoguard.guards.Number,
+	"ttl": autoguard.guards.Number,
+	"type": autoguard.guards.Reference.of(() => DomainRecordType)
 });
 
 export type DomainRecord = ReturnType<typeof DomainRecord["as"]>;
 
 export namespace Autoguard {
 	export const Guards = {
-		"Status": autoguard.guards.Reference.of(() => Status),
+		"DomainPrice": autoguard.guards.Reference.of(() => DomainPrice),
+		"RegistrarInfo": autoguard.guards.Reference.of(() => RegistrarInfo),
 		"Domain": autoguard.guards.Reference.of(() => Domain),
 		"DomainRecordHost": autoguard.guards.Reference.of(() => DomainRecordHost),
 		"DomainRecordType": autoguard.guards.Reference.of(() => DomainRecordType),
@@ -127,9 +192,9 @@ export namespace Autoguard {
 			),
 			"payload": autoguard.guards.Object.of({
 				"domainname": autoguard.guards.String,
+				"data": autoguard.guards.String,
 				"host": autoguard.guards.Reference.of(() => DomainRecordHost),
 				"type": autoguard.guards.Reference.of(() => DomainRecordType),
-				"data": autoguard.guards.String,
 				"ttl": autoguard.guards.Union.of(
 					autoguard.guards.Number,
 					autoguard.guards.Undefined
@@ -153,16 +218,16 @@ export namespace Autoguard {
 			),
 			"payload": autoguard.guards.Object.of({
 				"recordid": autoguard.guards.Number,
+				"data": autoguard.guards.Union.of(
+					autoguard.guards.String,
+					autoguard.guards.Undefined
+				),
 				"host": autoguard.guards.Union.of(
 					autoguard.guards.Reference.of(() => DomainRecordHost),
 					autoguard.guards.Undefined
 				),
 				"type": autoguard.guards.Union.of(
 					autoguard.guards.Reference.of(() => DomainRecordType),
-					autoguard.guards.Undefined
-				),
-				"data": autoguard.guards.Union.of(
-					autoguard.guards.String,
 					autoguard.guards.Undefined
 				),
 				"ttl": autoguard.guards.Union.of(
@@ -209,7 +274,6 @@ export namespace Autoguard {
 			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
-					"status": autoguard.guards.Reference.of(() => Status),
 					"domains": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Domain))
 				})
 			})
@@ -228,7 +292,6 @@ export namespace Autoguard {
 			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
-					"status": autoguard.guards.Reference.of(() => Status),
 					"records": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => DomainRecord))
 				})
 			})
@@ -247,7 +310,6 @@ export namespace Autoguard {
 			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
-					"status": autoguard.guards.Reference.of(() => Status),
 					"record": autoguard.guards.Reference.of(() => DomainRecord)
 				})
 			})
@@ -266,7 +328,6 @@ export namespace Autoguard {
 			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
-					"status": autoguard.guards.Reference.of(() => Status),
 					"record": autoguard.guards.Reference.of(() => DomainRecord)
 				})
 			})
@@ -284,9 +345,7 @@ export namespace Autoguard {
 				autoguard.guards.Undefined
 			),
 			"payload": autoguard.guards.Object.of({
-				"response": autoguard.guards.Object.of({
-					"status": autoguard.guards.Reference.of(() => Status)
-				})
+				"response": autoguard.guards.Object.of({})
 			})
 		})
 	};
