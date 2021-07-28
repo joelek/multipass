@@ -18,7 +18,6 @@
 		"build": "rm -rf ./build/ && npm run codegen && npx tsc --build",
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"codegen": "npx autoguard",
-		"install": "npm run build"
 	},
 	"version": "0.0.0"
 }
