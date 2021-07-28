@@ -21,7 +21,9 @@
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"codegen": "npx autoguard",
 		"compile": "rm -rf ./build/* && npx tsc --build",
-		"package": "rm -rf ./dist/* && cp -r ./build/* ./dist/"
+		"package": "rm -rf ./dist/* && cp -r ./build/* ./dist/",
+		"preversion": "npm run build && git add ./",
+		"postversion": "git push && git push --tags"
 	},
 	"version": "0.0.0"
 }
