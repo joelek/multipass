@@ -1,0 +1,57 @@
+# ==============================================================================
+
+guard Domain: {
+	"id": number,
+	"name": string
+};
+
+route listDomains(): GET:/dns
+	<=
+	=> {
+		"domains": Domain[]
+	};
+
+# ==============================================================================
+
+guard DomainRecordStubGeneric: {
+	"nodeName": string,
+	"recordType": string
+};
+
+guard DomainRecordStubTXT: DomainRecordStubGeneric & {
+	"recordType": "TXT",
+	"textData": string
+};
+
+guard DomainRecordStub: DomainRecordStubGeneric | DomainRecordStubTXT;
+
+guard DomainRecordBase: {
+	"id": number,
+	"domainId": number
+};
+
+guard DomainRecordGeneric: DomainRecordBase & DomainRecordStubGeneric;
+
+guard DomainRecordTXT: DomainRecordBase & DomainRecordStubTXT;
+
+guard DomainRecord: DomainRecordGeneric | DomainRecordTXT;
+
+route listDomainRecords(): GET:/dns/<domainid:number>/record
+	<=
+	=> {
+		"dnsRecords": DomainRecord[]
+	};
+
+route createDomainRecord(): POST:/dns/<domainid:number>/record
+	<= DomainRecordStub
+	=> DomainRecord;
+
+route updateDomainRecord(): POST:/dns/<domainid:number>/record/<recordid:number>
+	<= DomainRecordStub
+	=> DomainRecord;
+
+route deleteDomainRecord(): DELETE:/dns/<domainid:number>/record/<recordid:number>
+	<=
+	=> {};
+
+# ==============================================================================
