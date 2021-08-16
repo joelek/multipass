@@ -14,18 +14,18 @@ guard GlesysApi: {
 guard Api: DynuApi | GlesysApi;
 
 guard Domain: {
-	hostname: string,
-	api: Api
+	"hostname": string,
+	"api": Api
 };
 
 guard Certificate: {
-	domains?: Domain[],
-	root?: string,
-	account?: string,
-	key?: string,
-	cert?: string
+	"domains"?: Domain[],
+	"root"?: string,
+	"account"?: string,
+	"key"?: string,
+	"cert"?: string
 };
 
 guard Options: {
-	certificates?: Certificate[]
+	"certificates"?: Certificate[]
 };
