@@ -21,7 +21,7 @@ export async function parse(string: string): Promise<Array<Section>> {
 				continue;
 			}
 			let end = index;
-			let string = lines.slice(start, end - 1).join("");
+			let string = lines.slice(start, end - 1).join(``);
 			sections.push({
 				label: label,
 				buffer: await encoding.convertBase64StringToBuffer(string)
@@ -35,7 +35,7 @@ export async function parse(string: string): Promise<Array<Section>> {
 export async function serialize(section: Section): Promise<string> {
 	let lines = new Array<string>();
 	if (!(/^((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)$/.test(section.label))) {
-		throw "Expected a valid label!";
+		throw `Expected a valid label!`;
 	}
 	lines.push(`-----BEGIN ${section.label}-----`);
 	let base64 = await encoding.convertBufferToBase64String(section.buffer);
@@ -44,5 +44,5 @@ export async function serialize(section: Section): Promise<string> {
 		lines.push(line);
 	}
 	lines.push(`-----END ${section.label}-----`);
-	return lines.join("\r\n");
+	return lines.join(`\r\n`);
 };
