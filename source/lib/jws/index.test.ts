@@ -14,7 +14,7 @@ import * as lib from "./";
 			format: `pem`
 		}
 	});
-	let blob = await lib.sign(privateKey, { horse: "hej" }, "testfolk");
+	let blob = await lib.sign(privateKey, { food: "räksmörgås" }, "räksmörgås");
 	let verification = await lib.verify(blob, publicKey);
 	console.log(verification);
 })();
