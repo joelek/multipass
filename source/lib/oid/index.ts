@@ -1,26 +1,41 @@
-// TODO: Add serializer.
+import * as der from "../der";
+import * as parsing from "../parsing";
 
-export async function parse(buffer: Buffer): Promise<Array<number>> {
-	let components = new Array<number>();
-	let offset = 0;
-	let byte = buffer.readUInt8(offset++);
-	components.push((byte / 40) | 0);
-	components.push(byte % 40);
-	while (offset < buffer.length) {
-		let component = 0;
-		for (let i = 0; true; i++) {
-			let byte = buffer.readUInt8(offset++);
-			let hi = ((byte >> 7) & 0x01);
-			let lo = ((byte >> 0) & 0x7F);
-			component = (component * 128) + lo;
-			if (hi === 0) {
-				break;
-			}
-			if (i === 4) {
-				throw "Expected a reasonable component length!";
-			}
+export function parse(parser: parsing.Parser): Array<number> {
+	return parser.try(() => {
+		let arcs = new Array<number>();
+		let arc = der.decodeVarlen(parser);
+		let root = Math.min(Math.floor(arc / 40), 2);
+		arcs.push(root);
+		arcs.push(arc - root * 40);
+		while (!parser.eof()) {
+			let arc = der.decodeVarlen(parser);
+			arcs.push(arc);
 		}
-		components.push(component);
+		return arcs;
+	});
+};
+
+export function serialize(arcs: Array<number>): Buffer {
+	for (let arc of arcs) {
+		if (!Number.isInteger(arc) || arc < 0) {
+			throw `Expected an unsigned integer!`;
+		}
 	}
-	return components;
+	if (arcs.length < 2) {
+		throw `Expected at least two arcs!`;
+	}
+	let root = arcs[0];
+	let second = arcs[1];
+	if (root > 2) {
+		throw `Expected the root arc to be at most 2!`;
+	} else if (root < 2 && second >= 40) {
+		throw `Expected the second arc to be at most 39!`;
+	}
+	let buffers = new Array<Buffer>();
+	buffers.push(der.encodeVarlen(root * 40 + second));
+	for (let i = 2; i < arcs.length; i++) {
+		buffers.push(der.encodeVarlen(arcs[i]));
+	}
+	return Buffer.concat(buffers);
 };
