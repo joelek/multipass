@@ -1,11 +1,11 @@
-import * as lib from "./";
+import * as pem from "./";
 
 (async () => {
-	let one = await lib.serialize({
+	let one = await pem.serialize({
 		label: `NUMBERS`,
 		buffer: Buffer.of(1, 2, 3, 4)
 	});
-	let two = await lib.serialize({
+	let two = await pem.serialize({
 		label: `STRING`,
 		buffer: Buffer.from(`räksmörgås`)
 	});
@@ -17,7 +17,7 @@ import * as lib from "./";
 		`junk`
 	].join(`\r\n`);
 	console.log(string);
-	let sections = await lib.parse(string);
+	let sections = await pem.parse(string);
 	console.log(sections);
 })();
 
@@ -25,6 +25,6 @@ import * as lib from "./";
 	let string = [
 		`-----BEGIN NUMBERS-----`
 	].join(`\r\n`);
-	let sections = await lib.parse(string);
+	let sections = await pem.parse(string);
 	console.log(sections);
 })();

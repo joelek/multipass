@@ -1,5 +1,5 @@
 import * as libcrypto from "crypto";
-import * as lib from "./";
+import * as jws from "./";
 
 (async () => {
 	let { privateKey, publicKey } = libcrypto.generateKeyPairSync(`rsa`, {
@@ -14,7 +14,7 @@ import * as lib from "./";
 			format: `pem`
 		}
 	});
-	let blob = await lib.sign(privateKey, { food: "räksmörgås" }, "räksmörgås");
-	let verification = await lib.verify(blob, publicKey);
+	let blob = await jws.sign(privateKey, { food: "räksmörgås" }, "räksmörgås");
+	let verification = await jws.verify(blob, publicKey);
 	console.log(verification);
 })();
