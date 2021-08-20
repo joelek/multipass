@@ -1,3 +1,5 @@
+// TODO: Add serializer.
+
 export async function parse(buffer: Buffer): Promise<Array<number>> {
 	let components = new Array<number>();
 	let offset = 0;
