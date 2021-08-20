@@ -1,5 +1,7 @@
 import * as encoding from "../encoding";
 
+// TODO: Add support for parsing padding.
+
 export type Section = {
 	label: string;
 	buffer: Buffer;
