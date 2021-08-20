@@ -9,16 +9,16 @@ export async function parse(string: string): Promise<Array<Section>> {
 	let sections = new Array<Section>();
 	let lines = string.split(/\r\n|\r|\n/);
 	let index = 0;
-	while (index < lines.length) {
+	outer: while (index < lines.length) {
 		let parts = /^-----BEGIN ((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)-----$/.exec(lines[index++]);
 		if (parts == null) {
-			continue;
+			continue outer;
 		}
 		let label = parts[1];
 		let start = index;
-		while (index < lines.length) {
+		inner: while (index < lines.length) {
 			if (lines[index++] !== `-----END ${label}-----`) {
-				continue;
+				continue inner;
 			}
 			let end = index;
 			let string = lines.slice(start, end - 1).join(``);
@@ -26,8 +26,9 @@ export async function parse(string: string): Promise<Array<Section>> {
 				label: label,
 				buffer: await encoding.convertBase64StringToBuffer(string)
 			});
-			break;
+			continue outer;
 		}
+		throw `Expected end of label "${label}"!`;
 	}
 	return sections;
 };

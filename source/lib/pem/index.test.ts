@@ -20,3 +20,11 @@ import * as lib from "./";
 	let sections = await lib.parse(string);
 	console.log(sections);
 })();
+
+(async () => {
+	let string = [
+		`-----BEGIN NUMBERS-----`
+	].join(`\r\n`);
+	let sections = await lib.parse(string);
+	console.log(sections);
+})();
