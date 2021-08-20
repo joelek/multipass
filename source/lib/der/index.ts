@@ -1,7 +1,7 @@
-import * as $encoding from "../encoding";
-import * as $enumeration from "../enumeration";
+import * as enumeration from "../enumeration";
+import * as parsing from "../parsing";
 
-enum Type {
+export enum Type {
 	"END_OF_CONTENT",
 	"BOOLEAN",
 	"INTEGER",
@@ -41,44 +41,81 @@ enum Type {
 	"RELATIVE_OID_IRI"
 };
 
-enum Form {
+export enum Form {
 	"PRIMITIVE",
 	"CONSTRUCTED"
 };
 
-enum Kind {
+export enum Kind {
 	"UNIVERSAL",
 	"APPLICATION",
-	"CONTEXT_SPECIFIC",
+	"CONTEXT",
 	"PRIVATE"
 };
 
-enum OctetType {
+export enum OctetType {
 	"FINAL",
 	"NON_FINAL"
 };
 
-type Node = {
+export type Node = {
 	type: keyof typeof Type,
 	form: keyof typeof Form,
 	kind: keyof typeof Kind,
 	data: string | Array<Node>
 };
 
-async function parse(buffer: Buffer): Promise<Array<Node>> {
+export function encodeVarlen(number: number): Buffer {
+	let bytes = new Array<number>();
+	while (true) {
+		let byte = number & 0x7F;
+		bytes.push(byte);
+		number = number >> 7;
+		if (number === 0) {
+			break;
+		}
+	}
+	for (let i = 1; i < bytes.length; i++) {
+		bytes[i] += 0x80;
+	}
+	bytes.reverse();
+	return Buffer.from(bytes);
+};
+
+export function decodeVarlen(parser: parsing.Parser): number {
+	return parser.try(() => {
+		let length = 0;
+		for (let i = 0; true; i++) {
+			let byte = parser.unsigned(1);
+			let hi = ((byte >> 7) & 0x01);
+			let lo = ((byte >> 0) & 0x7F);
+			length = (length * 128) + lo;
+			if (hi === 0) {
+				break;
+			}
+			if (i === 4) {
+				throw "Expected a reasonably long varlen encoding!";
+			}
+		}
+		return length;
+	});
+};
+
+export async function parse(buffer: Buffer): Promise<Array<Node>> {
 	let offset = 0;
 	let nodes = new Array<Node>();
 	while (offset < buffer.length) {
 		let tag = buffer.readUInt8(offset++);
-		let kind = await $enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
-		let form = await $enumeration.nameOf(Form, ((tag >> 5) & 0x01));
-		let type = await $enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
+		let kind = await enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
+		let form = await enumeration.nameOf(Form, ((tag >> 5) & 0x01));
+		let type = await enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
+		// TODO: Use constant.
 		if (Type[type] === 0x1F) {
 			let bytes = new Array<number>();
 			while (true) {
 				let byte = buffer.readUInt8(offset++);
 				bytes.push(byte);
-				let octet_type = await $enumeration.nameOf(OctetType, ((byte >> 7) & 0x01));
+				let octet_type = await enumeration.nameOf(OctetType, ((byte >> 7) & 0x01));
 				if (octet_type === "FINAL") {
 					break;
 				}
@@ -93,10 +130,11 @@ async function parse(buffer: Buffer): Promise<Array<Node>> {
 			for (let i = 0; i < bytes.length; i++) {
 				index = (index * 128) + (bytes[i] & 0x7F);
 			}
+			// stop of decode
 			if (index < 0x1F) {
 				throw "Unexpected long form!";
 			}
-			type = await $enumeration.nameOf(Type, index);
+			type = await enumeration.nameOf(Type, index);
 		}
 		let length = buffer.readUInt8(offset++);
 		if (length <= 127) {
@@ -144,34 +182,4 @@ async function parse(buffer: Buffer): Promise<Array<Node>> {
 		offset += length;
 	}
 	return nodes;
-}
-
-async function parseObjectIdentifier(buffer: Buffer): Promise<Array<number>> {
-	let components = new Array<number>();
-	let offset = 0;
-	let byte = buffer.readUInt8(offset++);
-	components.push((byte / 40) | 0);
-	components.push(byte % 40);
-	while (offset < buffer.length) {
-		let component = 0;
-		for (let i = 0; true; i++) {
-			let byte = buffer.readUInt8(offset++);
-			let hi = ((byte >> 7) & 0x01);
-			let lo = ((byte >> 0) & 0x7F);
-			component = (component * 128) + lo;
-			if (hi === 0) {
-				break;
-			}
-			if (i === 4) {
-				throw "Expected a reasonable length!";
-			}
-		}
-		components.push(component);
-	}
-	return components;
-}
-
-export {
-	parse,
-	parseObjectIdentifier
 };
