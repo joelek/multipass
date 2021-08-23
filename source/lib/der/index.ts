@@ -109,7 +109,7 @@ export async function parse(buffer: Buffer): Promise<Array<Node>> {
 		let kind = await enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
 		let form = await enumeration.nameOf(Form, ((tag >> 5) & 0x01));
 		let type = await enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
-		// TODO: Use constant.
+		// The value 0x1F denotes a varlen encoded type which must be >= 31 for DER.
 		if (Type[type] === 0x1F) {
 			let bytes = new Array<number>();
 			while (true) {
