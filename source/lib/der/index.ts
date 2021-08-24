@@ -1,6 +1,18 @@
 import * as enumeration from "../enumeration";
 import * as parsing from "../parsing";
 
+export enum Kind {
+	"UNIVERSAL",
+	"APPLICATION",
+	"CONTEXT",
+	"PRIVATE"
+};
+
+export enum Form {
+	"PRIMITIVE",
+	"CONSTRUCTED"
+};
+
 export enum Type {
 	"END_OF_CONTENT",
 	"BOOLEAN",
@@ -41,42 +53,28 @@ export enum Type {
 	"RELATIVE_OID_IRI"
 };
 
-export enum Form {
-	"PRIMITIVE",
-	"CONSTRUCTED"
-};
-
-export enum Kind {
-	"UNIVERSAL",
-	"APPLICATION",
-	"CONTEXT",
-	"PRIVATE"
-};
-
-export enum OctetType {
-	"FINAL",
-	"NON_FINAL"
-};
-
 export type Node = {
-	type: keyof typeof Type,
-	form: keyof typeof Form,
-	kind: keyof typeof Kind,
-	data: string | Array<Node>
+	kind: keyof typeof Kind;
+	form: keyof typeof Form;
+	type: keyof typeof Type;
+	data: Buffer;
 };
 
 export function encodeVarlen(number: number): Buffer {
+	if (!Number.isInteger(number) || number < 0) {
+		throw `Expected an unsigned integer!`;
+	}
 	let bytes = new Array<number>();
 	while (true) {
-		let byte = number & 0x7F;
+		let byte = number % 128;
 		bytes.push(byte);
-		number = number >> 7;
+		number = Math.floor(number / 128);
 		if (number === 0) {
 			break;
 		}
 	}
 	for (let i = 1; i < bytes.length; i++) {
-		bytes[i] += 0x80;
+		bytes[i] += 128;
 	}
 	bytes.reverse();
 	return Buffer.from(bytes);
@@ -87,99 +85,98 @@ export function decodeVarlen(parser: parsing.Parser): number {
 		let length = 0;
 		for (let i = 0; true; i++) {
 			let byte = parser.unsigned(1);
-			let hi = ((byte >> 7) & 0x01);
-			let lo = ((byte >> 0) & 0x7F);
+			let hi = (byte >> 7) & 0x01;
+			let lo = (byte >> 0) & 0x7F;
 			length = (length * 128) + lo;
 			if (hi === 0) {
 				break;
 			}
+			if (i === 0 && lo === 0) {
+				throw `Expected a minimally encoded varlen!`;
+			}
 			if (i === 4) {
-				throw "Expected a reasonably long varlen encoding!";
+				throw `Expected a reasonably long varlen encoding!`;
 			}
 		}
 		return length;
 	});
 };
 
-export async function parse(buffer: Buffer): Promise<Array<Node>> {
-	let offset = 0;
-	let nodes = new Array<Node>();
-	while (offset < buffer.length) {
-		let tag = buffer.readUInt8(offset++);
-		let kind = await enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
-		let form = await enumeration.nameOf(Form, ((tag >> 5) & 0x01));
-		let type = await enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
-		// The value 0x1F denotes a varlen encoded type which must be >= 31 for DER.
-		if (Type[type] === 0x1F) {
-			let bytes = new Array<number>();
-			while (true) {
-				let byte = buffer.readUInt8(offset++);
-				bytes.push(byte);
-				let octet_type = await enumeration.nameOf(OctetType, ((byte >> 7) & 0x01));
-				if (octet_type === "FINAL") {
-					break;
-				}
-				if (bytes.length === 4) {
-					throw "Expected a reasonable length!";
-				}
-			}
-			if ((bytes[0] & 0x7F) === 0x00) {
-				throw "Expected a minimally encoded length!";
-			}
-			let index = 0;
-			for (let i = 0; i < bytes.length; i++) {
-				index = (index * 128) + (bytes[i] & 0x7F);
-			}
-			// stop of decode
-			if (index < 0x1F) {
-				throw "Unexpected long form!";
-			}
-			type = await enumeration.nameOf(Type, index);
-		}
-		let length = buffer.readUInt8(offset++);
-		if (length <= 127) {
-		} else if (length <= 128) {
-			throw "Expected a definite length!";
-		} else if (length <= 254) {
-			let bytes = (length & 0x7F);
-			if (bytes > 4) {
-				throw "Expected a reasonable length!";
-			}
-			let true_length = 0;
-			for (let i = 0; i < bytes; i++) {
-				let byte = buffer.readUInt8(offset++);
-				if ((i === 0) && (byte === 0)) {
-					throw "Expected a minimally encoded length!";
-				}
-				true_length = (true_length * 256) + ((byte >> 0) & 0xFF);
-			}
-			if (true_length <= 127) {
-				throw "Expected a minimally encoded length!";
-			}
-			length = true_length;
-		} else {
-			throw "Expected a valid length!";
-		}
-		if (offset + length > buffer.length) {
-			throw "Expected a valid length!";
-		}
-		let data = buffer.slice(offset, offset + length);
-		if (form === "PRIMITIVE") {
-			nodes.push({
-				type,
-				form,
-				kind,
-				data: data.toString("hex")
-			});
-		} else {
-			nodes.push({
-				type,
-				form,
-				kind,
-				data: await parse(data)
-			});
-		}
-		offset += length;
+export function encodeLength(number: number): Buffer {
+	if (!Number.isInteger(number) || number < 0) {
+		throw `Expected an unsigned integer!`;
 	}
-	return nodes;
+	if (number <= 127) {
+		return Buffer.of(number);
+	}
+	let bytes = new Array<number>();
+	while (true) {
+		let byte = number % 256;
+		bytes.push(byte);
+		number = Math.floor(number / 256);
+		if (number === 0) {
+			break;
+		}
+	}
+	bytes.push(bytes.length);
+	bytes.reverse();
+	return Buffer.from(bytes);
+};
+
+export function decodeLength(parser: parsing.Parser): number {
+	return parser.try(() => {
+		let byte = parser.unsigned(1);
+		let hi = (byte >> 7) & 0x01;
+		let lo = (byte >> 0) & 0x7F;
+		if (hi === 0) {
+			return lo;
+		}
+		if (lo === 0) {
+			throw `Expected a definite length!`;
+		}
+		if (lo > 4) {
+			throw `Expected a reasonably long length encoding!`;
+		}
+		let length = 0;
+		for (let i = 0; i < lo; i++) {
+			let byte = parser.unsigned(1);
+			length = (length * 256) + byte;
+			if (i === 0 && byte === 0) {
+				throw `Expected a minimally encoded length!`;
+			}
+		}
+		if (length <= 127) {
+			throw `Expected a minimally encoded length!`;
+		}
+		return length;
+	});
+};
+
+export function parse(parser: parsing.Parser): Array<Node> {
+	return parser.try(() => {
+		let nodes = new Array<Node>();
+		while (!parser.eof()) {
+			let tag = parser.unsigned(1);
+			let kind = enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
+			let form = enumeration.nameOf(Form, ((tag >> 5) & 0x01));
+			let type = enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
+			// The value 31 is special and denotes a varlen encoded type.
+			if (Type[type] === 31) {
+				let length = decodeVarlen(parser);
+				if (length < 31) {
+					throw `Expected a minimally encoded type!`;
+				}
+				type = enumeration.nameOf(Type, length);
+			}
+			let length = decodeLength(parser);
+			let data = parser.chunk(length);
+			nodes.push({
+				type,
+				form,
+				kind,
+				data
+			});
+		}
+		return nodes;
+	});
 };
