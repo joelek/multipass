@@ -1,14 +1,11 @@
-type Enumeration = {
-	[key: number]: undefined | string
+type EnumerationValues = {
+	[key: number]: undefined | string;
 };
 
-async function nameOf<A extends Enumeration>(enumeration: A, index: number): Promise<keyof A> {
-	if (!(index in enumeration)) {
-		throw "Expected a valid index!";
+export function nameOf<A extends EnumerationValues>(enumeration: A, key: number): keyof A {
+	let value = enumeration[key];
+	if (value == null) {
+		throw `Expected a valid enumeration key!`;
 	}
-	return enumeration[index] as keyof A;
-}
-
-export {
-	nameOf
+	return value as keyof A;
 };
