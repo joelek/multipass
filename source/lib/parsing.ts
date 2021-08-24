@@ -7,6 +7,15 @@ export class Parser {
 		this.offset = offset ?? 0;
 	}
 
+	chunk(length: number): Buffer {
+		if (this.offset + length > this.buffer.length) {
+			throw `Expected to read at least ${length} bytes!`;
+		}
+		let buffer = this.buffer.slice(this.offset, this.offset + length);
+		this.offset += length;
+		return buffer;
+	}
+
 	eof(): boolean {
 		return this.offset >= this.buffer.length;
 	}
