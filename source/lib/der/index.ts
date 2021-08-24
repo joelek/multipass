@@ -118,7 +118,7 @@ export function encodeLength(number: number): Buffer {
 			break;
 		}
 	}
-	bytes.push(bytes.length);
+	bytes.push(bytes.length + 128);
 	bytes.reverse();
 	return Buffer.from(bytes);
 };
