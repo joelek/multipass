@@ -1,14 +1,14 @@
 import * as encoding from "../encoding";
 
 export type Section = {
-	headers: Array<string>;
+	headers?: Array<string>;
 	label: string;
 	buffer: Buffer;
 };
 
 export type Document = {
 	sections: Array<Section>;
-	trailers: Array<string>;
+	trailers?: Array<string>;
 };
 
 export async function parse(string: string): Promise<Document> {
@@ -53,7 +53,7 @@ export async function serialize(document: Document): Promise<string> {
 		if (!(/^((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)$/.test(section.label))) {
 			throw `Expected a valid label!`;
 		}
-		lines.push(...section.headers);
+		lines.push(...(section.headers ?? []));
 		lines.push(`-----BEGIN ${section.label}-----`);
 		let base64 = await encoding.convertBufferToBase64String(section.buffer);
 		for (let i = 0; i < base64.length; i += 64) {
@@ -62,6 +62,6 @@ export async function serialize(document: Document): Promise<string> {
 		}
 		lines.push(`-----END ${section.label}-----`);
 	}
-	lines.push(...document.trailers);
+	lines.push(...(document.trailers ?? []));
 	return lines.join(`\r\n`);
 };

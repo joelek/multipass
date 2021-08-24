@@ -47,7 +47,7 @@ import * as pem from "./";
 		`two`
 	].join(`\r\n`);
 	let document = await pem.parse(string);
-	let observed = document.trailers.join(`\r\n`);
+	let observed = document.trailers?.join(`\r\n`);
 	let expected = [
 		`one`,
 		`two`
@@ -63,7 +63,7 @@ import * as pem from "./";
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
 	let document = await pem.parse(string);
-	let observed = document.sections[0]?.headers.join(`\r\n`);
+	let observed = document.sections[0]?.headers?.join(`\r\n`);
 	let expected = [
 		`one`,
 		`two`
@@ -91,5 +91,106 @@ import * as pem from "./";
 	let document = await pem.parse(string);
 	let observed = document.sections[0]?.buffer;
 	let expected = Buffer.from(`AQIDBA==`, `base64`);
-	console.assert(observed?.equals(expected), `It should parse buffers properly.`);
+	console.assert(observed?.equals(expected), `It should parse section buffers properly.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: []
+	});
+	let expected = [
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize documents containing zero sections.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [
+			{
+				label: "NUMBERS",
+				buffer: Buffer.of()
+			}
+		]
+	});
+	let expected = [
+		`-----BEGIN NUMBERS-----`,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize documents containing one section.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [
+			{
+				label: "NUMBERS",
+				buffer: Buffer.of()
+			},
+			{
+				label: "STRINGS",
+				buffer: Buffer.of()
+			}
+		]
+	});
+	let expected = [
+		`-----BEGIN NUMBERS-----`,
+		`-----END NUMBERS-----`,
+		`-----BEGIN STRINGS-----`,
+		`-----END STRINGS-----`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize documents containing two sections.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [],
+		trailers: [
+			`one`,
+			`two`
+		]
+	});
+	let expected = [
+		`one`,
+		`two`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize documents containing trailers.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [
+			{
+				headers: [
+					`one`,
+					`two`
+				],
+				label: "NUMBERS",
+				buffer: Buffer.of()
+			}
+		]
+	});
+	let expected = [
+		`one`,
+		`two`,
+		`-----BEGIN NUMBERS-----`,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize section headers properly.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [
+			{
+				label: "NUMBERS",
+				buffer: Buffer.of(1, 2, 3, 4)
+			}
+		]
+	});
+	let expected = [
+		`-----BEGIN NUMBERS-----`,
+		`AQIDBA==`,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize section buffers properly.`);
 })();
