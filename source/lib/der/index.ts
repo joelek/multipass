@@ -152,6 +152,25 @@ export function decodeLength(parser: parsing.Parser): number {
 	});
 };
 
+export function assertNode(node: Node, expected: Partial<Node>): Node {
+	if (expected.kind != null) {
+		if (node.kind !== expected.kind) {
+			throw `Expected kind "${node.kind}" to be "${expected.kind}"!`;
+		}
+	}
+	if (expected.form != null) {
+		if (node.form !== expected.form) {
+			throw `Expected form "${node.form}" to be "${expected.form}"!`;
+		}
+	}
+	if (expected.type != null) {
+		if (node.type !== expected.type) {
+			throw `Expected type "${node.type}" to be "${expected.type}"!`;
+		}
+	}
+	return node;
+};
+
 export function parseNode(parser: parsing.Parser): Node {
 	return parser.try(() => {
 		let tag = parser.unsigned(1);
