@@ -2,7 +2,9 @@
 
 ```
 certhero \
-	--api=<string> \
+	--acme=https://api.acme-provider.com/directory \
+	--contact=user@domain.com \
+	--dns=<string> \
 	--domain=domain.com \
 	--domain=*.domain.com \
 	--account=account_key.pem \
