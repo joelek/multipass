@@ -171,9 +171,9 @@ export function parse(parser: parsing.Parser): Array<Node> {
 			let length = decodeLength(parser);
 			let data = parser.chunk(length);
 			nodes.push({
-				type,
-				form,
 				kind,
+				form,
+				type,
 				data
 			});
 		}
