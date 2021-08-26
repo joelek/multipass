@@ -1,6 +1,6 @@
-import * as $rsa from "./";
+import * as rsa from "./";
 
 (async () => {
-	let private_key = await $rsa.generatePrivateKey();
+	let private_key = rsa.generatePrivateKey();
 	console.log(private_key);
 })();

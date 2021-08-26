@@ -1,6 +1,6 @@
-import * as $crypto from "crypto";
-import * as $asno from "../der";
-import * as $schema from "./schema";
+import * as libcrypto from "crypto";
+import * as der from "../der";
+import * as parsing from "../parsing";
 
 export type PublicKey = {
 	modulus: Buffer;
@@ -19,42 +19,77 @@ export type PrivateKey = {
 	coefficient: Buffer;
 };
 
-export async function generatePrivateKeyDer(): Promise<Buffer> {
-	return new Promise<Buffer>((resolve, reject) => {
-		$crypto.generateKeyPair("rsa", {
-			modulusLength: 4096,
-			publicExponent: 65537,
-			publicKeyEncoding: {
-				type: "pkcs1",
-				format: "der"
-			},
-			privateKeyEncoding: {
-				type: "pkcs1",
-				format: "der"
-			}
-		}, (error, public_key, private_key) => {
-			if (error != null) {
-				return reject(error);
-			}
-			return resolve(private_key);
-		});
+export function generatePrivateKeyPKCS1(): Buffer {
+	let pair = libcrypto.generateKeyPairSync(`rsa`, {
+		modulusLength: 4096,
+		publicExponent: 65537,
+		publicKeyEncoding: {
+			type: `pkcs1`,
+			format: `der`
+		},
+		privateKeyEncoding: {
+			type: `pkcs1`,
+			format: `der`
+		}
 	});
-}
+	return pair.privateKey;
+};
 
-export async function generatePrivateKey(): Promise<PrivateKey> {
-	let der = await generatePrivateKeyDer();
-	let nodes = await $asno.parse(der);
-	let private_key = $schema.PrivateKey.as(nodes);
-	let components = private_key[0].data;
-	let version = Buffer.from(components[0].data, "hex");
-	let modulus = Buffer.from(components[1].data, "hex");
-	let public_exponent = Buffer.from(components[2].data, "hex");
-	let private_exponent = Buffer.from(components[3].data, "hex");
-	let prime_one = Buffer.from(components[4].data, "hex");
-	let prime_two = Buffer.from(components[5].data, "hex");
-	let exponent_one = Buffer.from(components[6].data, "hex");
-	let exponent_two = Buffer.from(components[7].data, "hex");
-	let coefficient = Buffer.from(components[8].data, "hex");
+export function parsePKCS1(parser: parsing.Parser): PrivateKey {
+	let node = der.assertNode(der.parseNode(parser), {
+		kind: "UNIVERSAL",
+		form: "CONSTRUCTED",
+		type: "SEQUENCE"
+	});
+	let children = der.parse(new parsing.Parser(node.data));
+	if (children.length < 9) {
+		throw `Expected at least 9 child nodes!`;
+	}
+	let version = der.assertNode(children[0], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let modulus = der.assertNode(children[1], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let public_exponent = der.assertNode(children[2], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let private_exponent = der.assertNode(children[3], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let prime_one = der.assertNode(children[4], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let prime_two = der.assertNode(children[5], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let exponent_one = der.assertNode(children[6], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let exponent_two = der.assertNode(children[7], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
+	let coefficient = der.assertNode(children[8], {
+		kind: "UNIVERSAL",
+		form: "PRIMITIVE",
+		type: "INTEGER"
+	}).data;
 	return {
 		version,
 		modulus,
@@ -66,4 +101,10 @@ export async function generatePrivateKey(): Promise<PrivateKey> {
 		exponent_two,
 		coefficient
 	};
-}
+};
+
+export function generatePrivateKey(): PrivateKey {
+	let buffer = generatePrivateKeyPKCS1();
+	let parser = new parsing.Parser(buffer);
+	return parsePKCS1(parser);
+};
