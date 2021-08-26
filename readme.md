@@ -12,3 +12,7 @@ certhero \
 	--cert=full_chain.pem \
 	--root=/certs/domain.com/
 ```
+
+## Roadmap
+
+* Add support for encrypted keys.
