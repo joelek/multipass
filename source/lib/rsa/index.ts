@@ -1,4 +1,5 @@
 import * as libcrypto from "crypto";
+import * as asno from "../asno";
 import * as der from "../der";
 import * as parsing from "../parsing";
 
@@ -36,7 +37,7 @@ export function generatePrivateKeyPKCS1(): Buffer {
 };
 
 export function parsePKCS1(parser: parsing.Parser): PrivateKey {
-	let node = der.assertNode(der.parseNode(parser), {
+	let node = asno.expect(der.parseNode(parser), {
 		kind: "UNIVERSAL",
 		form: "CONSTRUCTED",
 		type: "SEQUENCE"
@@ -45,47 +46,47 @@ export function parsePKCS1(parser: parsing.Parser): PrivateKey {
 	if (children.length < 9) {
 		throw `Expected at least 9 child nodes!`;
 	}
-	let version = der.assertNode(children[0], {
+	let version = asno.expect(children[0], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let modulus = der.assertNode(children[1], {
+	let modulus = asno.expect(children[1], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let public_exponent = der.assertNode(children[2], {
+	let public_exponent = asno.expect(children[2], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let private_exponent = der.assertNode(children[3], {
+	let private_exponent = asno.expect(children[3], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let prime_one = der.assertNode(children[4], {
+	let prime_one = asno.expect(children[4], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let prime_two = der.assertNode(children[5], {
+	let prime_two = asno.expect(children[5], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let exponent_one = der.assertNode(children[6], {
+	let exponent_one = asno.expect(children[6], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let exponent_two = der.assertNode(children[7], {
+	let exponent_two = asno.expect(children[7], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"
 	}).data;
-	let coefficient = der.assertNode(children[8], {
+	let coefficient = asno.expect(children[8], {
 		kind: "UNIVERSAL",
 		form: "PRIMITIVE",
 		type: "INTEGER"

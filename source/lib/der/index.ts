@@ -1,64 +1,6 @@
+import * as asno from "../asno";
 import * as enumeration from "../enumeration";
 import * as parsing from "../parsing";
-
-export enum Kind {
-	"UNIVERSAL",
-	"APPLICATION",
-	"CONTEXT",
-	"PRIVATE"
-};
-
-export enum Form {
-	"PRIMITIVE",
-	"CONSTRUCTED"
-};
-
-export enum Type {
-	"END_OF_CONTENT",
-	"BOOLEAN",
-	"INTEGER",
-	"BIT_STRING",
-	"OCTET_STRING",
-	"NULL",
-	"OBJECT_IDENTIFIER",
-	"OBJECT_DESCRIPTOR",
-	"EXTERNAL",
-	"REAL",
-	"ENUMERATED",
-	"EMBEDDED_PDV",
-	"UTF8_STRING",
-	"RELATIVE_OID",
-	"TIME",
-	"0F_RESERVED",
-	"SEQUENCE",
-	"SET",
-	"NUMERIC_STRING",
-	"PRINTABLE_STRING",
-	"T61_STRING",
-	"VIDEOTEX_STRING",
-	"IA5_STRING",
-	"UTC_TIME",
-	"GENERALIZED_TIME",
-	"GRAPHIC_STRING",
-	"VISIBLE_STRING",
-	"GENERAL_STRING",
-	"UNIVERSAL_STRING",
-	"CHARACTER_STRING",
-	"BMP_STRING",
-	"DATE",
-	"TIME_OF_DAY",
-	"DATE_TIME",
-	"DURATION",
-	"OID_IRI",
-	"RELATIVE_OID_IRI"
-};
-
-export type Node = {
-	kind: keyof typeof Kind;
-	form: keyof typeof Form;
-	type: keyof typeof Type;
-	data: Buffer;
-};
 
 export function encodeVarlen(number: number): Buffer {
 	if (!Number.isInteger(number) || number < 0) {
@@ -152,38 +94,19 @@ export function decodeLength(parser: parsing.Parser): number {
 	});
 };
 
-export function assertNode(node: Node, expected: Partial<Node>): Node {
-	if (expected.kind != null) {
-		if (node.kind !== expected.kind) {
-			throw `Expected kind "${node.kind}" to be "${expected.kind}"!`;
-		}
-	}
-	if (expected.form != null) {
-		if (node.form !== expected.form) {
-			throw `Expected form "${node.form}" to be "${expected.form}"!`;
-		}
-	}
-	if (expected.type != null) {
-		if (node.type !== expected.type) {
-			throw `Expected type "${node.type}" to be "${expected.type}"!`;
-		}
-	}
-	return node;
-};
-
-export function parseNode(parser: parsing.Parser): Node {
+export function parseNode(parser: parsing.Parser): asno.Node {
 	return parser.try(() => {
 		let tag = parser.unsigned(1);
-		let kind = enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
-		let form = enumeration.nameOf(Form, ((tag >> 5) & 0x01));
-		let type = enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
+		let kind = enumeration.nameOf(asno.Kind, ((tag >> 6) & 0x03));
+		let form = enumeration.nameOf(asno.Form, ((tag >> 5) & 0x01));
+		let type = enumeration.nameOf(asno.Type, ((tag >> 0) & 0x1F));
 		// The value 31 is special and denotes a varlen encoded type.
-		if (Type[type] === 31) {
+		if (asno.Type[type] === 31) {
 			let length = decodeVarlen(parser);
 			if (length < 31) {
 				throw `Expected a minimally encoded type!`;
 			}
-			type = enumeration.nameOf(Type, length);
+			type = enumeration.nameOf(asno.Type, length);
 		}
 		let length = decodeLength(parser);
 		let data = parser.chunk(length);
@@ -196,11 +119,11 @@ export function parseNode(parser: parsing.Parser): Node {
 	});
 };
 
-export function serializeNode(node: Node): Buffer {
+export function serializeNode(node: asno.Node): Buffer {
 	let buffers = new Array<Buffer>();
-	let kind = Kind[node.kind];
-	let form = Form[node.form];
-	let type = Type[node.type];
+	let kind = asno.Kind[node.kind];
+	let form = asno.Form[node.form];
+	let type = asno.Type[node.type];
 	let data = node.data;
 	let extended = type >= 31;
 	let tag = 0;
@@ -216,9 +139,9 @@ export function serializeNode(node: Node): Buffer {
 	return Buffer.concat(buffers);
 };
 
-export function parse(parser: parsing.Parser): Array<Node> {
+export function parse(parser: parsing.Parser): Array<asno.Node> {
 	return parser.try(() => {
-		let nodes = new Array<Node>();
+		let nodes = new Array<asno.Node>();
 		while (!parser.eof()) {
 			let node = parseNode(parser);
 			nodes.push(node);
@@ -227,7 +150,7 @@ export function parse(parser: parsing.Parser): Array<Node> {
 	});
 };
 
-export function serialize(nodes: Array<Node>): Buffer {
+export function serialize(nodes: Array<asno.Node>): Buffer {
 	let buffers = new Array<Buffer>();
 	for (let node of nodes) {
 		let buffer = serializeNode(node);
