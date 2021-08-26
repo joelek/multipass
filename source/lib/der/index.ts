@@ -192,6 +192,7 @@ export function serializeNode(node: Node): Buffer {
 	if (extended) {
 		buffers.push(encodeVarlen(type));
 	}
+	buffers.push(encodeLength(data.length));
 	buffers.push(data);
 	return Buffer.concat(buffers);
 };
