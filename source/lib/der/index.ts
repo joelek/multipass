@@ -180,3 +180,7 @@ export function parse(parser: parsing.Parser): Array<Node> {
 		return nodes;
 	});
 };
+
+export function serialize(nodes: Array<Node>): Buffer {
+	throw `Unimplemented!`;
+};
