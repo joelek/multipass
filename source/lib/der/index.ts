@@ -152,35 +152,66 @@ export function decodeLength(parser: parsing.Parser): number {
 	});
 };
 
+export function parseNode(parser: parsing.Parser): Node {
+	return parser.try(() => {
+		let tag = parser.unsigned(1);
+		let kind = enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
+		let form = enumeration.nameOf(Form, ((tag >> 5) & 0x01));
+		let type = enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
+		// The value 31 is special and denotes a varlen encoded type.
+		if (Type[type] === 31) {
+			let length = decodeVarlen(parser);
+			if (length < 31) {
+				throw `Expected a minimally encoded type!`;
+			}
+			type = enumeration.nameOf(Type, length);
+		}
+		let length = decodeLength(parser);
+		let data = parser.chunk(length);
+		return {
+			kind,
+			form,
+			type,
+			data
+		};
+	});
+};
+
+export function serializeNode(node: Node): Buffer {
+	let buffers = new Array<Buffer>();
+	let kind = Kind[node.kind];
+	let form = Form[node.form];
+	let type = Type[node.type];
+	let data = node.data;
+	let extended = type >= 31;
+	let tag = 0;
+	tag |= (kind << 6);
+	tag |= (form << 5);
+	tag |= ((extended ? 31 : type) << 0);
+	buffers.push(Buffer.of(tag));
+	if (extended) {
+		buffers.push(encodeVarlen(type));
+	}
+	buffers.push(data);
+	return Buffer.concat(buffers);
+};
+
 export function parse(parser: parsing.Parser): Array<Node> {
 	return parser.try(() => {
 		let nodes = new Array<Node>();
 		while (!parser.eof()) {
-			let tag = parser.unsigned(1);
-			let kind = enumeration.nameOf(Kind, ((tag >> 6) & 0x03));
-			let form = enumeration.nameOf(Form, ((tag >> 5) & 0x01));
-			let type = enumeration.nameOf(Type, ((tag >> 0) & 0x1F));
-			// The value 31 is special and denotes a varlen encoded type.
-			if (Type[type] === 31) {
-				let length = decodeVarlen(parser);
-				if (length < 31) {
-					throw `Expected a minimally encoded type!`;
-				}
-				type = enumeration.nameOf(Type, length);
-			}
-			let length = decodeLength(parser);
-			let data = parser.chunk(length);
-			nodes.push({
-				kind,
-				form,
-				type,
-				data
-			});
+			let node = parseNode(parser);
+			nodes.push(node);
 		}
 		return nodes;
 	});
 };
 
 export function serialize(nodes: Array<Node>): Buffer {
-	throw `Unimplemented!`;
+	let buffers = new Array<Buffer>();
+	for (let node of nodes) {
+		let buffer = serializeNode(node);
+		buffers.push(buffer);
+	}
+	return Buffer.concat(buffers);
 };
