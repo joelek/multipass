@@ -4,6 +4,21 @@ import * as json from "../json";
 
 // TODO: Add support for other signature algorithms.
 
+export enum SignatureAlgorithm {
+	"HS256",
+	"HS384",
+	"HS512",
+	"RS256",
+	"RS384",
+	"RS512",
+	"ES256",
+	"ES384",
+	"ES512",
+	"PS256",
+	"PS384",
+	"PS512"
+};
+
 async function encode(json: json.Any): Promise<string> {
 	return Promise.resolve(json)
 		.then(encoding.convertJSONToString)
