@@ -47,12 +47,12 @@ import * as pem from "./";
 		`two`
 	].join(`\r\n`);
 	let document = await pem.parse(string);
-	let observed = document.trailers?.join(`\r\n`);
+	let observed = document.postamble?.join(`\r\n`);
 	let expected = [
 		`one`,
 		`two`
 	].join(`\r\n`);
-	console.assert(observed === expected, `It should parse document trailers properly.`);
+	console.assert(observed === expected, `It should parse document postamble properly.`);
 })();
 
 (async () => {
@@ -63,12 +63,12 @@ import * as pem from "./";
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
 	let document = await pem.parse(string);
-	let observed = document.sections[0]?.headers?.join(`\r\n`);
+	let observed = document.sections[0]?.preamble?.join(`\r\n`);
 	let expected = [
 		`one`,
 		`two`
 	].join(`\r\n`);
-	console.assert(observed === expected, `It should parse section headers properly.`);
+	console.assert(observed === expected, `It should parse section preamble properly.`);
 })();
 
 (async () => {
@@ -144,7 +144,7 @@ import * as pem from "./";
 (async () => {
 	let observed = await pem.serialize({
 		sections: [],
-		trailers: [
+		postamble: [
 			`one`,
 			`two`
 		]
@@ -153,14 +153,14 @@ import * as pem from "./";
 		`one`,
 		`two`
 	].join(`\r\n`);
-	console.assert(observed === expected, `It should serialize documents containing trailers.`);
+	console.assert(observed === expected, `It should serialize documents containing postamble.`);
 })();
 
 (async () => {
 	let observed = await pem.serialize({
 		sections: [
 			{
-				headers: [
+				preamble: [
 					`one`,
 					`two`
 				],
@@ -175,7 +175,7 @@ import * as pem from "./";
 		`-----BEGIN NUMBERS-----`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	console.assert(observed === expected, `It should serialize section headers properly.`);
+	console.assert(observed === expected, `It should serialize section preamble properly.`);
 })();
 
 (async () => {
