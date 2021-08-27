@@ -85,6 +85,23 @@ import * as pem from "./";
 (async () => {
 	let string = [
 		`-----BEGIN NUMBERS-----`,
+		`one: 1`,
+		`two: 2`,
+		``,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	let document = await pem.parse(string);
+	let observed = document.sections[0]?.headers?.join(`\r\n`);
+	let expected = [
+		`one: 1`,
+		`two: 2`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should parse section headers properly.`);
+})();
+
+(async () => {
+	let string = [
+		`-----BEGIN NUMBERS-----`,
 		`AQIDBA==`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
@@ -154,6 +171,29 @@ import * as pem from "./";
 		`two`
 	].join(`\r\n`);
 	console.assert(observed === expected, `It should serialize documents containing postamble.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [
+			{
+				label: "NUMBERS",
+				headers: [
+					`one: 1`,
+					`two: 2`
+				],
+				buffer: Buffer.of()
+			}
+		]
+	});
+	let expected = [
+		`-----BEGIN NUMBERS-----`,
+		`one: 1`,
+		`two: 2`,
+		``,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize section headers properly.`);
 })();
 
 (async () => {

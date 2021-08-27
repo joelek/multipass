@@ -3,6 +3,7 @@ import * as encoding from "../encoding";
 export type Section = {
 	preamble?: Array<string>;
 	label: string;
+	headers?: Array<string>;
 	buffer: Buffer;
 };
 
@@ -30,11 +31,13 @@ export async function parse(string: string): Promise<Document> {
 				continue inner;
 			}
 			let end = index;
-			let string = lines.slice(start, end - 1).join(``);
+			let body = lines.slice(start, end - 1);
+			let headers = body.slice(0, body.indexOf(``));
 			sections.push({
 				preamble: preamble.splice(0, preamble.length),
 				label: label,
-				buffer: await encoding.convertBase64StringToBuffer(string)
+				headers: headers,
+				buffer: await encoding.convertBase64StringToBuffer(body.slice(body.indexOf(``) + 1).join(``))
 			});
 			continue outer;
 		}
@@ -55,6 +58,10 @@ export async function serialize(document: Document): Promise<string> {
 		}
 		lines.push(...(section.preamble ?? []));
 		lines.push(`-----BEGIN ${section.label}-----`);
+		lines.push(...(section.headers ?? []));
+		if (section.headers != null) {
+			lines.push(``);
+		}
 		let base64 = await encoding.convertBufferToBase64String(section.buffer);
 		for (let i = 0; i < base64.length; i += 64) {
 			let line = base64.substr(i, 64);
