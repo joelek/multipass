@@ -91,7 +91,9 @@ import * as pem from "./";
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
 	let document = await pem.parse(string);
-	let observed = document.sections[0]?.headers?.join(`\r\n`);
+	let observed = document.sections[0]?.headers?.map((header) => {
+		return `${header.key}: ${header.values.join(",")}`;
+	}).join(`\r\n`);
 	let expected = [
 		`one: 1`,
 		`two: 2`
@@ -179,8 +181,14 @@ import * as pem from "./";
 			{
 				label: "NUMBERS",
 				headers: [
-					`one: 1`,
-					`two: 2`
+					{
+						key: `one`,
+						values: [`1`]
+					},
+					{
+						key: `two`,
+						values: [`2`]
+					}
 				],
 				buffer: Buffer.of()
 			}

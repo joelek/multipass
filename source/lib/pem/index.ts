@@ -1,9 +1,14 @@
 import * as encoding from "../encoding";
 
+export type Header = {
+	key: string;
+	values: Array<string>;
+};
+
 export type Section = {
 	preamble?: Array<string>;
 	label: string;
-	headers?: Array<string>;
+	headers?: Array<Header>;
 	buffer: Buffer;
 };
 
@@ -32,7 +37,18 @@ export async function parse(string: string): Promise<Document> {
 			}
 			let end = index;
 			let body = lines.slice(start, end - 1);
-			let headers = body.slice(0, body.indexOf(``));
+			let headers = body.slice(0, body.indexOf(``)).map((line) => {
+				let parts = /^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.exec(line);
+				if (parts == null) {
+					throw `Expected a valid header!`;
+				}
+				let key = parts[1];
+				let values = parts[2].trim().split(`,`).map((value) => value.trim());
+				return {
+					key,
+					values
+				};
+			});
 			sections.push({
 				preamble: preamble.splice(0, preamble.length),
 				label: label,
@@ -58,8 +74,14 @@ export async function serialize(document: Document): Promise<string> {
 		}
 		lines.push(...(section.preamble ?? []));
 		lines.push(`-----BEGIN ${section.label}-----`);
-		lines.push(...(section.headers ?? []));
-		if (section.headers != null) {
+		lines.push(...(section.headers ?? []).map((header) => {
+			let line = `${header.key}: ${header.values.join(",")}`;
+			if (!/^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.test(line)) {
+				throw `Expected a valid header!`;
+			}
+			return line;
+		}));
+		if (section.headers != null && section.headers.length > 0) {
 			lines.push(``);
 		}
 		let base64 = await encoding.convertBufferToBase64String(section.buffer);
