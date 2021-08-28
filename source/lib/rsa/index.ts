@@ -1,7 +1,10 @@
 import * as libcrypto from "crypto";
 import * as asno from "../asno";
 import * as der from "../der";
+import * as oid from "../oid";
 import * as parsing from "../parsing";
+
+export const RSA_OID = `1.2.840.113549.1.1.1`;
 
 export type PublicKey = {
 	modulus: Buffer;
@@ -20,10 +23,12 @@ export type PrivateKey = {
 	coefficient: Buffer;
 };
 
-export function generatePrivateKeyPKCS1(options?: Partial<{
-	modulusLength: number
+export function generateDerPrivateKey(options?: Partial<{
+	modulusLength: number,
+	type: `pkcs1` | `pkcs8`
 }>): Buffer {
 	let modulusLength = options?.modulusLength ?? 4096;
+	let type = options?.type ?? `pkcs1`;
 	let pair = libcrypto.generateKeyPairSync(`rsa`, {
 		modulusLength: modulusLength,
 		publicKeyEncoding: {
@@ -31,7 +36,7 @@ export function generatePrivateKeyPKCS1(options?: Partial<{
 			format: `der`
 		},
 		privateKeyEncoding: {
-			type: `pkcs1`,
+			type: type,
 			format: `der`
 		}
 	});
@@ -46,7 +51,7 @@ export function parsePKCS1(parser: parsing.Parser): PrivateKey {
 	});
 	let children = der.parse(new parsing.Parser(node.data));
 	if (children.length < 9) {
-		throw `Expected at least 9 nodes!`;
+		throw `Expected at least 9 children!`;
 	}
 	let version = asno.expect(children[0], {
 		kind: `UNIVERSAL`,
@@ -106,8 +111,54 @@ export function parsePKCS1(parser: parsing.Parser): PrivateKey {
 	};
 };
 
+export function parsePKCS8(parser: parsing.Parser): PrivateKey {
+	let node = asno.expect(der.parseNode(parser), {
+		kind: `UNIVERSAL`,
+		form: `CONSTRUCTED`,
+		type: `SEQUENCE`
+	});
+	let children = der.parse(new parsing.Parser(node.data));
+	if (children.length < 3) {
+		throw `Expected at least 3 children!`;
+	}
+	let version = asno.expect(children[0], {
+		kind: `UNIVERSAL`,
+		form: `PRIMITIVE`,
+		type: `INTEGER`
+	}).data;
+	let algorithms = der.parse(new parsing.Parser(asno.expect(children[1], {
+		kind: `UNIVERSAL`,
+		form: `CONSTRUCTED`,
+		type: `SEQUENCE`
+	}).data));
+	if (algorithms.length < 2) {
+		throw `Expected at least 2 algorithms!`;
+	}
+	let rsa = oid.parse(new parsing.Parser(asno.expect(algorithms[0], {
+		kind: `UNIVERSAL`,
+		form: `PRIMITIVE`,
+		type: `OBJECT_IDENTIFIER`
+	}).data)).join(`.`);
+	if (rsa !== RSA_OID) {
+		throw `Expected an RSA object identifier!`;
+	}
+	let terminator = asno.expect(algorithms[1], {
+		kind: `UNIVERSAL`,
+		form: `PRIMITIVE`,
+		type: `NULL`
+	}).data;
+	let private_key = asno.expect(children[2], {
+		kind: `UNIVERSAL`,
+		form: `PRIMITIVE`,
+		type: `OCTET_STRING`
+	}).data;
+	return parsePKCS1(new parsing.Parser(private_key));
+};
+
 export function generatePrivateKey(): PrivateKey {
-	let buffer = generatePrivateKeyPKCS1();
+	let buffer = generateDerPrivateKey({
+		type: `pkcs8`
+	});
 	let parser = new parsing.Parser(buffer);
-	return parsePKCS1(parser);
+	return parsePKCS8(parser);
 };
