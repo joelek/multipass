@@ -19,7 +19,7 @@ export async function parse(string: string): Promise<Document> {
 	let preamble = new Array<string>();
 	outer: while (index < lines.length) {
 		let line = lines[index++];
-		let parts = /^-----BEGIN ((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)-----$/.exec(line);
+		let parts = /^-----BEGIN ((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)-----$/u.exec(line);
 		if (parts == null) {
 			preamble.push(line);
 			continue outer;
@@ -53,7 +53,7 @@ export async function parse(string: string): Promise<Document> {
 export async function serialize(document: Document): Promise<string> {
 	let lines = new Array<string>();
 	for (let section of document.sections) {
-		if (!(/^((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)$/.test(section.label))) {
+		if (!/^((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)$/u.test(section.label)) {
 			throw `Expected a valid label!`;
 		}
 		lines.push(...(section.preamble ?? []));
