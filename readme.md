@@ -3,7 +3,7 @@
 ```
 certhero \
 	--acme=https://api.acme-provider.com/directory \
-	--contact=user@domain.com \
+	--email=user@domain.com \
 	--dns=<string> \
 	--domain=domain.com \
 	--domain=*.domain.com \
@@ -15,4 +15,5 @@ certhero \
 
 ## Roadmap
 
-* Add support for encrypted keys.
+* PEM: Add support for multi-line headers.
+* RSA: Add support for PKCS#8 encryption.
