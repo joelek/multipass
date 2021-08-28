@@ -20,10 +20,12 @@ export type PrivateKey = {
 	coefficient: Buffer;
 };
 
-export function generatePrivateKeyPKCS1(): Buffer {
+export function generatePrivateKeyPKCS1(options?: Partial<{
+	modulusLength: number
+}>): Buffer {
+	let modulusLength = options?.modulusLength ?? 4096;
 	let pair = libcrypto.generateKeyPairSync(`rsa`, {
-		modulusLength: 4096,
-		publicExponent: 65537,
+		modulusLength: modulusLength,
 		publicKeyEncoding: {
 			type: `pkcs1`,
 			format: `der`
