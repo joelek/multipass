@@ -105,7 +105,7 @@ export function encrypt(section: Section, passphrase: string, options?: Partial<
 
 export function parseHeaders(lines: Array<string>): Array<Header> {
 	for (let i = 1; i < lines.length;) {
-		let parts = /^[ \t]([\x20-\x7E]*)$/u.exec(lines[i]);
+		let parts = /^[ \t]([\x09\x20-\x7E]*)$/u.exec(lines[i]);
 		if (parts != null) {
 			lines.splice(i, 1);
 			lines[i-1] += parts[1];
@@ -114,7 +114,7 @@ export function parseHeaders(lines: Array<string>): Array<Header> {
 		}
 	}
 	return lines.map((line) => {
-		let parts = /^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.exec(line);
+		let parts = /^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x09\x20-\x7E]*)$/u.exec(line);
 		if (parts == null) {
 			throw `Expected a valid header!`;
 		}
@@ -180,7 +180,7 @@ export async function serialize(document: Document): Promise<string> {
 				if (!/^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)$/u.test(key)) {
 					throw `Expected a valid header key!`;
 				}
-				if (!/^([\x20-\x7E]*)$/u.test(value)) {
+				if (!/^([\x09\x20-\x7E]*)$/u.test(value)) {
 					throw `Expected a valid header value!`;
 				}
 				let parts = value.match(/.{1,64}/g) ?? [];
