@@ -1,3 +1,4 @@
+import * as libcrypto from "crypto";
 import * as encoding from "../encoding";
 
 export type Header = {
@@ -15,6 +16,91 @@ export type Section = {
 export type Document = {
 	sections: Array<Section>;
 	postamble?: Array<string>;
+};
+
+export function deriveKey(data: Buffer, salt: Buffer, keyLength: number): Buffer {
+	let last = Buffer.alloc(0);
+	let key = Buffer.alloc(0);
+	while (key.length < keyLength) {
+		let hash = libcrypto.createHash(`MD5`);
+		hash.update(last);
+		hash.update(data);
+		hash.update(salt);
+		last = hash.digest();
+		key = Buffer.concat([key, last]);
+	}
+	return key.slice(0, keyLength);
+};
+
+export function decrypt(section: Section, passphrase: string): Section {
+	let procTypes = section.headers?.filter((header) => header.key.toLowerCase() === `proc-type`) ?? [];
+	if (procTypes.length !== 1) {
+		throw `Expected exactly one "Proc-Type" header!`;
+	}
+	let procType = procTypes[0];
+	if (procType.values.length < 2) {
+		throw `Expected "Proc-Type" to contain at least 2 values!`;
+	}
+	if (procType.values[0] !== `4` || procType.values[1] !== `ENCRYPTED`) {
+		throw `Expected an encrypted section!`;
+	}
+	let dekInfos = section.headers?.filter((header) => header.key.toLowerCase() === `dek-info`) ?? [];
+	if (dekInfos.length !== 1) {
+		throw `Expected exactly one "DEK-Info" header!`;
+	}
+	let dekInfo = dekInfos[0];
+	if (dekInfo.values.length < 2) {
+		throw `Expected "DEK-Info" to contain at least 2 values!`;
+	}
+	let algorithm = dekInfo.values[0];
+	let { ivLength, keyLength } = { ...libcrypto.getCipherInfo(algorithm) };
+	if (ivLength == null || keyLength == null) {
+		throw `Expected "${algorithm}" to be a supported cipher!`;
+	}
+	let iv = Buffer.from(dekInfo.values[1], `hex`);
+	let key = deriveKey(Buffer.from(passphrase), iv.slice(0, 8), keyLength);
+	let decipher = libcrypto.createDecipheriv(algorithm, key, iv);
+	let buffer = Buffer.concat([decipher.update(section.buffer), decipher.final()]);
+	return {
+		...section,
+		headers: [
+			...(section.headers ?? []).filter((header) => {
+				let key = header.key.toLowerCase();
+				return key !== `proc-type` && key !== `dek-info`;
+			}),
+		],
+		buffer
+	};
+};
+
+export function encrypt(section: Section, passphrase: string, options?: Partial<{
+	algorithm: string,
+	iv: Buffer
+}>): Section {
+	let algorithm = options?.algorithm ?? `AES-128-CBC`;
+	let { ivLength, keyLength } = { ...libcrypto.getCipherInfo(algorithm) };
+	if (ivLength == null || keyLength == null) {
+		throw `Expected "${algorithm}" to be a supported cipher!`;
+	}
+	let iv = options?.iv ?? libcrypto.randomBytes(ivLength);
+	let key = deriveKey(Buffer.from(passphrase), iv.slice(0, 8), keyLength);
+	let cipher = libcrypto.createCipheriv(algorithm, key, iv);
+	let buffer = Buffer.concat([cipher.update(section.buffer), cipher.final()]);
+	return {
+		...section,
+		headers: [
+			...(section.headers ?? []),
+			{
+				key: `Proc-TYPE`,
+				values: [`4`, `ENCRYPTED`]
+			},
+			{
+				key: `DEK-Info`,
+				values: [algorithm, iv.toString(`hex`).toUpperCase()]
+			}
+		],
+		buffer
+	};
 };
 
 export async function parse(string: string): Promise<Document> {

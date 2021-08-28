@@ -242,3 +242,36 @@ import * as pem from "./";
 	].join(`\r\n`);
 	console.assert(observed === expected, `It should serialize section buffers properly.`);
 })();
+
+(async () => {
+	let section: pem.Section = {
+		label: `NUMBERS`,
+		buffer: Buffer.of(1, 2, 3, 4)
+	};
+	let observed = pem.encrypt(section, `räksmörgås`, {
+		algorithm: `AES-128-CBC`,
+		iv: Buffer.alloc(16)
+	}).buffer;
+	let expected = Buffer.from(`ZjytgQTTv6HeUfYMXOuKcg==`, `base64`);
+	console.assert(observed.equals(expected), `It should encrypt section buffers properly.`);
+})();
+
+(async () => {
+	let section: pem.Section = {
+		label: `NUMBERS`,
+		headers: [
+			{
+				key: `Proc-Type`,
+				values: [`4`, `ENCRYPTED`]
+			},
+			{
+				key: `DEK-Info`,
+				values: [`AES-128-CBC`, Buffer.alloc(16).toString(`hex`).toUpperCase()]
+			}
+		],
+		buffer: Buffer.from(`ZjytgQTTv6HeUfYMXOuKcg==`, `base64`)
+	};
+	let observed = pem.decrypt(section, `räksmörgås`).buffer;
+	let expected = Buffer.of(1, 2, 3, 4);
+	console.assert(observed.equals(expected), `It should decrypt section buffers properly.`);
+})();
