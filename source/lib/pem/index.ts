@@ -3,7 +3,7 @@ import * as encoding from "../encoding";
 
 export type Header = {
 	key: string;
-	values: Array<string>;
+	value: string;
 };
 
 export type Section = {
@@ -37,27 +37,27 @@ export function decrypt(section: Section, passphrase: string): Section {
 	if (procTypes.length !== 1) {
 		throw `Expected exactly one "Proc-Type" header!`;
 	}
-	let procType = procTypes[0];
-	if (procType.values.length < 2) {
+	let procType = procTypes[0].value.trim().split(`,`);
+	if (procType.length < 2) {
 		throw `Expected "Proc-Type" to contain at least 2 values!`;
 	}
-	if (procType.values[0] !== `4` || procType.values[1] !== `ENCRYPTED`) {
+	if (procType[0] !== `4` || procType[1] !== `ENCRYPTED`) {
 		throw `Expected an encrypted section!`;
 	}
 	let dekInfos = section.headers?.filter((header) => header.key.toLowerCase() === `dek-info`) ?? [];
 	if (dekInfos.length !== 1) {
 		throw `Expected exactly one "DEK-Info" header!`;
 	}
-	let dekInfo = dekInfos[0];
-	if (dekInfo.values.length < 2) {
+	let dekInfo = dekInfos[0].value.trim().split(`,`);
+	if (dekInfo.length < 2) {
 		throw `Expected "DEK-Info" to contain at least 2 values!`;
 	}
-	let algorithm = dekInfo.values[0];
+	let algorithm = dekInfo[0];
 	let { ivLength, keyLength } = { ...libcrypto.getCipherInfo(algorithm) };
 	if (ivLength == null || keyLength == null) {
 		throw `Expected "${algorithm}" to be a supported cipher!`;
 	}
-	let iv = Buffer.from(dekInfo.values[1], `hex`);
+	let iv = Buffer.from(dekInfo[1], `hex`);
 	let key = deriveKey(Buffer.from(passphrase), iv.slice(0, 8), keyLength);
 	let decipher = libcrypto.createDecipheriv(algorithm, key, iv);
 	let buffer = Buffer.concat([decipher.update(section.buffer), decipher.final()]);
@@ -92,11 +92,11 @@ export function encrypt(section: Section, passphrase: string, options?: Partial<
 			...(section.headers ?? []),
 			{
 				key: `Proc-TYPE`,
-				values: [`4`, `ENCRYPTED`]
+				value: [`4`, `ENCRYPTED`].join(`,`)
 			},
 			{
 				key: `DEK-Info`,
-				values: [algorithm, iv.toString(`hex`).toUpperCase()]
+				value: [algorithm, iv.toString(`hex`).toUpperCase()].join(`,`)
 			}
 		],
 		buffer
@@ -129,10 +129,10 @@ export async function parse(string: string): Promise<Document> {
 					throw `Expected a valid header!`;
 				}
 				let key = parts[1];
-				let values = parts[2].trim().split(`,`).map((value) => value.trim());
+				let value = parts[2];
 				return {
 					key,
-					values
+					value
 				};
 			});
 			sections.push({
@@ -161,7 +161,7 @@ export async function serialize(document: Document): Promise<string> {
 		lines.push(...(section.preamble ?? []));
 		lines.push(`-----BEGIN ${section.label}-----`);
 		lines.push(...(section.headers ?? []).map((header) => {
-			let line = `${header.key}: ${header.values.join(",")}`;
+			let line = `${header.key}:${header.value}`;
 			if (!/^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.test(line)) {
 				throw `Expected a valid header!`;
 			}

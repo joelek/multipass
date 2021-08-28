@@ -92,7 +92,7 @@ import * as pem from "./";
 	].join(`\r\n`);
 	let document = await pem.parse(string);
 	let observed = document.sections[0]?.headers?.map((header) => {
-		return `${header.key}: ${header.values.join(",")}`;
+		return `${header.key}:${header.value}`;
 	}).join(`\r\n`);
 	let expected = [
 		`one: 1`,
@@ -183,11 +183,11 @@ import * as pem from "./";
 				headers: [
 					{
 						key: `one`,
-						values: [`1`]
+						value: `1`
 					},
 					{
 						key: `two`,
-						values: [`2`]
+						value: `2`
 					}
 				],
 				buffer: Buffer.of()
@@ -196,8 +196,8 @@ import * as pem from "./";
 	});
 	let expected = [
 		`-----BEGIN NUMBERS-----`,
-		`one: 1`,
-		`two: 2`,
+		`one:1`,
+		`two:2`,
 		``,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
@@ -262,11 +262,11 @@ import * as pem from "./";
 		headers: [
 			{
 				key: `Proc-Type`,
-				values: [`4`, `ENCRYPTED`]
+				value: [`4`, `ENCRYPTED`].join(`,`)
 			},
 			{
 				key: `DEK-Info`,
-				values: [`AES-128-CBC`, Buffer.alloc(16).toString(`hex`).toUpperCase()]
+				value: [`AES-128-CBC`, Buffer.alloc(16).toString(`hex`).toUpperCase()].join(`,`)
 			}
 		],
 		buffer: Buffer.from(`ZjytgQTTv6HeUfYMXOuKcg==`, `base64`)
