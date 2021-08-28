@@ -15,5 +15,4 @@ certhero \
 
 ## Roadmap
 
-* PEM: Add support for multi-line headers.
 * RSA: Add support for PKCS#8 encryption.

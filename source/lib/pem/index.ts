@@ -103,6 +103,30 @@ export function encrypt(section: Section, passphrase: string, options?: Partial<
 	};
 };
 
+export function parseHeaders(lines: Array<string>): Array<Header> {
+	for (let i = 1; i < lines.length;) {
+		let parts = /^[ \t]([\x20-\x7E]*)$/u.exec(lines[i]);
+		if (parts != null) {
+			lines.splice(i, 1);
+			lines[i-1] += parts[1];
+		} else {
+			i += 1;
+		}
+	}
+	return lines.map((line) => {
+		let parts = /^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.exec(line);
+		if (parts == null) {
+			throw `Expected a valid header!`;
+		}
+		let key = parts[1];
+		let value = parts[2];
+		return {
+			key,
+			value
+		};
+	});
+};
+
 export async function parse(string: string): Promise<Document> {
 	let sections = new Array<Section>();
 	let lines = string.split(/\r\n|\r|\n/);
@@ -122,24 +146,15 @@ export async function parse(string: string): Promise<Document> {
 				continue inner;
 			}
 			let end = index;
-			let body = lines.slice(start, end - 1);
-			let headers = body.slice(0, body.indexOf(``)).map((line) => {
-				let parts = /^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.exec(line);
-				if (parts == null) {
-					throw `Expected a valid header!`;
-				}
-				let key = parts[1];
-				let value = parts[2];
-				return {
-					key,
-					value
-				};
-			});
+			let message = lines.slice(start, end - 1);
+			let head = message.slice(0, message.indexOf(``));
+			let body = message.slice(message.indexOf(``) + 1);
+			let headers = parseHeaders(head);
 			sections.push({
 				preamble: preamble.splice(0, preamble.length),
 				label: label,
 				headers: headers,
-				buffer: await encoding.convertBase64StringToBuffer(body.slice(body.indexOf(``) + 1).join(``))
+				buffer: await encoding.convertBase64StringToBuffer(body.join(``))
 			});
 			continue outer;
 		}
@@ -160,14 +175,23 @@ export async function serialize(document: Document): Promise<string> {
 		}
 		lines.push(...(section.preamble ?? []));
 		lines.push(`-----BEGIN ${section.label}-----`);
-		lines.push(...(section.headers ?? []).map((header) => {
-			let line = `${header.key}:${header.value}`;
-			if (!/^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)[:]([\x20-\x7E]*)$/u.test(line)) {
-				throw `Expected a valid header!`;
-			}
-			return line;
-		}));
 		if (section.headers != null && section.headers.length > 0) {
+			for (let { key, value } of section.headers) {
+				if (!/^([\x21\x23-\x27\x2A-\x2B\x2D-\x2E\x30-\x39\x41-\x5A\x5E-\x7A\x7C\x7E]+)$/u.test(key)) {
+					throw `Expected a valid header key!`;
+				}
+				if (!/^([\x20-\x7E]*)$/u.test(value)) {
+					throw `Expected a valid header value!`;
+				}
+				let parts = value.match(/.{1,64}/g) ?? [];
+				if (key.length + 1 + parts[0].length > 64) {
+					parts.unshift(``);
+				}
+				lines.push(`${key}:${parts[0]}`);
+				for (let part of parts.slice(1)) {
+					lines.push(`\t${part}`);
+				}
+			}
 			lines.push(``);
 		}
 		let base64 = await encoding.convertBufferToBase64String(section.buffer);

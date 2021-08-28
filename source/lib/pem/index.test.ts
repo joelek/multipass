@@ -104,6 +104,27 @@ import * as pem from "./";
 (async () => {
 	let string = [
 		`-----BEGIN NUMBERS-----`,
+		`one: 1`,
+		` 1`,
+		` 1`,
+		`two: 2`,
+		``,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	let document = await pem.parse(string);
+	let observed = document.sections[0]?.headers?.map((header) => {
+		return `${header.key}:${header.value}`;
+	}).join(`\r\n`);
+	let expected = [
+		`one: 111`,
+		`two: 2`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should parse multi-line section headers properly.`);
+})();
+
+(async () => {
+	let string = [
+		`-----BEGIN NUMBERS-----`,
 		`AQIDBA==`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
@@ -202,6 +223,31 @@ import * as pem from "./";
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
 	console.assert(observed === expected, `It should serialize section headers properly.`);
+})();
+
+(async () => {
+	let observed = await pem.serialize({
+		sections: [
+			{
+				label: "NUMBERS",
+				headers: [
+					{
+						key: `one`,
+						value: `1111111111111111111111111111111111111111111111111111111111111111`
+					}
+				],
+				buffer: Buffer.of()
+			}
+		]
+	});
+	let expected = [
+		`-----BEGIN NUMBERS-----`,
+		`one:`,
+		`	1111111111111111111111111111111111111111111111111111111111111111`,
+		``,
+		`-----END NUMBERS-----`
+	].join(`\r\n`);
+	console.assert(observed === expected, `It should serialize multi-line section headers properly.`);
 })();
 
 (async () => {
