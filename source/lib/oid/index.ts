@@ -1,6 +1,8 @@
 import * as der from "../der";
 import * as parsing from "../parsing";
 
+export const RSA = `1.2.840.113549.1.1.1`;
+
 export function parse(parser: parsing.Parser): Array<number> {
 	return parser.try(() => {
 		let arcs = new Array<number>();

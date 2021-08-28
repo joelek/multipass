@@ -4,8 +4,6 @@ import * as der from "../der";
 import * as oid from "../oid";
 import * as parsing from "../parsing";
 
-export const RSA_OID = `1.2.840.113549.1.1.1`;
-
 export type PublicKey = {
 	modulus: Buffer;
 	public_exponent: Buffer;
@@ -132,14 +130,14 @@ export function parsePKCS8(parser: parsing.Parser): PrivateKey {
 		type: `SEQUENCE`
 	}).data));
 	if (algorithms.length < 2) {
-		throw `Expected at least 2 algorithms!`;
+		throw `Expected at least 2 children!`;
 	}
 	let rsa = oid.parse(new parsing.Parser(asno.expect(algorithms[0], {
 		kind: `UNIVERSAL`,
 		form: `PRIMITIVE`,
 		type: `OBJECT_IDENTIFIER`
 	}).data)).join(`.`);
-	if (rsa !== RSA_OID) {
+	if (rsa !== oid.RSA) {
 		throw `Expected an RSA object identifier!`;
 	}
 	let terminator = asno.expect(algorithms[1], {
