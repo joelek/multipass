@@ -128,7 +128,7 @@ export const AES256CBCAlgorithmIdentifier: autoguard.serialization.MessageGuard<
 				autoguard.guards.Object.of({
 					"data": autoguard.guards.Union.of(
 						autoguard.guards.StringLiteral.of("2.16.840.1.101.3.4.1.42"),
-						autoguard.guards.StringLiteral.of("Mi4xNi44NDAuMS4xMDEuMy40LjEuNDI=")
+						autoguard.guards.StringLiteral.of("YIZIAWUDBAEq")
 					)
 				}, {})
 			),
@@ -146,7 +146,7 @@ export type AES256CBCAlgorithmIdentifier = autoguard.guards.Intersection<[
 				autoguard.guards.Object<{
 					"data": autoguard.guards.Union<[
 						autoguard.guards.StringLiteral<"2.16.840.1.101.3.4.1.42">,
-						autoguard.guards.StringLiteral<"Mi4xNi44NDAuMS4xMDEuMy40LjEuNDI=">
+						autoguard.guards.StringLiteral<"YIZIAWUDBAEq">
 					]>
 				}, {}>
 			]>,
@@ -164,7 +164,7 @@ export const HMACSHA256AlgorithmIdentifier: autoguard.serialization.MessageGuard
 				autoguard.guards.Object.of({
 					"data": autoguard.guards.Union.of(
 						autoguard.guards.StringLiteral.of("1.2.840.113549.2.9"),
-						autoguard.guards.StringLiteral.of("MS4yLjg0MC4xMTM1NDkuMi45")
+						autoguard.guards.StringLiteral.of("KoZIhvcNAgk=")
 					)
 				}, {})
 			),
@@ -182,7 +182,7 @@ export type HMACSHA256AlgorithmIdentifier = autoguard.guards.Intersection<[
 				autoguard.guards.Object<{
 					"data": autoguard.guards.Union<[
 						autoguard.guards.StringLiteral<"1.2.840.113549.2.9">,
-						autoguard.guards.StringLiteral<"MS4yLjg0MC4xMTM1NDkuMi45">
+						autoguard.guards.StringLiteral<"KoZIhvcNAgk=">
 					]>
 				}, {}>
 			]>,
@@ -200,7 +200,7 @@ export const PBKDF2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBK
 				autoguard.guards.Object.of({
 					"data": autoguard.guards.Union.of(
 						autoguard.guards.StringLiteral.of("1.2.840.113549.1.5.12"),
-						autoguard.guards.StringLiteral.of("MS4yLjg0MC4xMTM1NDkuMS41LjEy")
+						autoguard.guards.StringLiteral.of("KoZIhvcNAQUM")
 					)
 				}, {})
 			),
@@ -241,7 +241,7 @@ export type PBKDF2AlgorithmIdentifier = autoguard.guards.Intersection<[
 				autoguard.guards.Object<{
 					"data": autoguard.guards.Union<[
 						autoguard.guards.StringLiteral<"1.2.840.113549.1.5.12">,
-						autoguard.guards.StringLiteral<"MS4yLjg0MC4xMTM1NDkuMS41LjEy">
+						autoguard.guards.StringLiteral<"KoZIhvcNAQUM">
 					]>
 				}, {}>
 			]>,
@@ -282,7 +282,7 @@ export const PBES2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBES
 				autoguard.guards.Object.of({
 					"data": autoguard.guards.Union.of(
 						autoguard.guards.StringLiteral.of("1.2.840.113549.1.5.13"),
-						autoguard.guards.StringLiteral.of("MS4yLjg0MC4xMTM1NDkuMS41LjEz")
+						autoguard.guards.StringLiteral.of("KoZIhvcNAQUN")
 					)
 				}, {})
 			),
@@ -308,7 +308,7 @@ export type PBES2AlgorithmIdentifier = autoguard.guards.Intersection<[
 				autoguard.guards.Object<{
 					"data": autoguard.guards.Union<[
 						autoguard.guards.StringLiteral<"1.2.840.113549.1.5.13">,
-						autoguard.guards.StringLiteral<"MS4yLjg0MC4xMTM1NDkuMS41LjEz">
+						autoguard.guards.StringLiteral<"KoZIhvcNAQUN">
 					]>
 				}, {}>
 			]>,

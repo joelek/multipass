@@ -41,21 +41,21 @@ guard EncryptedPrivateKeyInfo: ASNOSequence & {
 
 guard AES256CBCAlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" | "Mi4xNi44NDAuMS4xMDEuMy40LjEuNDI=" },
+		ASNOObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" | "YIZIAWUDBAEq" },
 		ASNOOctetString
 	]
 };
 
 guard HMACSHA256AlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.2.9" | "MS4yLjg0MC4xMTM1NDkuMi45" },
+		ASNOObjectIdentifier & { data: "1.2.840.113549.2.9" | "KoZIhvcNAgk=" },
 		ASNONull
 	]
 };
 
 guard PBKDF2AlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "MS4yLjg0MC4xMTM1NDkuMS41LjEy" },
+		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
 		ASNOSequence & {
 			data: [
 				ASNOOctetString | AlgorithmIdentifier,
@@ -73,7 +73,7 @@ guard PBKDF2AlgorithmIdentifier: AlgorithmIdentifier & {
 
 guard PBES2AlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.13" | "MS4yLjg0MC4xMTM1NDkuMS41LjEz" },
+		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.13" | "KoZIhvcNAQUN" },
 		ASNOSequence & {
 			data: [
 				AlgorithmIdentifier,
