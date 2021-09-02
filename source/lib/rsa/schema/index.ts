@@ -191,7 +191,7 @@ export type HMACSHA256AlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const PBKDF2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBKDF2AlgorithmIdentifier> = autoguard.guards.Intersection.of(
+export const PBKDF2AlgorithmIdentifier1: autoguard.serialization.MessageGuard<PBKDF2AlgorithmIdentifier1> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -207,24 +207,14 @@ export const PBKDF2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBK
 			autoguard.guards.Intersection.of(
 				autoguard.guards.Reference.of(() => ASNOSequence),
 				autoguard.guards.Object.of({
-					"data": autoguard.guards.Union.of(
-						autoguard.guards.Tuple.of(
-							autoguard.guards.Union.of(
-								autoguard.guards.Reference.of(() => ASNOOctetString),
-								autoguard.guards.Reference.of(() => AlgorithmIdentifier)
-							),
-							autoguard.guards.Reference.of(() => ASNOInteger),
-							autoguard.guards.Reference.of(() => ASNOInteger),
+					"data": autoguard.guards.Tuple.of(
+						autoguard.guards.Union.of(
+							autoguard.guards.Reference.of(() => ASNOOctetString),
 							autoguard.guards.Reference.of(() => AlgorithmIdentifier)
 						),
-						autoguard.guards.Tuple.of(
-							autoguard.guards.Union.of(
-								autoguard.guards.Reference.of(() => ASNOOctetString),
-								autoguard.guards.Reference.of(() => AlgorithmIdentifier)
-							),
-							autoguard.guards.Reference.of(() => ASNOInteger),
-							autoguard.guards.Reference.of(() => AlgorithmIdentifier)
-						)
+						autoguard.guards.Reference.of(() => ASNOInteger),
+						autoguard.guards.Reference.of(() => ASNOInteger),
+						autoguard.guards.Reference.of(() => AlgorithmIdentifier)
 					)
 				}, {})
 			)
@@ -232,7 +222,7 @@ export const PBKDF2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBK
 	}, {})
 );
 
-export type PBKDF2AlgorithmIdentifier = autoguard.guards.Intersection<[
+export type PBKDF2AlgorithmIdentifier1 = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -248,24 +238,74 @@ export type PBKDF2AlgorithmIdentifier = autoguard.guards.Intersection<[
 			autoguard.guards.Intersection<[
 				autoguard.guards.Reference<ASNOSequence>,
 				autoguard.guards.Object<{
-					"data": autoguard.guards.Union<[
-						autoguard.guards.Tuple<[
-							autoguard.guards.Union<[
-								autoguard.guards.Reference<ASNOOctetString>,
-								autoguard.guards.Reference<AlgorithmIdentifier>
-							]>,
-							autoguard.guards.Reference<ASNOInteger>,
-							autoguard.guards.Reference<ASNOInteger>,
+					"data": autoguard.guards.Tuple<[
+						autoguard.guards.Union<[
+							autoguard.guards.Reference<ASNOOctetString>,
 							autoguard.guards.Reference<AlgorithmIdentifier>
 						]>,
-						autoguard.guards.Tuple<[
-							autoguard.guards.Union<[
-								autoguard.guards.Reference<ASNOOctetString>,
-								autoguard.guards.Reference<AlgorithmIdentifier>
-							]>,
-							autoguard.guards.Reference<ASNOInteger>,
+						autoguard.guards.Reference<ASNOInteger>,
+						autoguard.guards.Reference<ASNOInteger>,
+						autoguard.guards.Reference<AlgorithmIdentifier>
+					]>
+				}, {}>
+			]>
+		]>
+	}, {}>
+]>;
+
+export const PBKDF2AlgorithmIdentifier2: autoguard.serialization.MessageGuard<PBKDF2AlgorithmIdentifier2> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASNOObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.Union.of(
+						autoguard.guards.StringLiteral.of("1.2.840.113549.1.5.12"),
+						autoguard.guards.StringLiteral.of("KoZIhvcNAQUM")
+					)
+				}, {})
+			),
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASNOSequence),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.Tuple.of(
+						autoguard.guards.Union.of(
+							autoguard.guards.Reference.of(() => ASNOOctetString),
+							autoguard.guards.Reference.of(() => AlgorithmIdentifier)
+						),
+						autoguard.guards.Reference.of(() => ASNOInteger),
+						autoguard.guards.Reference.of(() => AlgorithmIdentifier)
+					)
+				}, {})
+			)
+		)
+	}, {})
+);
+
+export type PBKDF2AlgorithmIdentifier2 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASNOObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.Union<[
+						autoguard.guards.StringLiteral<"1.2.840.113549.1.5.12">,
+						autoguard.guards.StringLiteral<"KoZIhvcNAQUM">
+					]>
+				}, {}>
+			]>,
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASNOSequence>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.Tuple<[
+						autoguard.guards.Union<[
+							autoguard.guards.Reference<ASNOOctetString>,
 							autoguard.guards.Reference<AlgorithmIdentifier>
-						]>
+						]>,
+						autoguard.guards.Reference<ASNOInteger>,
+						autoguard.guards.Reference<AlgorithmIdentifier>
 					]>
 				}, {}>
 			]>
@@ -438,7 +478,8 @@ export namespace Autoguard {
 		"EncryptedPrivateKeyInfo": autoguard.guards.Reference.of(() => EncryptedPrivateKeyInfo),
 		"AES256CBCAlgorithmIdentifier": autoguard.guards.Reference.of(() => AES256CBCAlgorithmIdentifier),
 		"HMACSHA256AlgorithmIdentifier": autoguard.guards.Reference.of(() => HMACSHA256AlgorithmIdentifier),
-		"PBKDF2AlgorithmIdentifier": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier),
+		"PBKDF2AlgorithmIdentifier1": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier1),
+		"PBKDF2AlgorithmIdentifier2": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier2),
 		"PBES2AlgorithmIdentifier": autoguard.guards.Reference.of(() => PBES2AlgorithmIdentifier),
 		"OtherPrimeInfo": autoguard.guards.Reference.of(() => OtherPrimeInfo),
 		"OtherPrimeInfos": autoguard.guards.Reference.of(() => OtherPrimeInfos),

@@ -53,7 +53,7 @@ guard HMACSHA256AlgorithmIdentifier: AlgorithmIdentifier & {
 	]
 };
 
-guard PBKDF2AlgorithmIdentifier: AlgorithmIdentifier & {
+guard PBKDF2AlgorithmIdentifier1: AlgorithmIdentifier & {
 	data: [
 		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
 		ASNOSequence & {
@@ -62,7 +62,16 @@ guard PBKDF2AlgorithmIdentifier: AlgorithmIdentifier & {
 				ASNOInteger,
 				ASNOInteger,
 				AlgorithmIdentifier
-			] | [
+			]
+		}
+	]
+};
+
+guard PBKDF2AlgorithmIdentifier2: AlgorithmIdentifier & {
+	data: [
+		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
+		ASNOSequence & {
+			data: [
 				ASNOOctetString | AlgorithmIdentifier,
 				ASNOInteger,
 				AlgorithmIdentifier
