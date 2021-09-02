@@ -9,7 +9,7 @@ import * as parsing from "../parsing";
 })();
 
 (async () => {
-	let observed = oid.serialize([1, 2, 840, 113549, 1, 1, 11]);
+	let observed = oid.serialize(`1.2.840.113549.1.1.11`.split(`.`).map((part) => Number.parseInt(part, 10)));
 	let expected = Buffer.from(`KoZIhvcNAQEL`, `base64`);
 	console.assert(observed.equals(expected), `It should serialize a common cryptographic oid.`);
 })();
