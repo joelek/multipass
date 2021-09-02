@@ -2,70 +2,75 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
-export const DynuApi = autoguard.guards.Object.of({
+export const DynuApi: autoguard.serialization.MessageGuard<DynuApi> = autoguard.guards.Object.of({
 	"name": autoguard.guards.StringLiteral.of("dynu"),
 	"hostname": autoguard.guards.String,
 	"key": autoguard.guards.String
-});
+}, {});
 
-export type DynuApi = ReturnType<typeof DynuApi["as"]>;
+export type DynuApi = autoguard.guards.Object<{
+	"name": autoguard.guards.StringLiteral<"dynu">,
+	"hostname": autoguard.guards.String,
+	"key": autoguard.guards.String
+}, {}>;
 
-export const GlesysApi = autoguard.guards.Object.of({
+export const GlesysApi: autoguard.serialization.MessageGuard<GlesysApi> = autoguard.guards.Object.of({
 	"name": autoguard.guards.StringLiteral.of("glesys"),
 	"hostname": autoguard.guards.String,
 	"account": autoguard.guards.String,
 	"key": autoguard.guards.String
-});
+}, {});
 
-export type GlesysApi = ReturnType<typeof GlesysApi["as"]>;
+export type GlesysApi = autoguard.guards.Object<{
+	"name": autoguard.guards.StringLiteral<"glesys">,
+	"hostname": autoguard.guards.String,
+	"account": autoguard.guards.String,
+	"key": autoguard.guards.String
+}, {}>;
 
-export const Api = autoguard.guards.Union.of(
+export const Api: autoguard.serialization.MessageGuard<Api> = autoguard.guards.Union.of(
 	autoguard.guards.Reference.of(() => DynuApi),
 	autoguard.guards.Reference.of(() => GlesysApi)
 );
 
-export type Api = ReturnType<typeof Api["as"]>;
+export type Api = autoguard.guards.Union<[
+	autoguard.guards.Reference<DynuApi>,
+	autoguard.guards.Reference<GlesysApi>
+]>;
 
-export const Domain = autoguard.guards.Object.of({
+export const Domain: autoguard.serialization.MessageGuard<Domain> = autoguard.guards.Object.of({
 	"hostname": autoguard.guards.String,
 	"api": autoguard.guards.Reference.of(() => Api)
+}, {});
+
+export type Domain = autoguard.guards.Object<{
+	"hostname": autoguard.guards.String,
+	"api": autoguard.guards.Reference<Api>
+}, {}>;
+
+export const Certificate: autoguard.serialization.MessageGuard<Certificate> = autoguard.guards.Object.of({}, {
+	"domains": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Domain)),
+	"root": autoguard.guards.String,
+	"account": autoguard.guards.String,
+	"key": autoguard.guards.String,
+	"cert": autoguard.guards.String
 });
 
-export type Domain = ReturnType<typeof Domain["as"]>;
+export type Certificate = autoguard.guards.Object<{}, {
+	"domains": autoguard.guards.Array<autoguard.guards.Reference<Domain>>,
+	"root": autoguard.guards.String,
+	"account": autoguard.guards.String,
+	"key": autoguard.guards.String,
+	"cert": autoguard.guards.String
+}>;
 
-export const Certificate = autoguard.guards.Object.of({
-	"domains": autoguard.guards.Union.of(
-		autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Domain)),
-		autoguard.guards.Undefined
-	),
-	"root": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"account": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"key": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"cert": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	)
+export const Options: autoguard.serialization.MessageGuard<Options> = autoguard.guards.Object.of({}, {
+	"certificates": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Certificate))
 });
 
-export type Certificate = ReturnType<typeof Certificate["as"]>;
-
-export const Options = autoguard.guards.Object.of({
-	"certificates": autoguard.guards.Union.of(
-		autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Certificate)),
-		autoguard.guards.Undefined
-	)
-});
-
-export type Options = ReturnType<typeof Options["as"]>;
+export type Options = autoguard.guards.Object<{}, {
+	"certificates": autoguard.guards.Array<autoguard.guards.Reference<Certificate>>
+}>;
 
 export namespace Autoguard {
 	export const Guards = {

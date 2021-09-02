@@ -2,107 +2,87 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
-export const DomainPrice = autoguard.guards.Object.of({
+export const DomainPrice: autoguard.serialization.MessageGuard<DomainPrice> = autoguard.guards.Object.of({
 	"amount": autoguard.guards.Number,
 	"currency": autoguard.guards.String,
 	"years": autoguard.guards.Number
-});
+}, {});
 
-export type DomainPrice = ReturnType<typeof DomainPrice["as"]>;
+export type DomainPrice = autoguard.guards.Object<{
+	"amount": autoguard.guards.Number,
+	"currency": autoguard.guards.String,
+	"years": autoguard.guards.Number
+}, {}>;
 
-export const RegistrarInfo = autoguard.guards.Object.of({
+export const RegistrarInfo: autoguard.serialization.MessageGuard<RegistrarInfo> = autoguard.guards.Object.of({
 	"autorenew": autoguard.guards.String,
-	"state": autoguard.guards.String,
-	"statedescription": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"expire": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"tld": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"invoicenumber": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	)
+	"state": autoguard.guards.String
+}, {
+	"statedescription": autoguard.guards.String,
+	"expire": autoguard.guards.String,
+	"tld": autoguard.guards.String,
+	"invoicenumber": autoguard.guards.String
 });
 
-export type RegistrarInfo = ReturnType<typeof RegistrarInfo["as"]>;
+export type RegistrarInfo = autoguard.guards.Object<{
+	"autorenew": autoguard.guards.String,
+	"state": autoguard.guards.String
+}, {
+	"statedescription": autoguard.guards.String,
+	"expire": autoguard.guards.String,
+	"tld": autoguard.guards.String,
+	"invoicenumber": autoguard.guards.String
+}>;
 
-export const Domain = autoguard.guards.Object.of({
-	"domainname": autoguard.guards.String,
-	"available": autoguard.guards.Union.of(
-		autoguard.guards.Boolean,
-		autoguard.guards.Undefined
-	),
-	"createtime": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"displayname": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"expire": autoguard.guards.Union.of(
-		autoguard.guards.Number,
-		autoguard.guards.Undefined
-	),
-	"minimum": autoguard.guards.Union.of(
-		autoguard.guards.Number,
-		autoguard.guards.Undefined
-	),
-	"prices": autoguard.guards.Union.of(
-		autoguard.guards.Array.of(autoguard.guards.Reference.of(() => DomainPrice)),
-		autoguard.guards.Undefined
-	),
-	"primarynameserver": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"recordcount": autoguard.guards.Union.of(
-		autoguard.guards.Number,
-		autoguard.guards.Undefined
-	),
-	"refresh": autoguard.guards.Union.of(
-		autoguard.guards.Number,
-		autoguard.guards.Undefined
-	),
-	"registrarinfo": autoguard.guards.Union.of(
-		autoguard.guards.Reference.of(() => RegistrarInfo),
-		autoguard.guards.Undefined
-	),
-	"responsibleperson": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	),
-	"retry": autoguard.guards.Union.of(
-		autoguard.guards.Number,
-		autoguard.guards.Undefined
-	),
-	"ttl": autoguard.guards.Union.of(
-		autoguard.guards.Number,
-		autoguard.guards.Undefined
-	),
-	"usingglesysnameserver": autoguard.guards.Union.of(
-		autoguard.guards.String,
-		autoguard.guards.Undefined
-	)
+export const Domain: autoguard.serialization.MessageGuard<Domain> = autoguard.guards.Object.of({
+	"domainname": autoguard.guards.String
+}, {
+	"available": autoguard.guards.Boolean,
+	"createtime": autoguard.guards.String,
+	"displayname": autoguard.guards.String,
+	"expire": autoguard.guards.Number,
+	"minimum": autoguard.guards.Number,
+	"prices": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => DomainPrice)),
+	"primarynameserver": autoguard.guards.String,
+	"recordcount": autoguard.guards.Number,
+	"refresh": autoguard.guards.Number,
+	"registrarinfo": autoguard.guards.Reference.of(() => RegistrarInfo),
+	"responsibleperson": autoguard.guards.String,
+	"retry": autoguard.guards.Number,
+	"ttl": autoguard.guards.Number,
+	"usingglesysnameserver": autoguard.guards.String
 });
 
-export type Domain = ReturnType<typeof Domain["as"]>;
+export type Domain = autoguard.guards.Object<{
+	"domainname": autoguard.guards.String
+}, {
+	"available": autoguard.guards.Boolean,
+	"createtime": autoguard.guards.String,
+	"displayname": autoguard.guards.String,
+	"expire": autoguard.guards.Number,
+	"minimum": autoguard.guards.Number,
+	"prices": autoguard.guards.Array<autoguard.guards.Reference<DomainPrice>>,
+	"primarynameserver": autoguard.guards.String,
+	"recordcount": autoguard.guards.Number,
+	"refresh": autoguard.guards.Number,
+	"registrarinfo": autoguard.guards.Reference<RegistrarInfo>,
+	"responsibleperson": autoguard.guards.String,
+	"retry": autoguard.guards.Number,
+	"ttl": autoguard.guards.Number,
+	"usingglesysnameserver": autoguard.guards.String
+}>;
 
-export const DomainRecordHost = autoguard.guards.Union.of(
+export const DomainRecordHost: autoguard.serialization.MessageGuard<DomainRecordHost> = autoguard.guards.Union.of(
 	autoguard.guards.StringLiteral.of("@"),
 	autoguard.guards.String
 );
 
-export type DomainRecordHost = ReturnType<typeof DomainRecordHost["as"]>;
+export type DomainRecordHost = autoguard.guards.Union<[
+	autoguard.guards.StringLiteral<"@">,
+	autoguard.guards.String
+]>;
 
-export const DomainRecordType = autoguard.guards.Union.of(
+export const DomainRecordType: autoguard.serialization.MessageGuard<DomainRecordType> = autoguard.guards.Union.of(
 	autoguard.guards.StringLiteral.of("A"),
 	autoguard.guards.StringLiteral.of("NS"),
 	autoguard.guards.StringLiteral.of("MX"),
@@ -110,18 +90,31 @@ export const DomainRecordType = autoguard.guards.Union.of(
 	autoguard.guards.String
 );
 
-export type DomainRecordType = ReturnType<typeof DomainRecordType["as"]>;
+export type DomainRecordType = autoguard.guards.Union<[
+	autoguard.guards.StringLiteral<"A">,
+	autoguard.guards.StringLiteral<"NS">,
+	autoguard.guards.StringLiteral<"MX">,
+	autoguard.guards.StringLiteral<"TXT">,
+	autoguard.guards.String
+]>;
 
-export const DomainRecord = autoguard.guards.Object.of({
+export const DomainRecord: autoguard.serialization.MessageGuard<DomainRecord> = autoguard.guards.Object.of({
 	"domainname": autoguard.guards.String,
 	"data": autoguard.guards.String,
 	"host": autoguard.guards.Reference.of(() => DomainRecordHost),
 	"recordid": autoguard.guards.Number,
 	"ttl": autoguard.guards.Number,
 	"type": autoguard.guards.Reference.of(() => DomainRecordType)
-});
+}, {});
 
-export type DomainRecord = ReturnType<typeof DomainRecord["as"]>;
+export type DomainRecord = autoguard.guards.Object<{
+	"domainname": autoguard.guards.String,
+	"data": autoguard.guards.String,
+	"host": autoguard.guards.Reference<DomainRecordHost>,
+	"recordid": autoguard.guards.Number,
+	"ttl": autoguard.guards.Number,
+	"type": autoguard.guards.Reference<DomainRecordType>
+}, {}>;
 
 export namespace Autoguard {
 	export const Guards = {
@@ -136,124 +129,82 @@ export namespace Autoguard {
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
 
 	export const Requests = {
-		"listDomains": autoguard.guards.Object.of({
-			"options": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Options
-				),
-				autoguard.guards.Undefined
+		"listDomains": autoguard.guards.Object.of({}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Options
 			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
 			),
-			"payload": autoguard.guards.Union.of(
-				autoguard.api.Binary,
-				autoguard.guards.Undefined
-			)
+			"payload": autoguard.api.Binary
 		}),
 		"listDomainRecords": autoguard.guards.Object.of({
-			"options": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Options
-				),
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"domainname": autoguard.guards.String
-			})
+			}, {})
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Options
+			),
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		}),
 		"createDomainRecord": autoguard.guards.Object.of({
-			"options": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Options
-				),
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"domainname": autoguard.guards.String,
 				"data": autoguard.guards.String,
 				"host": autoguard.guards.Reference.of(() => DomainRecordHost),
-				"type": autoguard.guards.Reference.of(() => DomainRecordType),
-				"ttl": autoguard.guards.Union.of(
-					autoguard.guards.Number,
-					autoguard.guards.Undefined
-				)
+				"type": autoguard.guards.Reference.of(() => DomainRecordType)
+			}, {
+				"ttl": autoguard.guards.Number
 			})
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Options
+			),
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		}),
 		"updateDomainRecord": autoguard.guards.Object.of({
-			"options": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Options
-				),
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
-			"payload": autoguard.guards.Object.of({
-				"recordid": autoguard.guards.Number,
-				"data": autoguard.guards.Union.of(
-					autoguard.guards.String,
-					autoguard.guards.Undefined
-				),
-				"host": autoguard.guards.Union.of(
-					autoguard.guards.Reference.of(() => DomainRecordHost),
-					autoguard.guards.Undefined
-				),
-				"type": autoguard.guards.Union.of(
-					autoguard.guards.Reference.of(() => DomainRecordType),
-					autoguard.guards.Undefined
-				),
-				"ttl": autoguard.guards.Union.of(
-					autoguard.guards.Number,
-					autoguard.guards.Undefined
-				)
-			})
-		}),
-		"deleteDomainRecord": autoguard.guards.Object.of({
-			"options": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Options
-				),
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"recordid": autoguard.guards.Number
+			}, {
+				"data": autoguard.guards.String,
+				"host": autoguard.guards.Reference.of(() => DomainRecordHost),
+				"type": autoguard.guards.Reference.of(() => DomainRecordType),
+				"ttl": autoguard.guards.Number
 			})
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Options
+			),
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
+		}),
+		"deleteDomainRecord": autoguard.guards.Object.of({
+			"payload": autoguard.guards.Object.of({
+				"recordid": autoguard.guards.Number
+			}, {})
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Options
+			),
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		})
 	};
 
@@ -261,92 +212,67 @@ export namespace Autoguard {
 
 	export const Responses = {
 		"listDomains": autoguard.guards.Object.of({
-			"status": autoguard.guards.Union.of(
-				autoguard.guards.Number,
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
 					"domains": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Domain))
-				})
-			})
+				}, {})
+			}, {})
+		}, {
+			"status": autoguard.guards.Number,
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		}),
 		"listDomainRecords": autoguard.guards.Object.of({
-			"status": autoguard.guards.Union.of(
-				autoguard.guards.Number,
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
 					"records": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => DomainRecord))
-				})
-			})
+				}, {})
+			}, {})
+		}, {
+			"status": autoguard.guards.Number,
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		}),
 		"createDomainRecord": autoguard.guards.Object.of({
-			"status": autoguard.guards.Union.of(
-				autoguard.guards.Number,
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
 					"record": autoguard.guards.Reference.of(() => DomainRecord)
-				})
-			})
+				}, {})
+			}, {})
+		}, {
+			"status": autoguard.guards.Number,
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		}),
 		"updateDomainRecord": autoguard.guards.Object.of({
-			"status": autoguard.guards.Union.of(
-				autoguard.guards.Number,
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
 				"response": autoguard.guards.Object.of({
 					"record": autoguard.guards.Reference.of(() => DomainRecord)
-				})
-			})
+				}, {})
+			}, {})
+		}, {
+			"status": autoguard.guards.Number,
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		}),
 		"deleteDomainRecord": autoguard.guards.Object.of({
-			"status": autoguard.guards.Union.of(
-				autoguard.guards.Number,
-				autoguard.guards.Undefined
-			),
-			"headers": autoguard.guards.Union.of(
-				autoguard.guards.Intersection.of(
-					autoguard.guards.Object.of({}),
-					autoguard.api.Headers
-				),
-				autoguard.guards.Undefined
-			),
 			"payload": autoguard.guards.Object.of({
-				"response": autoguard.guards.Object.of({})
-			})
+				"response": autoguard.guards.Object.of({}, {})
+			}, {})
+		}, {
+			"status": autoguard.guards.Number,
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {}),
+				autoguard.api.Headers
+			)
 		})
 	};
 

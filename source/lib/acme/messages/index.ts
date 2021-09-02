@@ -2,24 +2,19 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
-export const AccountBase = autoguard.guards.Object.of({
-	"contact": autoguard.guards.Union.of(
-		autoguard.guards.Array.of(autoguard.guards.String),
-		autoguard.guards.Undefined
-	),
-	"termsOfServiceAgreed": autoguard.guards.Union.of(
-		autoguard.guards.Boolean,
-		autoguard.guards.Undefined
-	),
-	"externalAccountBinding": autoguard.guards.Union.of(
-		autoguard.guards.Object.of({}),
-		autoguard.guards.Undefined
-	)
+export const AccountBase: autoguard.serialization.MessageGuard<AccountBase> = autoguard.guards.Object.of({}, {
+	"contact": autoguard.guards.Array.of(autoguard.guards.String),
+	"termsOfServiceAgreed": autoguard.guards.Boolean,
+	"externalAccountBinding": autoguard.guards.Object.of({}, {})
 });
 
-export type AccountBase = ReturnType<typeof AccountBase["as"]>;
+export type AccountBase = autoguard.guards.Object<{}, {
+	"contact": autoguard.guards.Array<autoguard.guards.String>,
+	"termsOfServiceAgreed": autoguard.guards.Boolean,
+	"externalAccountBinding": autoguard.guards.Object<{}, {}>
+}>;
 
-export const Account = autoguard.guards.Intersection.of(
+export const Account: autoguard.serialization.MessageGuard<Account> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AccountBase),
 	autoguard.guards.Object.of({
 		"status": autoguard.guards.Union.of(
@@ -28,72 +23,90 @@ export const Account = autoguard.guards.Intersection.of(
 			autoguard.guards.StringLiteral.of("revoked")
 		),
 		"orders": autoguard.guards.String
-	})
+	}, {})
 );
 
-export type Account = ReturnType<typeof Account["as"]>;
+export type Account = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AccountBase>,
+	autoguard.guards.Object<{
+		"status": autoguard.guards.Union<[
+			autoguard.guards.StringLiteral<"valid">,
+			autoguard.guards.StringLiteral<"deactivated">,
+			autoguard.guards.StringLiteral<"revoked">
+		]>,
+		"orders": autoguard.guards.String
+	}, {}>
+]>;
 
-export const NewAccountJWSPayload = autoguard.guards.Intersection.of(
+export const NewAccountJWSPayload: autoguard.serialization.MessageGuard<NewAccountJWSPayload> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AccountBase),
-	autoguard.guards.Object.of({
-		"onlyReturnExisting": autoguard.guards.Union.of(
-			autoguard.guards.Boolean,
-			autoguard.guards.Undefined
-		)
+	autoguard.guards.Object.of({}, {
+		"onlyReturnExisting": autoguard.guards.Boolean
 	})
 );
 
-export type NewAccountJWSPayload = ReturnType<typeof NewAccountJWSPayload["as"]>;
+export type NewAccountJWSPayload = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AccountBase>,
+	autoguard.guards.Object<{}, {
+		"onlyReturnExisting": autoguard.guards.Boolean
+	}>
+]>;
 
-export const GetDirectoryResponse = autoguard.guards.Object.of({
+export const GetDirectoryResponse: autoguard.serialization.MessageGuard<GetDirectoryResponse> = autoguard.guards.Object.of({
 	"body": autoguard.guards.Object.of({
 		"keyChange": autoguard.guards.String,
-		"meta": autoguard.guards.Union.of(
-			autoguard.guards.Object.of({
-				"caaIdentities": autoguard.guards.Union.of(
-					autoguard.guards.Array.of(autoguard.guards.String),
-					autoguard.guards.Undefined
-				),
-				"externalAccountRequired": autoguard.guards.Union.of(
-					autoguard.guards.Boolean,
-					autoguard.guards.Undefined
-				),
-				"termsOfService": autoguard.guards.Union.of(
-					autoguard.guards.String,
-					autoguard.guards.Undefined
-				),
-				"website": autoguard.guards.Union.of(
-					autoguard.guards.String,
-					autoguard.guards.Undefined
-				)
-			}),
-			autoguard.guards.Undefined
-		),
 		"newAccount": autoguard.guards.String,
-		"newAuthz": autoguard.guards.Union.of(
-			autoguard.guards.String,
-			autoguard.guards.Undefined
-		),
 		"newNonce": autoguard.guards.String,
 		"newOrder": autoguard.guards.String,
 		"revokeCert": autoguard.guards.String
+	}, {
+		"meta": autoguard.guards.Object.of({}, {
+			"caaIdentities": autoguard.guards.Array.of(autoguard.guards.String),
+			"externalAccountRequired": autoguard.guards.Boolean,
+			"termsOfService": autoguard.guards.String,
+			"website": autoguard.guards.String
+		}),
+		"newAuthz": autoguard.guards.String
 	})
-});
+}, {});
 
-export type GetDirectoryResponse = ReturnType<typeof GetDirectoryResponse["as"]>;
+export type GetDirectoryResponse = autoguard.guards.Object<{
+	"body": autoguard.guards.Object<{
+		"keyChange": autoguard.guards.String,
+		"newAccount": autoguard.guards.String,
+		"newNonce": autoguard.guards.String,
+		"newOrder": autoguard.guards.String,
+		"revokeCert": autoguard.guards.String
+	}, {
+		"meta": autoguard.guards.Object<{}, {
+			"caaIdentities": autoguard.guards.Array<autoguard.guards.String>,
+			"externalAccountRequired": autoguard.guards.Boolean,
+			"termsOfService": autoguard.guards.String,
+			"website": autoguard.guards.String
+		}>,
+		"newAuthz": autoguard.guards.String
+	}>
+}, {}>;
 
-export const NewNonceResponse = autoguard.guards.Object.of({
+export const NewNonceResponse: autoguard.serialization.MessageGuard<NewNonceResponse> = autoguard.guards.Object.of({
 	"status": autoguard.guards.NumberLiteral.of(200),
 	"headers": autoguard.guards.Object.of({
 		"Replay-Nonce": autoguard.guards.Tuple.of(
 			autoguard.guards.String
 		)
-	})
-});
+	}, {})
+}, {});
 
-export type NewNonceResponse = ReturnType<typeof NewNonceResponse["as"]>;
+export type NewNonceResponse = autoguard.guards.Object<{
+	"status": autoguard.guards.NumberLiteral<200>,
+	"headers": autoguard.guards.Object<{
+		"Replay-Nonce": autoguard.guards.Tuple<[
+			autoguard.guards.String
+		]>
+	}, {}>
+}, {}>;
 
-export const NewAccountResponse = autoguard.guards.Object.of({
+export const NewAccountResponse: autoguard.serialization.MessageGuard<NewAccountResponse> = autoguard.guards.Object.of({
 	"status": autoguard.guards.NumberLiteral.of(201),
 	"headers": autoguard.guards.Object.of({
 		"Replay-Nonce": autoguard.guards.Tuple.of(
@@ -102,11 +115,22 @@ export const NewAccountResponse = autoguard.guards.Object.of({
 		"Location": autoguard.guards.Tuple.of(
 			autoguard.guards.String
 		)
-	}),
+	}, {}),
 	"body": autoguard.guards.Reference.of(() => Account)
-});
+}, {});
 
-export type NewAccountResponse = ReturnType<typeof NewAccountResponse["as"]>;
+export type NewAccountResponse = autoguard.guards.Object<{
+	"status": autoguard.guards.NumberLiteral<201>,
+	"headers": autoguard.guards.Object<{
+		"Replay-Nonce": autoguard.guards.Tuple<[
+			autoguard.guards.String
+		]>,
+		"Location": autoguard.guards.Tuple<[
+			autoguard.guards.String
+		]>
+	}, {}>,
+	"body": autoguard.guards.Reference<Account>
+}, {}>;
 
 export namespace Autoguard {
 	export const Guards = {

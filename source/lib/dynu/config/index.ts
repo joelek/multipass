@@ -2,12 +2,15 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
-export const Config = autoguard.guards.Object.of({
+export const Config: autoguard.serialization.MessageGuard<Config> = autoguard.guards.Object.of({
 	"api_key": autoguard.guards.String,
 	"hostname": autoguard.guards.String
-});
+}, {});
 
-export type Config = ReturnType<typeof Config["as"]>;
+export type Config = autoguard.guards.Object<{
+	"api_key": autoguard.guards.String,
+	"hostname": autoguard.guards.String
+}, {}>;
 
 export namespace Autoguard {
 	export const Guards = {

@@ -2,20 +2,31 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
-export const Config = autoguard.guards.Object.of({
+export const Config: autoguard.serialization.MessageGuard<Config> = autoguard.guards.Object.of({
 	"agree_to_tos": autoguard.guards.Boolean,
 	"contact": autoguard.guards.Array.of(autoguard.guards.String),
 	"directories": autoguard.guards.Object.of({
 		"staging": autoguard.guards.String,
 		"production": autoguard.guards.String
-	}),
+	}, {}),
 	"domains": autoguard.guards.Array.of(autoguard.guards.Object.of({
 		"hostname": autoguard.guards.String,
 		"wildcard": autoguard.guards.Boolean
-	}))
-});
+	}, {}))
+}, {});
 
-export type Config = ReturnType<typeof Config["as"]>;
+export type Config = autoguard.guards.Object<{
+	"agree_to_tos": autoguard.guards.Boolean,
+	"contact": autoguard.guards.Array<autoguard.guards.String>,
+	"directories": autoguard.guards.Object<{
+		"staging": autoguard.guards.String,
+		"production": autoguard.guards.String
+	}, {}>,
+	"domains": autoguard.guards.Array<autoguard.guards.Object<{
+		"hostname": autoguard.guards.String,
+		"wildcard": autoguard.guards.Boolean
+	}, {}>>
+}, {}>;
 
 export namespace Autoguard {
 	export const Guards = {
