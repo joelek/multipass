@@ -1,0 +1,120 @@
+guard ASNOBitString: ../asno/schema/BitString;
+guard ASNOInteger: ../asno/schema/Integer;
+guard ASNONode: ../asno/schema/Node;
+guard ASNONull: ../asno/schema/Null;
+guard ASNOObjectIdentifier: ../asno/schema/ObjectIdentifier;
+guard ASNOOctetString: ../asno/schema/OctetString;
+guard ASNOSequence: ../asno/schema/Sequence;
+
+# ================================================================ PKCS#8
+
+guard AlgorithmIdentifier: ASNOSequence & {
+	data: [
+		ASNOObjectIdentifier,
+		ASNONode
+	]
+};
+
+guard PublicKeyInfo: ASNOSequence & {
+	data: [
+		AlgorithmIdentifier,
+		ASNOBitString
+	]
+};
+
+guard PrivateKeyInfo: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		AlgorithmIdentifier,
+		ASNOOctetString
+	]
+};
+
+guard EncryptedPrivateKeyInfo: ASNOSequence & {
+	data: [
+		AlgorithmIdentifier,
+		ASNOOctetString
+	]
+};
+
+# ================================================================ PKCS#5
+
+guard AES256CBCAlgorithmIdentifier: AlgorithmIdentifier & {
+	data: [
+		ASNOObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" | "Mi4xNi44NDAuMS4xMDEuMy40LjEuNDI=" },
+		ASNOOctetString
+	]
+};
+
+guard HMACSHA256AlgorithmIdentifier: AlgorithmIdentifier & {
+	data: [
+		ASNOObjectIdentifier & { data: "1.2.840.113549.2.9" | "MS4yLjg0MC4xMTM1NDkuMi45" },
+		ASNONull
+	]
+};
+
+guard PBKDF2AlgorithmIdentifier: AlgorithmIdentifier & {
+	data: [
+		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "MS4yLjg0MC4xMTM1NDkuMS41LjEy" },
+		ASNOSequence & {
+			data: [
+				ASNOOctetString | AlgorithmIdentifier,
+				ASNOInteger,
+				ASNOInteger,
+				AlgorithmIdentifier
+			] | [
+				ASNOOctetString | AlgorithmIdentifier,
+				ASNOInteger,
+				AlgorithmIdentifier
+			]
+		}
+	]
+};
+
+guard PBES2AlgorithmIdentifier: AlgorithmIdentifier & {
+	data: [
+		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.13" | "MS4yLjg0MC4xMTM1NDkuMS41LjEz" },
+		ASNOSequence & {
+			data: [
+				AlgorithmIdentifier,
+				AlgorithmIdentifier
+			]
+		}
+	]
+};
+
+# ================================================================ PKCS#1
+
+guard OtherPrimeInfo: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger
+	]
+};
+
+guard OtherPrimeInfos: ASNOSequence & {
+	data: OtherPrimeInfo[]
+};
+
+guard RSAPublicKey: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		ASNOInteger
+	]
+};
+
+guard RSAPrivateKey: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		OtherPrimeInfos | undefined
+	]
+};
