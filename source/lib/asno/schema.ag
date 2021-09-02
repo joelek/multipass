@@ -1,0 +1,100 @@
+table Kind: {
+	"UNIVERSAL",
+	"APPLICATION",
+	"CONTEXT",
+	"PRIVATE"
+};
+
+table Form: {
+	"PRIMITIVE",
+	"CONSTRUCTED"
+};
+
+table Type: {
+	"END_OF_CONTENT",
+	"BOOLEAN",
+	"INTEGER",
+	"BIT_STRING",
+	"OCTET_STRING",
+	"NULL",
+	"OBJECT_IDENTIFIER",
+	"OBJECT_DESCRIPTOR",
+	"EXTERNAL",
+	"REAL",
+	"ENUMERATED",
+	"EMBEDDED_PDV",
+	"UTF8_STRING",
+	"RELATIVE_OID",
+	"TIME",
+	"0F_RESERVED",
+	"SEQUENCE",
+	"SET",
+	"NUMERIC_STRING",
+	"PRINTABLE_STRING",
+	"T61_STRING",
+	"VIDEOTEX_STRING",
+	"IA5_STRING",
+	"UTC_TIME",
+	"GENERALIZED_TIME",
+	"GRAPHIC_STRING",
+	"VISIBLE_STRING",
+	"GENERAL_STRING",
+	"UNIVERSAL_STRING",
+	"CHARACTER_STRING",
+	"BMP_STRING",
+	"DATE",
+	"TIME_OF_DAY",
+	"DATE_TIME",
+	"DURATION",
+	"OID_IRI",
+	"RELATIVE_OID_IRI"
+};
+
+guard Node: {
+	kind: Kind.Key,
+	form: Form.Key,
+	type: Type.Key,
+	data: string | Node[]
+};
+
+guard BitString: Node & {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "BIT_STRING",
+	data: string
+};
+
+guard Integer: Node & {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "INTEGER",
+	data: string
+};
+
+guard Null: Node & {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "NULL",
+	data: string
+};
+
+guard ObjectIdentifier: Node & {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "OBJECT_IDENTIFIER",
+	data: string
+};
+
+guard OctetString: Node & {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "OCTET_STRING",
+	data: string
+};
+
+guard Sequence: Node & {
+	kind: "UNIVERSAL",
+	form: "CONSTRUCTED",
+	type: "SEQUENCE",
+	data: Node[]
+};
