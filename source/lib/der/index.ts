@@ -1,5 +1,4 @@
 import * as asno from "../asno";
-import * as enumeration from "../enumeration";
 import * as parsing from "../parsing";
 
 export function encodeVarlen(number: number): Buffer {
@@ -97,16 +96,16 @@ export function decodeLength(parser: parsing.Parser): number {
 export function parseNode(parser: parsing.Parser): asno.Node {
 	return parser.try(() => {
 		let tag = parser.unsigned(1);
-		let kind = enumeration.nameOf(asno.Kind, ((tag >> 6) & 0x03));
-		let form = enumeration.nameOf(asno.Form, ((tag >> 5) & 0x01));
-		let type = enumeration.nameOf(asno.Type, ((tag >> 0) & 0x1F));
+		let kind = asno.Kind.keyFromValue((tag >> 6) & 0x03);
+		let form = asno.Form.keyFromValue((tag >> 5) & 0x01);
+		let type = asno.Type.keyFromValue((tag >> 0) & 0x1F);
 		// The value 31 is special and denotes a varlen encoded type.
 		if (asno.Type[type] === 31) {
 			let length = decodeVarlen(parser);
 			if (length < 31) {
 				throw `Expected a minimally encoded type!`;
 			}
-			type = enumeration.nameOf(asno.Type, length);
+			type = asno.Type.keyFromValue(length);
 		}
 		let length = decodeLength(parser);
 		let data = parser.chunk(length);
@@ -114,7 +113,7 @@ export function parseNode(parser: parsing.Parser): asno.Node {
 			kind,
 			form,
 			type,
-			data
+			data: form === `CONSTRUCTED` ? parse(new parsing.Parser(data)) : data.toString(`base64`)
 		};
 	});
 };
@@ -135,7 +134,13 @@ export function serializeNode(node: asno.Node): Buffer {
 		buffers.push(encodeVarlen(type));
 	}
 	buffers.push(encodeLength(data.length));
-	buffers.push(data);
+	if (typeof data === `string`) {
+		buffers.push(Buffer.from(data, `base64`));
+	} else {
+		for (let node of data) {
+			buffers.push(serializeNode(node));
+		}
+	}
 	return Buffer.concat(buffers);
 };
 
