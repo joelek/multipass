@@ -2,8 +2,6 @@ import * as libcrypto from "crypto";
 import * as encoding from "../encoding";
 import * as json from "../json";
 
-// TODO: Add support for other signature algorithms.
-
 export enum SignatureAlgorithm {
 	"HS256",
 	"HS384",
