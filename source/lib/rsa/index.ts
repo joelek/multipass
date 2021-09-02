@@ -59,10 +59,51 @@ export function parsePKCS1(parser: parsing.Parser): PrivateKey {
 	};
 };
 
-export function parsePKCS8(parser: parsing.Parser): PrivateKey {
-	let node = schema.PrivateKeyInfo.as(der.parseNode(parser));
-	let pkcs1 = Buffer.from(node.data[2].data, `base64`);
-	return parsePKCS1(new parsing.Parser(pkcs1));
+export function deriveKey(keyDerivationAlgorithm: schema.ASNONode, passphrase: string, keyLength: number): Buffer {
+	if (schema.PBKDF2AlgorithmIdentifier2.is(keyDerivationAlgorithm)) {
+		if (schema.ASNOOctetString.is(keyDerivationAlgorithm.data[1].data[0])) {
+			let salt = Buffer.from(keyDerivationAlgorithm.data[1].data[0].data, "base64");
+			let iterations = Buffer.from(keyDerivationAlgorithm.data[1].data[1].data, "base64");
+			let algorithm = keyDerivationAlgorithm.data[1].data[2];
+			if (schema.HMACSHA256AlgorithmIdentifier.is(algorithm)) {
+				return libcrypto.pbkdf2Sync(passphrase, salt, iterations.readUIntBE(0, iterations.length), keyLength, "sha256");
+			}
+			throw `Expected digestion algorithm to be known!`;
+		}
+	}
+	throw `Expected derivation algorithm to be known!`;
+};
+
+export function decryptBuffer(cipherAlgorithm: schema.ASNONode, key: Buffer, ciphertext: Buffer): Buffer {
+	if (schema.AES256CBCAlgorithmIdentifier.is(cipherAlgorithm)) {
+		let iv = Buffer.from(cipherAlgorithm.data[1].data, "base64");
+		let decipher = libcrypto.createDecipheriv("aes-256-cbc", key, iv);
+		return Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+	}
+	throw `Expected cipher algorithm to be known!`;
+};
+
+export function unwrapKey(wrappingAlgorithm: schema.ASNONode, passphrase: string, ciphertext: Buffer): Buffer {
+	if (schema.PBES2AlgorithmIdentifier.is(wrappingAlgorithm)) {
+		let key = deriveKey(wrappingAlgorithm.data[1].data[0], passphrase, 32);
+		let pkcs8 = decryptBuffer(wrappingAlgorithm.data[1].data[1], key, ciphertext);
+		return pkcs8;
+	}
+	throw `Expected wrapping algorithm to be known!`;
+};
+
+export function parsePKCS8(parser: parsing.Parser, passphrase?: string): PrivateKey {
+	if (passphrase != null) {
+		let node = schema.EncryptedPrivateKeyInfo.as(der.parseNode(parser));
+		let wrappingAlgorithm = node.data[0];
+		let ciphertext = Buffer.from(node.data[1].data, "base64");
+		let pkcs8 = unwrapKey(wrappingAlgorithm, passphrase, ciphertext);
+		return parsePKCS8(new parsing.Parser(pkcs8));
+	} else {
+		let node = schema.PrivateKeyInfo.as(der.parseNode(parser));
+		let pkcs1 = Buffer.from(node.data[2].data, `base64`);
+		return parsePKCS1(new parsing.Parser(pkcs1));
+	}
 };
 
 export function generatePrivateKey(): PrivateKey {
