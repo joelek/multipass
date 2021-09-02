@@ -57,42 +57,42 @@ guard Node: {
 	data: string | Node[]
 };
 
-guard BitString: Node & {
+guard BitString: {
 	kind: "UNIVERSAL",
 	form: "PRIMITIVE",
 	type: "BIT_STRING",
 	data: string
 };
 
-guard Integer: Node & {
+guard Integer: {
 	kind: "UNIVERSAL",
 	form: "PRIMITIVE",
 	type: "INTEGER",
 	data: string
 };
 
-guard Null: Node & {
+guard Null: {
 	kind: "UNIVERSAL",
 	form: "PRIMITIVE",
 	type: "NULL",
 	data: string
 };
 
-guard ObjectIdentifier: Node & {
+guard ObjectIdentifier: {
 	kind: "UNIVERSAL",
 	form: "PRIMITIVE",
 	type: "OBJECT_IDENTIFIER",
 	data: string
 };
 
-guard OctetString: Node & {
+guard OctetString: {
 	kind: "UNIVERSAL",
 	form: "PRIMITIVE",
 	type: "OCTET_STRING",
 	data: string
 };
 
-guard Sequence: Node & {
+guard Sequence: {
 	kind: "UNIVERSAL",
 	form: "CONSTRUCTED",
 	type: "SEQUENCE",

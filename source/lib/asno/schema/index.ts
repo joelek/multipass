@@ -312,125 +312,89 @@ export type Node = autoguard.guards.Object<{
 	]>
 }, {}>;
 
-export const BitString: autoguard.serialization.MessageGuard<BitString> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Node),
-	autoguard.guards.Object.of({
-		"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
-		"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
-		"type": autoguard.guards.StringLiteral.of("BIT_STRING"),
-		"data": autoguard.guards.String
-	}, {})
-);
+export const BitString: autoguard.serialization.MessageGuard<BitString> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("BIT_STRING"),
+	"data": autoguard.guards.String
+}, {});
 
-export type BitString = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Node>,
-	autoguard.guards.Object<{
-		"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
-		"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
-		"type": autoguard.guards.StringLiteral<"BIT_STRING">,
-		"data": autoguard.guards.String
-	}, {}>
-]>;
+export type BitString = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"BIT_STRING">,
+	"data": autoguard.guards.String
+}, {}>;
 
-export const Integer: autoguard.serialization.MessageGuard<Integer> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Node),
-	autoguard.guards.Object.of({
-		"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
-		"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
-		"type": autoguard.guards.StringLiteral.of("INTEGER"),
-		"data": autoguard.guards.String
-	}, {})
-);
+export const Integer: autoguard.serialization.MessageGuard<Integer> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("INTEGER"),
+	"data": autoguard.guards.String
+}, {});
 
-export type Integer = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Node>,
-	autoguard.guards.Object<{
-		"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
-		"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
-		"type": autoguard.guards.StringLiteral<"INTEGER">,
-		"data": autoguard.guards.String
-	}, {}>
-]>;
+export type Integer = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"INTEGER">,
+	"data": autoguard.guards.String
+}, {}>;
 
-export const Null: autoguard.serialization.MessageGuard<Null> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Node),
-	autoguard.guards.Object.of({
-		"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
-		"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
-		"type": autoguard.guards.StringLiteral.of("NULL"),
-		"data": autoguard.guards.String
-	}, {})
-);
+export const Null: autoguard.serialization.MessageGuard<Null> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("NULL"),
+	"data": autoguard.guards.String
+}, {});
 
-export type Null = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Node>,
-	autoguard.guards.Object<{
-		"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
-		"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
-		"type": autoguard.guards.StringLiteral<"NULL">,
-		"data": autoguard.guards.String
-	}, {}>
-]>;
+export type Null = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"NULL">,
+	"data": autoguard.guards.String
+}, {}>;
 
-export const ObjectIdentifier: autoguard.serialization.MessageGuard<ObjectIdentifier> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Node),
-	autoguard.guards.Object.of({
-		"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
-		"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
-		"type": autoguard.guards.StringLiteral.of("OBJECT_IDENTIFIER"),
-		"data": autoguard.guards.String
-	}, {})
-);
+export const ObjectIdentifier: autoguard.serialization.MessageGuard<ObjectIdentifier> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("OBJECT_IDENTIFIER"),
+	"data": autoguard.guards.String
+}, {});
 
-export type ObjectIdentifier = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Node>,
-	autoguard.guards.Object<{
-		"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
-		"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
-		"type": autoguard.guards.StringLiteral<"OBJECT_IDENTIFIER">,
-		"data": autoguard.guards.String
-	}, {}>
-]>;
+export type ObjectIdentifier = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"OBJECT_IDENTIFIER">,
+	"data": autoguard.guards.String
+}, {}>;
 
-export const OctetString: autoguard.serialization.MessageGuard<OctetString> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Node),
-	autoguard.guards.Object.of({
-		"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
-		"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
-		"type": autoguard.guards.StringLiteral.of("OCTET_STRING"),
-		"data": autoguard.guards.String
-	}, {})
-);
+export const OctetString: autoguard.serialization.MessageGuard<OctetString> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("OCTET_STRING"),
+	"data": autoguard.guards.String
+}, {});
 
-export type OctetString = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Node>,
-	autoguard.guards.Object<{
-		"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
-		"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
-		"type": autoguard.guards.StringLiteral<"OCTET_STRING">,
-		"data": autoguard.guards.String
-	}, {}>
-]>;
+export type OctetString = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"OCTET_STRING">,
+	"data": autoguard.guards.String
+}, {}>;
 
-export const Sequence: autoguard.serialization.MessageGuard<Sequence> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Node),
-	autoguard.guards.Object.of({
-		"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
-		"form": autoguard.guards.StringLiteral.of("CONSTRUCTED"),
-		"type": autoguard.guards.StringLiteral.of("SEQUENCE"),
-		"data": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Node))
-	}, {})
-);
+export const Sequence: autoguard.serialization.MessageGuard<Sequence> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("CONSTRUCTED"),
+	"type": autoguard.guards.StringLiteral.of("SEQUENCE"),
+	"data": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Node))
+}, {});
 
-export type Sequence = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Node>,
-	autoguard.guards.Object<{
-		"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
-		"form": autoguard.guards.StringLiteral<"CONSTRUCTED">,
-		"type": autoguard.guards.StringLiteral<"SEQUENCE">,
-		"data": autoguard.guards.Array<autoguard.guards.Reference<Node>>
-	}, {}>
-]>;
+export type Sequence = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"CONSTRUCTED">,
+	"type": autoguard.guards.StringLiteral<"SEQUENCE">,
+	"data": autoguard.guards.Array<autoguard.guards.Reference<Node>>
+}, {}>;
 
 export namespace Autoguard {
 	export const Guards = {
