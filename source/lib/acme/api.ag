@@ -1,0 +1,63 @@
+guard Account: {
+	"contact"?: string[],
+	"externalAccountBinding"?: {},
+	"orders": string,
+	"status": "valid" | "deactivated" | "revoked",
+	"termsOfServiceAgreed"?: boolean
+};
+
+guard Authorization: {
+	"identifier": Identifier,
+	"status": "pending" | "valid" | "invalid" | "deactivated" | "expired" | "revoked",
+	"expires"?: string,
+	"challenges": Challenge[],
+	"wildcard"?: boolean
+};
+
+guard Challenge: {
+	"error"?: {},
+	"status": "pending" | "processing" | "valid" | "invalid",
+	"type": string,
+	"url": string,
+	"validated"?: string
+};
+
+guard Directory: {
+	"keyChange": string,
+	"meta"?: {
+		"caaIdentities"?: string[],
+		"externalAccountRequired"?: boolean,
+		"termsOfService"?: string,
+		"website"?: string
+	},
+	"newAccount": string,
+	"newAuthz"?: string,
+	"newNonce": string,
+	"newOrder": string,
+	"revokeCert": string
+};
+
+guard Identifier: {
+	"type": "dns",
+	"value": string
+};
+
+guard Order: {
+	"authorizations": string[],
+	"certificate"?: string,
+	"error"?: {},
+	"expires"?: string,
+	"finalize": string,
+	"identifiers": Identifier[],
+	"notBefore"?: string,
+	"notAfter"?: string,
+	"status": "pending" | "ready" | "processing" | "valid" | "invalid"
+};
+
+# ==============================================================================
+
+route getDirectory(): GET:/<path*>
+	=> Directory;
+
+route newNonce(): HEAD:/<path*>
+	=> <{ "Replay-Nonce" }>;
