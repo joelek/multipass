@@ -59,5 +59,16 @@ guard Order: {
 route getDirectory(): GET:/<path*>
 	=> Directory;
 
+guard CreateAccountPayload: {
+	"contact"?: string[],
+	"termsOfServiceAgreed"?: boolean,
+	"onlyReturnExisting"?: boolean,
+	"externalAccountBinding"?: {}
+};
+
+route createAccount(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> Account;
+
 route newNonce(): HEAD:/<path*>
 	=> <{ "Replay-Nonce" }>;

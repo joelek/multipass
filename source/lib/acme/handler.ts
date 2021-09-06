@@ -40,6 +40,16 @@ export class Handler {
 		this.nonce = undefined;
 	}
 
+	createAccount(...[request]: Parameters<Client["createAccount"]>): ReturnType<Client["createAccount"]> {
+		return this.client.createAccount({
+			...request,
+			options: {
+				...request.options,
+				path: this.directory.newAccount
+			}
+		});
+	}
+
 	newNonce(...[request]: Parameters<Client["newNonce"]>): ReturnType<Client["newNonce"]> {
 		return this.client.newNonce({
 			...request,
