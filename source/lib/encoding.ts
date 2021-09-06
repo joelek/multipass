@@ -2,6 +2,19 @@ async function convertJSONToString(json: any): Promise<string> {
 	return JSON.stringify(json);
 }
 
+async function convertJSONToBase64URLString(json: any): Promise<string> {
+	return Promise.resolve(json)
+		.then(convertJSONToString)
+		.then(convertStringToUTF8Buffer)
+		.then(convertBufferToBase64URLString);
+}
+
+async function convertBase64URLStringToJSON(string: string): Promise<any> {
+	return Promise.resolve(string)
+		.then(convertBase64URLStringToString)
+		.then(convertStringToJSON);
+}
+
 async function convertStringToJSON(string: string): Promise<any> {
 	return JSON.parse(string);
 }
@@ -69,6 +82,8 @@ async function convertBase64URLStringToString(string: string): Promise<string> {
 
 export {
 	convertJSONToString,
+	convertJSONToBase64URLString,
+	convertBase64URLStringToJSON,
 	convertStringToJSON,
 	convertUTF8BufferToString,
 	convertStringToUTF8Buffer,
