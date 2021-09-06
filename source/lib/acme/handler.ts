@@ -20,6 +20,15 @@ type Directory = {
 	revokeCert: Array<string>;
 };
 
+function getUrlPath(url: string, urlPrefix: string): Array<string> {
+	if (!url.startsWith(urlPrefix)) {
+		throw `Expected url "${url}" to have prefix "${urlPrefix}"!`;
+	}
+	url = url.slice(urlPrefix.length);
+	let components = autoguard.api.splitComponents(url);
+	return components.map((component) => decodeURIComponent(component));
+};
+
 export class Handler {
 	private client: Client;
 	private directory: Directory;
@@ -50,25 +59,11 @@ export class Handler {
 			}
 		});
 		let payload = await response.payload();
-		function getPath(url: string): Array<string> {
-			if (!url.startsWith(urlPrefix)) {
-				throw `Expected url "${url}" to have prefix "${urlPrefix}"!`;
-			}
-			url = url.slice(urlPrefix.length);
-			let components = autoguard.api.splitComponents(url);
-			return components.map((component) => {
-				let decoded = decodeURIComponent(component);
-				if (decoded === undefined) {
-					throw `Expected component to be properly encoded!`;
-				}
-				return decoded;
-			});
-		}
-		let keyChange = getPath(payload.keyChange);
-		let newAccount = getPath(payload.newAccount);
-		let newNonce = getPath(payload.newNonce);
-		let newOrder = getPath(payload.newOrder);
-		let revokeCert = getPath(payload.revokeCert);
+		let keyChange = getUrlPath(payload.keyChange, urlPrefix);
+		let newAccount = getUrlPath(payload.newAccount, urlPrefix);
+		let newNonce = getUrlPath(payload.newNonce, urlPrefix);
+		let newOrder = getUrlPath(payload.newOrder, urlPrefix);
+		let revokeCert = getUrlPath(payload.revokeCert, urlPrefix);
 		let directory: Directory = {
 			keyChange,
 			newAccount,
