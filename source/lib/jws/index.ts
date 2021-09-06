@@ -1,3 +1,4 @@
+import * as autoguard from "@joelek/ts-autoguard";
 import * as libcrypto from "crypto";
 import * as encoding from "../encoding";
 import * as json from "../json";
@@ -24,13 +25,15 @@ async function encode(json: json.Any): Promise<string> {
 		.then(encoding.convertBufferToBase64URLString);
 };
 
-export type Blob = {
-	protected: string;
-	payload: string;
-	signature: string;
-};
+export const Body = autoguard.guards.Object.of({
+	protected: autoguard.guards.String,
+	payload: autoguard.guards.String,
+	signature: autoguard.guards.String,
+});
 
-export async function sign(private_key: libcrypto.KeyLike, protected_json?: json.Object, payload_json?: json.Any): Promise<Blob> {
+export type Body = ReturnType<typeof Body["as"]>;
+
+export async function sign(private_key: libcrypto.KeyLike, protected_json?: json.Object, payload_json?: json.Any): Promise<Body> {
 	let protected_base64url = await encode({
 		...protected_json,
 		alg: `RS256`
@@ -47,7 +50,7 @@ export async function sign(private_key: libcrypto.KeyLike, protected_json?: json
 	};
 };
 
-export async function verify(blob: Blob, public_key: libcrypto.KeyLike): Promise<boolean> {
+export async function verify(blob: Body, public_key: libcrypto.KeyLike): Promise<boolean> {
 	let verifier = libcrypto.createVerify(`SHA256`);
 	verifier.update(`${blob.protected}.${blob.payload}`);
 	let signature = await encoding.convertBase64URLStringToBuffer(blob.signature);
