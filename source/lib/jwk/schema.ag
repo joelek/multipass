@@ -1,0 +1,56 @@
+table KeyType: {
+	"EC",
+	"RSA",
+	"oct"
+};
+
+table Curve: {
+	"P-256",
+	"P-384",
+	"P-521"
+};
+
+guard Key: {
+	kty: KeyType.Key
+};
+
+guard AssymetricKey: Key & {
+	kty: "EC" | "RSA"
+};
+
+guard ECKey: {
+	kty: "EC"
+};
+
+guard ECPublicKey: ECKey & {
+	crv: Curve.Key,
+	x: string,
+	y: string
+};
+
+guard ECPrivateKey: ECPublicKey & {
+	d: string
+};
+
+guard RSAKey: AssymetricKey & {
+	kty: "RSA"
+};
+
+guard RSAPublicKey: RSAKey & {
+	n: string,
+	e: string
+};
+
+guard RSAPrivateKey: RSAPublicKey & {
+	d: string,
+	p?: string,
+	q?: string,
+	dp?: string,
+	dq?: string,
+	qi?: string,
+	oth?: {
+		r: string,
+		d: string,
+		t: string
+	}[]
+};
