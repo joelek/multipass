@@ -50,9 +50,9 @@ export async function sign(private_key: libcrypto.KeyLike, protected_json?: json
 	};
 };
 
-export async function verify(blob: Body, public_key: libcrypto.KeyLike): Promise<boolean> {
+export async function verify(body: Body, public_key: libcrypto.KeyLike): Promise<boolean> {
 	let verifier = libcrypto.createVerify(`SHA256`);
-	verifier.update(`${blob.protected}.${blob.payload}`);
-	let signature = await encoding.convertBase64URLStringToBuffer(blob.signature);
+	verifier.update(`${body.protected}.${body.payload}`);
+	let signature = await encoding.convertBase64URLStringToBuffer(body.signature);
 	return verifier.verify(public_key, signature);
 };
