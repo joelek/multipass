@@ -15,5 +15,6 @@ certhero \
 
 ## Roadmap
 
+* JWK: Remove and add leadings zeroes from integers.
 * JWS: Add support for other signature algorithms.
 * RSA: Add support for PKCS#8 encryption.
