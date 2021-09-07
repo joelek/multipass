@@ -69,26 +69,6 @@ export type PrivateKeyInfo = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const EncryptedPrivateKeyInfo: autoguard.serialization.MessageGuard<EncryptedPrivateKeyInfo> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => ASN1Sequence),
-	autoguard.guards.Object.of({
-		"data": autoguard.guards.Tuple.of(
-			autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
-			autoguard.guards.Reference.of(() => ASN1OctetString)
-		)
-	}, {})
-);
-
-export type EncryptedPrivateKeyInfo = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<ASN1Sequence>,
-	autoguard.guards.Object<{
-		"data": autoguard.guards.Tuple<[
-			autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
-			autoguard.guards.Reference<ASN1OctetString>
-		]>
-	}, {}>
-]>;
-
 export namespace Autoguard {
 	export const Guards = {
 		"ASN1BitString": autoguard.guards.Reference.of(() => ASN1BitString),
@@ -97,8 +77,7 @@ export namespace Autoguard {
 		"ASN1Sequence": autoguard.guards.Reference.of(() => ASN1Sequence),
 		"PKCS5AlgorithmIdentifier": autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
 		"PublicKeyInfo": autoguard.guards.Reference.of(() => PublicKeyInfo),
-		"PrivateKeyInfo": autoguard.guards.Reference.of(() => PrivateKeyInfo),
-		"EncryptedPrivateKeyInfo": autoguard.guards.Reference.of(() => EncryptedPrivateKeyInfo)
+		"PrivateKeyInfo": autoguard.guards.Reference.of(() => PrivateKeyInfo)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };

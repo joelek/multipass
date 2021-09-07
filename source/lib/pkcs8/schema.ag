@@ -18,10 +18,3 @@ guard PrivateKeyInfo: ASN1Sequence & {
 		ASN1OctetString
 	]
 };
-
-guard EncryptedPrivateKeyInfo: ASN1Sequence & {
-	data: [
-		PKCS5AlgorithmIdentifier,
-		ASN1OctetString
-	]
-};

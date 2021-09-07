@@ -64,3 +64,10 @@ guard PBES2AlgorithmIdentifier: AlgorithmIdentifier & {
 		}
 	]
 };
+
+guard EncryptedPrivateKeyInfo: ASN1Sequence & {
+	data: [
+		AlgorithmIdentifier,
+		ASN1OctetString
+	]
+};

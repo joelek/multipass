@@ -298,6 +298,26 @@ export type PBES2AlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
+export const EncryptedPrivateKeyInfo: autoguard.serialization.MessageGuard<EncryptedPrivateKeyInfo> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => ASN1Sequence),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+			autoguard.guards.Reference.of(() => ASN1OctetString)
+		)
+	}, {})
+);
+
+export type EncryptedPrivateKeyInfo = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<ASN1Sequence>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Reference<AlgorithmIdentifier>,
+			autoguard.guards.Reference<ASN1OctetString>
+		]>
+	}, {}>
+]>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"ASN1Integer": autoguard.guards.Reference.of(() => ASN1Integer),
@@ -311,7 +331,8 @@ export namespace Autoguard {
 		"HMACSHA256AlgorithmIdentifier": autoguard.guards.Reference.of(() => HMACSHA256AlgorithmIdentifier),
 		"PBKDF2AlgorithmIdentifier1": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier1),
 		"PBKDF2AlgorithmIdentifier2": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier2),
-		"PBES2AlgorithmIdentifier": autoguard.guards.Reference.of(() => PBES2AlgorithmIdentifier)
+		"PBES2AlgorithmIdentifier": autoguard.guards.Reference.of(() => PBES2AlgorithmIdentifier),
+		"EncryptedPrivateKeyInfo": autoguard.guards.Reference.of(() => EncryptedPrivateKeyInfo)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
