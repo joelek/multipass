@@ -7,7 +7,6 @@ import * as parsing from "../parsing";
 export * from "./schema";
 
 export function parseRSAPublicKey(buffer: Buffer): jwk.RSAPublicKey {
-	// A private key is indistinguishable from a public key and contains a valid public key.
 	try {
 		let { n, e } = parseRSAPrivateKey(buffer);
 		return {
