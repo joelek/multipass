@@ -34,6 +34,21 @@ const RSA_PRIVATE_KEY_JWK: jwk.RSAPrivateKey = {
 };
 
 (async () => {
-	let observed = pkcs8.parseRSAPrivateKey(RSA_PRIVATE_KEY_PKCS8);
+	let key = pkcs8.parseRSAPublicKey(RSA_PUBLIC_KEY_PKCS8);
+	console.assert(true, `It should parse RSA public keys properly.`);
+})();
+
+(async () => {
+	let observed = pkcs8.serializeRSAPublicKey(RSA_PUBLIC_KEY_JWK);
+	console.assert(observed.equals(RSA_PUBLIC_KEY_PKCS8), `It should serialize RSA public keys properly.`);
+})();
+
+(async () => {
+	let key = pkcs8.parseRSAPrivateKey(RSA_PRIVATE_KEY_PKCS8);
 	console.assert(true, `It should parse RSA private keys properly.`);
+})();
+
+(async () => {
+	let observed = pkcs8.serializeRSAPrivateKey(RSA_PRIVATE_KEY_JWK);
+	console.assert(observed.equals(RSA_PRIVATE_KEY_PKCS8), `It should serialize RSA private keys properly.`);
 })();
