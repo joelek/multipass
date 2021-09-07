@@ -27,5 +27,11 @@ const KEY = Buffer.from(`
 (async () => {
 	let expected = KEY;
 	let observed = pkcs5.decrypt(KEY_PBES2_PBKDF2_HMACSHA256_AES256CBC, "test");
-	console.assert(observed.equals(expected), `It should decypt data encrypted using PBES2 PBKDF2 HMACSHA256 AES256CBC properly.`);
+	console.assert(observed.equals(expected), `It should decypt data using PBES2 PBKDF2 HMACSHA256 AES256CBC properly.`);
+})();
+
+(async () => {
+	let expected = KEY_PBES2_PBKDF2_HMACSHA256_AES256CBC;
+	let observed = pkcs5.encrypt(KEY, "test");
+	console.assert(observed.equals(expected), `It should encrypt data using PBES2 PBKDF2 HMACSHA256 AES256CBC properly.`);
 })();
