@@ -32,6 +32,12 @@ const KEY = Buffer.from(`
 
 (async () => {
 	let expected = KEY_PBES2_PBKDF2_HMACSHA256_AES256CBC;
-	let observed = pkcs5.encrypt(KEY, "test");
+	let observed = pkcs5.encrypt(KEY, "test", {
+		digestAlgorithm: "sha256",
+		salt: Buffer.from("EC23C0D104E8C916", "hex"),
+		iterations: 2048,
+		cipherAlgorithm: "aes-256-cbc",
+		iv: Buffer.from("22B21CC51CFA09DCBF4F674A1870813D", "hex")
+	});
 	console.assert(observed.equals(expected), `It should encrypt data using PBES2 PBKDF2 HMACSHA256 AES256CBC properly.`);
 })();
