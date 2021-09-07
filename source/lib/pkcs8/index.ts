@@ -23,10 +23,18 @@ export function parseRSAPublicKey(buffer: Buffer, passphrase?: string): jwk.RSAP
 	return pkcs1.parseRSAPublicKey(bufferPKCS1);
 };
 
+export function serializeRSAPublicKey(key: jwk.RSAPublicKey, passphrase?: string): Buffer {
+	throw `Not yet implemented!`;
+};
+
 export function parseRSAPrivateKey(buffer: Buffer, passphrase?: string): jwk.RSAPrivateKey {
 	let bufferPKCS8 = (passphrase != null) ? pkcs5.decrypt(buffer, passphrase) : buffer;
 	let parser = new parsing.Parser(bufferPKCS8);
 	let node = pkcs8.RSAPrivateKey.as(der.parseNode(parser));
 	let bufferPKCS1 = Buffer.from(node.data[2].data, "base64url");
 	return pkcs1.parseRSAPrivateKey(bufferPKCS1);
+};
+
+export function serializeRSAPrivateKey(key: jwk.RSAPrivateKey, passphrase?: string): Buffer {
+	throw `Not yet implemented!`;
 };
