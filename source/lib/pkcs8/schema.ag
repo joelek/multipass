@@ -1,0 +1,27 @@
+guard ASNOBitString: ../asno/BitString;
+guard ASNOInteger: ../asno/Integer;
+guard ASNOOctetString: ../asno/OctetString;
+guard ASNOSequence: ../asno/Sequence;
+guard PKCS5AlgorithmIdentifier: ../pkcs5/AlgorithmIdentifier;
+
+guard PublicKeyInfo: ASNOSequence & {
+	data: [
+		PKCS5AlgorithmIdentifier,
+		ASNOBitString
+	]
+};
+
+guard PrivateKeyInfo: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		PKCS5AlgorithmIdentifier,
+		ASNOOctetString
+	]
+};
+
+guard EncryptedPrivateKeyInfo: ASNOSequence & {
+	data: [
+		PKCS5AlgorithmIdentifier,
+		ASNOOctetString
+	]
+};

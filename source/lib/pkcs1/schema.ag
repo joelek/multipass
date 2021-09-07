@@ -1,0 +1,36 @@
+guard ASNOInteger: ../asno/Integer;
+guard ASNOSequence: ../asno/Sequence;
+
+guard OtherPrimeInfo: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger
+	]
+};
+
+guard OtherPrimeInfos: ASNOSequence & {
+	data: OtherPrimeInfo[]
+};
+
+guard RSAPublicKey: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		ASNOInteger
+	]
+};
+
+guard RSAPrivateKey: ASNOSequence & {
+	data: [
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		ASNOInteger,
+		OtherPrimeInfos | undefined
+	]
+};
