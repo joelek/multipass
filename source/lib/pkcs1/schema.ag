@@ -1,36 +1,36 @@
-guard ASNOInteger: ../asno/Integer;
-guard ASNOSequence: ../asno/Sequence;
+guard ASN1Integer: ../asn1/Integer;
+guard ASN1Sequence: ../asn1/Sequence;
 
-guard OtherPrimeInfo: ASNOSequence & {
+guard OtherPrimeInfo: ASN1Sequence & {
 	data: [
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer
 	]
 };
 
-guard OtherPrimeInfos: ASNOSequence & {
+guard OtherPrimeInfos: ASN1Sequence & {
 	data: OtherPrimeInfo[]
 };
 
-guard RSAPublicKey: ASNOSequence & {
+guard RSAPublicKey: ASN1Sequence & {
 	data: [
-		ASNOInteger,
-		ASNOInteger
+		ASN1Integer,
+		ASN1Integer
 	]
 };
 
-guard RSAPrivateKey: ASNOSequence & {
+guard RSAPrivateKey: ASN1Sequence & {
 	data: [
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
-		ASNOInteger,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
+		ASN1Integer,
 		OtherPrimeInfos | undefined
 	]
 };

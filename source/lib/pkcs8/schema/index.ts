@@ -2,99 +2,99 @@
 
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 import { AlgorithmIdentifier } from "../../pkcs5";
-import { BitString } from "../../asno";
-import { Integer } from "../../asno";
-import { OctetString } from "../../asno";
-import { Sequence } from "../../asno";
+import { BitString } from "../../asn1";
+import { Integer } from "../../asn1";
+import { OctetString } from "../../asn1";
+import { Sequence } from "../../asn1";
 
-export const ASNOBitString: autoguard.serialization.MessageGuard<ASNOBitString> = autoguard.guards.Reference.of(() => BitString);
+export const ASN1BitString: autoguard.serialization.MessageGuard<ASN1BitString> = autoguard.guards.Reference.of(() => BitString);
 
-export type ASNOBitString = autoguard.guards.Reference<BitString>;
+export type ASN1BitString = autoguard.guards.Reference<BitString>;
 
-export const ASNOInteger: autoguard.serialization.MessageGuard<ASNOInteger> = autoguard.guards.Reference.of(() => Integer);
+export const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer> = autoguard.guards.Reference.of(() => Integer);
 
-export type ASNOInteger = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 
-export const ASNOOctetString: autoguard.serialization.MessageGuard<ASNOOctetString> = autoguard.guards.Reference.of(() => OctetString);
+export const ASN1OctetString: autoguard.serialization.MessageGuard<ASN1OctetString> = autoguard.guards.Reference.of(() => OctetString);
 
-export type ASNOOctetString = autoguard.guards.Reference<OctetString>;
+export type ASN1OctetString = autoguard.guards.Reference<OctetString>;
 
-export const ASNOSequence: autoguard.serialization.MessageGuard<ASNOSequence> = autoguard.guards.Reference.of(() => Sequence);
+export const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence> = autoguard.guards.Reference.of(() => Sequence);
 
-export type ASNOSequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 
 export const PKCS5AlgorithmIdentifier: autoguard.serialization.MessageGuard<PKCS5AlgorithmIdentifier> = autoguard.guards.Reference.of(() => AlgorithmIdentifier);
 
 export type PKCS5AlgorithmIdentifier = autoguard.guards.Reference<AlgorithmIdentifier>;
 
 export const PublicKeyInfo: autoguard.serialization.MessageGuard<PublicKeyInfo> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => ASNOSequence),
+	autoguard.guards.Reference.of(() => ASN1Sequence),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
 			autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
-			autoguard.guards.Reference.of(() => ASNOBitString)
+			autoguard.guards.Reference.of(() => ASN1BitString)
 		)
 	}, {})
 );
 
 export type PublicKeyInfo = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<ASNOSequence>,
+	autoguard.guards.Reference<ASN1Sequence>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
 			autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
-			autoguard.guards.Reference<ASNOBitString>
+			autoguard.guards.Reference<ASN1BitString>
 		]>
 	}, {}>
 ]>;
 
 export const PrivateKeyInfo: autoguard.serialization.MessageGuard<PrivateKeyInfo> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => ASNOSequence),
+	autoguard.guards.Reference.of(() => ASN1Sequence),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
-			autoguard.guards.Reference.of(() => ASNOInteger),
+			autoguard.guards.Reference.of(() => ASN1Integer),
 			autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
-			autoguard.guards.Reference.of(() => ASNOOctetString)
+			autoguard.guards.Reference.of(() => ASN1OctetString)
 		)
 	}, {})
 );
 
 export type PrivateKeyInfo = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<ASNOSequence>,
+	autoguard.guards.Reference<ASN1Sequence>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
-			autoguard.guards.Reference<ASNOInteger>,
+			autoguard.guards.Reference<ASN1Integer>,
 			autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
-			autoguard.guards.Reference<ASNOOctetString>
+			autoguard.guards.Reference<ASN1OctetString>
 		]>
 	}, {}>
 ]>;
 
 export const EncryptedPrivateKeyInfo: autoguard.serialization.MessageGuard<EncryptedPrivateKeyInfo> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => ASNOSequence),
+	autoguard.guards.Reference.of(() => ASN1Sequence),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
 			autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
-			autoguard.guards.Reference.of(() => ASNOOctetString)
+			autoguard.guards.Reference.of(() => ASN1OctetString)
 		)
 	}, {})
 );
 
 export type EncryptedPrivateKeyInfo = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<ASNOSequence>,
+	autoguard.guards.Reference<ASN1Sequence>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
 			autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
-			autoguard.guards.Reference<ASNOOctetString>
+			autoguard.guards.Reference<ASN1OctetString>
 		]>
 	}, {}>
 ]>;
 
 export namespace Autoguard {
 	export const Guards = {
-		"ASNOBitString": autoguard.guards.Reference.of(() => ASNOBitString),
-		"ASNOInteger": autoguard.guards.Reference.of(() => ASNOInteger),
-		"ASNOOctetString": autoguard.guards.Reference.of(() => ASNOOctetString),
-		"ASNOSequence": autoguard.guards.Reference.of(() => ASNOSequence),
+		"ASN1BitString": autoguard.guards.Reference.of(() => ASN1BitString),
+		"ASN1Integer": autoguard.guards.Reference.of(() => ASN1Integer),
+		"ASN1OctetString": autoguard.guards.Reference.of(() => ASN1OctetString),
+		"ASN1Sequence": autoguard.guards.Reference.of(() => ASN1Sequence),
 		"PKCS5AlgorithmIdentifier": autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
 		"PublicKeyInfo": autoguard.guards.Reference.of(() => PublicKeyInfo),
 		"PrivateKeyInfo": autoguard.guards.Reference.of(() => PrivateKeyInfo),

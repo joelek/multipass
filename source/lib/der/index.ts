@@ -1,4 +1,4 @@
-import * as asno from "../asno";
+import * as asn1 from "../asn1";
 import * as parsing from "../parsing";
 
 export function encodeVarlen(number: number): Buffer {
@@ -93,19 +93,19 @@ export function decodeLength(parser: parsing.Parser): number {
 	});
 };
 
-export function parseNode(parser: parsing.Parser): asno.Node {
+export function parseNode(parser: parsing.Parser): asn1.Node {
 	return parser.try(() => {
 		let tag = parser.unsigned(1);
-		let kind = asno.Kind.keyFromValue((tag >> 6) & 0x03);
-		let form = asno.Form.keyFromValue((tag >> 5) & 0x01);
-		let type = asno.Type.keyFromValue((tag >> 0) & 0x1F);
+		let kind = asn1.Kind.keyFromValue((tag >> 6) & 0x03);
+		let form = asn1.Form.keyFromValue((tag >> 5) & 0x01);
+		let type = asn1.Type.keyFromValue((tag >> 0) & 0x1F);
 		// The value 31 is special and denotes a varlen encoded type.
-		if (asno.Type[type] === 31) {
+		if (asn1.Type[type] === 31) {
 			let length = decodeVarlen(parser);
 			if (length < 31) {
 				throw `Expected a minimally encoded type!`;
 			}
-			type = asno.Type.keyFromValue(length);
+			type = asn1.Type.keyFromValue(length);
 		}
 		let length = decodeLength(parser);
 		let data = parser.chunk(length);
@@ -118,11 +118,11 @@ export function parseNode(parser: parsing.Parser): asno.Node {
 	});
 };
 
-export function serializeNode(node: asno.Node): Buffer {
+export function serializeNode(node: asn1.Node): Buffer {
 	let buffers = new Array<Buffer>();
-	let kind = asno.Kind[node.kind];
-	let form = asno.Form[node.form];
-	let type = asno.Type[node.type];
+	let kind = asn1.Kind[node.kind];
+	let form = asn1.Form[node.form];
+	let type = asn1.Type[node.type];
 	let data = node.data;
 	let extended = type >= 31;
 	let tag = 0;
@@ -144,9 +144,9 @@ export function serializeNode(node: asno.Node): Buffer {
 	return Buffer.concat(buffers);
 };
 
-export function parse(parser: parsing.Parser): Array<asno.Node> {
+export function parse(parser: parsing.Parser): Array<asn1.Node> {
 	return parser.try(() => {
-		let nodes = new Array<asno.Node>();
+		let nodes = new Array<asn1.Node>();
 		while (!parser.eof()) {
 			let node = parseNode(parser);
 			nodes.push(node);
@@ -155,7 +155,7 @@ export function parse(parser: parsing.Parser): Array<asno.Node> {
 	});
 };
 
-export function serialize(nodes: Array<asno.Node>): Buffer {
+export function serialize(nodes: Array<asn1.Node>): Buffer {
 	let buffers = new Array<Buffer>();
 	for (let node of nodes) {
 		let buffer = serializeNode(node);

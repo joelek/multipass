@@ -1,39 +1,39 @@
-guard ASNOInteger: ../asno/Integer;
-guard ASNONode: ../asno/Node;
-guard ASNONull: ../asno/Null;
-guard ASNOObjectIdentifier: ../asno/ObjectIdentifier;
-guard ASNOOctetString: ../asno/OctetString;
-guard ASNOSequence: ../asno/Sequence;
+guard ASN1Integer: ../asn1/Integer;
+guard ASN1Node: ../asn1/Node;
+guard ASN1Null: ../asn1/Null;
+guard ASN1ObjectIdentifier: ../asn1/ObjectIdentifier;
+guard ASN1OctetString: ../asn1/OctetString;
+guard ASN1Sequence: ../asn1/Sequence;
 
-guard AlgorithmIdentifier: ASNOSequence & {
+guard AlgorithmIdentifier: ASN1Sequence & {
 	data: [
-		ASNOObjectIdentifier,
-		ASNONode
+		ASN1ObjectIdentifier,
+		ASN1Node
 	]
 };
 
 guard AES256CBCAlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" | "YIZIAWUDBAEq" },
-		ASNOOctetString
+		ASN1ObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" | "YIZIAWUDBAEq" },
+		ASN1OctetString
 	]
 };
 
 guard HMACSHA256AlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.2.9" | "KoZIhvcNAgk=" },
-		ASNONull
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.9" | "KoZIhvcNAgk=" },
+		ASN1Null
 	]
 };
 
 guard PBKDF2AlgorithmIdentifier1: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
-		ASNOSequence & {
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
+		ASN1Sequence & {
 			data: [
-				ASNOOctetString | AlgorithmIdentifier,
-				ASNOInteger,
-				ASNOInteger,
+				ASN1OctetString | AlgorithmIdentifier,
+				ASN1Integer,
+				ASN1Integer,
 				AlgorithmIdentifier
 			]
 		}
@@ -42,11 +42,11 @@ guard PBKDF2AlgorithmIdentifier1: AlgorithmIdentifier & {
 
 guard PBKDF2AlgorithmIdentifier2: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
-		ASNOSequence & {
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
+		ASN1Sequence & {
 			data: [
-				ASNOOctetString | AlgorithmIdentifier,
-				ASNOInteger,
+				ASN1OctetString | AlgorithmIdentifier,
+				ASN1Integer,
 				AlgorithmIdentifier
 			]
 		}
@@ -55,8 +55,8 @@ guard PBKDF2AlgorithmIdentifier2: AlgorithmIdentifier & {
 
 guard PBES2AlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASNOObjectIdentifier & { data: "1.2.840.113549.1.5.13" | "KoZIhvcNAQUN" },
-		ASNOSequence & {
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.13" | "KoZIhvcNAQUN" },
+		ASN1Sequence & {
 			data: [
 				AlgorithmIdentifier,
 				AlgorithmIdentifier

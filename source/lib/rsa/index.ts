@@ -1,5 +1,5 @@
 import * as libcrypto from "crypto";
-import * as asno from "../asno";
+import * as asn1 from "../asn1";
 import * as der from "../der";
 import * as pkcs1 from "../pkcs1";
 import * as pkcs5 from "../pkcs5";
@@ -40,9 +40,9 @@ export function generateDerPrivateKey(options?: Partial<{
 	return pair.privateKey;
 };
 
-export function deriveKey(keyDerivationAlgorithm: asno.Node, passphrase: string, keyLength: number): Buffer {
+export function deriveKey(keyDerivationAlgorithm: asn1.Node, passphrase: string, keyLength: number): Buffer {
 	if (pkcs5.PBKDF2AlgorithmIdentifier2.is(keyDerivationAlgorithm)) {
-		if (asno.OctetString.is(keyDerivationAlgorithm.data[1].data[0])) {
+		if (asn1.OctetString.is(keyDerivationAlgorithm.data[1].data[0])) {
 			let salt = Buffer.from(keyDerivationAlgorithm.data[1].data[0].data, "base64");
 			let iterations = Buffer.from(keyDerivationAlgorithm.data[1].data[1].data, "base64");
 			let algorithm = keyDerivationAlgorithm.data[1].data[2];
@@ -77,7 +77,7 @@ export function parsePKCS1(parser: parsing.Parser): PrivateKey {
 	};
 };
 
-export function decryptBuffer(cipherAlgorithm: asno.Node, key: Buffer, ciphertext: Buffer): Buffer {
+export function decryptBuffer(cipherAlgorithm: asn1.Node, key: Buffer, ciphertext: Buffer): Buffer {
 	if (pkcs5.AES256CBCAlgorithmIdentifier.is(cipherAlgorithm)) {
 		let iv = Buffer.from(cipherAlgorithm.data[1].data, "base64");
 		let decipher = libcrypto.createDecipheriv("aes-256-cbc", key, iv);
@@ -86,7 +86,7 @@ export function decryptBuffer(cipherAlgorithm: asno.Node, key: Buffer, ciphertex
 	throw `Expected cipher algorithm to be known!`;
 };
 
-export function unwrapKey(wrappingAlgorithm: asno.Node, passphrase: string, ciphertext: Buffer): Buffer {
+export function unwrapKey(wrappingAlgorithm: asn1.Node, passphrase: string, ciphertext: Buffer): Buffer {
 	if (pkcs5.PBES2AlgorithmIdentifier.is(wrappingAlgorithm)) {
 		let key = deriveKey(wrappingAlgorithm.data[1].data[0], passphrase, 32);
 		let pkcs8 = decryptBuffer(wrappingAlgorithm.data[1].data[1], key, ciphertext);
