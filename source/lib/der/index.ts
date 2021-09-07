@@ -113,7 +113,7 @@ export function parseNode(parser: parsing.Parser): asn1.Node {
 			kind,
 			form,
 			type,
-			data: form === `CONSTRUCTED` ? parse(new parsing.Parser(data)) : data.toString(`base64`)
+			data: form === `CONSTRUCTED` ? parse(new parsing.Parser(data)) : data.toString(`base64url`)
 		};
 	});
 };
@@ -135,7 +135,7 @@ export function serializeNode(node: asn1.Node): Buffer {
 	}
 	buffers.push(encodeLength(data.length));
 	if (typeof data === `string`) {
-		buffers.push(Buffer.from(data, `base64`));
+		buffers.push(Buffer.from(data, `base64url`));
 	} else {
 		for (let node of data) {
 			buffers.push(serializeNode(node));

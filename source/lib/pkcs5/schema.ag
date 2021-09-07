@@ -21,7 +21,7 @@ guard AES256CBCAlgorithmIdentifier: AlgorithmIdentifier & {
 
 guard HMACSHA256AlgorithmIdentifier: AlgorithmIdentifier & {
 	data: [
-		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.9" | "KoZIhvcNAgk=" },
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.9" | "KoZIhvcNAgk" },
 		ASN1Null
 	]
 };

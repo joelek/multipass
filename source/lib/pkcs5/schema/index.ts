@@ -97,7 +97,7 @@ export const HMACSHA256AlgorithmIdentifier: autoguard.serialization.MessageGuard
 				autoguard.guards.Object.of({
 					"data": autoguard.guards.Union.of(
 						autoguard.guards.StringLiteral.of("1.2.840.113549.2.9"),
-						autoguard.guards.StringLiteral.of("KoZIhvcNAgk=")
+						autoguard.guards.StringLiteral.of("KoZIhvcNAgk")
 					)
 				}, {})
 			),
@@ -115,7 +115,7 @@ export type HMACSHA256AlgorithmIdentifier = autoguard.guards.Intersection<[
 				autoguard.guards.Object<{
 					"data": autoguard.guards.Union<[
 						autoguard.guards.StringLiteral<"1.2.840.113549.2.9">,
-						autoguard.guards.StringLiteral<"KoZIhvcNAgk=">
+						autoguard.guards.StringLiteral<"KoZIhvcNAgk">
 					]>
 				}, {}>
 			]>,

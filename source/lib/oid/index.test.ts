@@ -2,7 +2,7 @@ import * as oid from "./";
 import * as parsing from "../parsing";
 
 (async () => {
-	let parser = new parsing.Parser(Buffer.from(`KoZIhvcNAQEL`, `base64`));
+	let parser = new parsing.Parser(Buffer.from(`KoZIhvcNAQEL`, `base64url`));
 	let observed = oid.parse(parser).join(`.`);
 	let expected = `1.2.840.113549.1.1.11`;
 	console.assert(observed === expected, `It should parse a common cryptographic oid.`);
@@ -10,7 +10,7 @@ import * as parsing from "../parsing";
 
 (async () => {
 	let observed = oid.serialize(`1.2.840.113549.1.1.11`.split(`.`).map((part) => Number.parseInt(part, 10)));
-	let expected = Buffer.from(`KoZIhvcNAQEL`, `base64`);
+	let expected = Buffer.from(`KoZIhvcNAQEL`, `base64url`);
 	console.assert(observed.equals(expected), `It should serialize a common cryptographic oid.`);
 })();
 
