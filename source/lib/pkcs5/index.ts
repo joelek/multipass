@@ -51,3 +51,7 @@ export function decrypt(buffer: Buffer, passphrase: string): Buffer {
 	}
 	throw `Expected wrapping algorithm to be known!`;
 };
+
+export function encrypt(buffer: Buffer, passphrase: string): Buffer {
+	throw `Not yet implemented!`;
+};
