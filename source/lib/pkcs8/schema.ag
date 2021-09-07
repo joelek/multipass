@@ -1,5 +1,7 @@
 guard ASN1BitString: ../asn1/BitString;
 guard ASN1Integer: ../asn1/Integer;
+guard ASN1Null: ../asn1/Null;
+guard ASN1ObjectIdentifier: ../asn1/ObjectIdentifier;
 guard ASN1OctetString: ../asn1/OctetString;
 guard ASN1Sequence: ../asn1/Sequence;
 guard PKCS5AlgorithmIdentifier: ../pkcs5/AlgorithmIdentifier;
@@ -15,6 +17,28 @@ guard PrivateKeyInfo: ASN1Sequence & {
 	data: [
 		ASN1Integer,
 		PKCS5AlgorithmIdentifier,
+		ASN1OctetString
+	]
+};
+
+guard RSAAlgorithmIdentifier: PKCS5AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.1" | "KoZIhvcNAQEB" },
+		ASN1Null
+	]
+};
+
+guard RSAPublicKey: PublicKeyInfo & {
+	data: [
+		RSAAlgorithmIdentifier,
+		ASN1BitString
+	]
+};
+
+guard RSAPrivateKey: PrivateKeyInfo & {
+	data: [
+		ASN1Integer,
+		RSAAlgorithmIdentifier,
 		ASN1OctetString
 	]
 };
