@@ -54,3 +54,7 @@ guard RSAPrivateKey: RSAPublicKey & {
 		t: string
 	}[]
 };
+
+guard PublicKey: ECPublicKey | RSAPublicKey;
+
+guard PrivateKey: ECPrivateKey | RSAPrivateKey;

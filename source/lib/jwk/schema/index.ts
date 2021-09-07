@@ -216,6 +216,26 @@ export type RSAPrivateKey = autoguard.guards.Intersection<[
 	}>
 ]>;
 
+export const PublicKey: autoguard.serialization.MessageGuard<PublicKey> = autoguard.guards.Union.of(
+	autoguard.guards.Reference.of(() => ECPublicKey),
+	autoguard.guards.Reference.of(() => RSAPublicKey)
+);
+
+export type PublicKey = autoguard.guards.Union<[
+	autoguard.guards.Reference<ECPublicKey>,
+	autoguard.guards.Reference<RSAPublicKey>
+]>;
+
+export const PrivateKey: autoguard.serialization.MessageGuard<PrivateKey> = autoguard.guards.Union.of(
+	autoguard.guards.Reference.of(() => ECPrivateKey),
+	autoguard.guards.Reference.of(() => RSAPrivateKey)
+);
+
+export type PrivateKey = autoguard.guards.Union<[
+	autoguard.guards.Reference<ECPrivateKey>,
+	autoguard.guards.Reference<RSAPrivateKey>
+]>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Key": autoguard.guards.Reference.of(() => Key),
@@ -225,7 +245,9 @@ export namespace Autoguard {
 		"ECPrivateKey": autoguard.guards.Reference.of(() => ECPrivateKey),
 		"RSAKey": autoguard.guards.Reference.of(() => RSAKey),
 		"RSAPublicKey": autoguard.guards.Reference.of(() => RSAPublicKey),
-		"RSAPrivateKey": autoguard.guards.Reference.of(() => RSAPrivateKey)
+		"RSAPrivateKey": autoguard.guards.Reference.of(() => RSAPrivateKey),
+		"PublicKey": autoguard.guards.Reference.of(() => PublicKey),
+		"PrivateKey": autoguard.guards.Reference.of(() => PrivateKey)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
