@@ -2,6 +2,8 @@ import * as jwk from "../jwk";
 import * as pkcs8 from "./";
 
 const RSA_PUBLIC_KEY_PKCS8 = Buffer.from(`
+	MFswDQYJKoZIhvcNAQEBBQADSjBIAkEAvmMw/sCvyhhctqv358NSMxVOghIYM4zg
+	5YTjlVLFe5osR0PZJUPVbvso3cOb3AjlF1VbuTLXJ1mWE2tqdv6olQIDAQAB
 `, "base64");
 
 const RSA_PUBLIC_KEY_JWK: jwk.RSAPublicKey = {
