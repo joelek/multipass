@@ -133,13 +133,18 @@ export function serializeNode(node: asn1.Node): Buffer {
 	if (extended) {
 		buffers.push(encodeVarlen(type));
 	}
-	buffers.push(encodeLength(data.length));
 	if (typeof data === `string`) {
-		buffers.push(Buffer.from(data, `base64url`));
+		let buffer = Buffer.from(data, `base64url`);
+		buffers.push(encodeLength(buffer.length));
+		buffers.push(buffer);
 	} else {
+		let subbuffers = new Array<Buffer>();
 		for (let node of data) {
-			buffers.push(serializeNode(node));
+			subbuffers.push(serializeNode(node));
 		}
+		let buffer = Buffer.concat(subbuffers);
+		buffers.push(encodeLength(buffer.length));
+		buffers.push(buffer);
 	}
 	return Buffer.concat(buffers);
 };
