@@ -8,6 +8,14 @@ import * as parsing from "../parsing";
 export * from "./schema";
 
 export function parseRSAPublicKey(buffer: Buffer, passphrase?: string): jwk.RSAPublicKey {
+	try {
+		let { n, e } = parseRSAPrivateKey(buffer, passphrase);
+		return {
+			kty: "RSA",
+			n,
+			e
+		};
+	} catch (error) {}
 	let bufferPKCS8 = (passphrase != null) ? pkcs5.decrypt(buffer, passphrase) : buffer;
 	let parser = new parsing.Parser(bufferPKCS8);
 	let node = pkcs8.RSAPublicKey.as(der.parseNode(parser));
