@@ -12,21 +12,21 @@ guard AlgorithmIdentifier: ASN1Sequence & {
 	]
 };
 
-guard AES256CBCAlgorithmIdentifier: AlgorithmIdentifier & {
+guard AES256CBCIdentifier: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" | "YIZIAWUDBAEq" },
 		ASN1OctetString
 	]
 };
 
-guard HMACSHA256AlgorithmIdentifier: AlgorithmIdentifier & {
+guard HMACSHA256Identifier: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.9" | "KoZIhvcNAgk" },
 		ASN1Null
 	]
 };
 
-guard PBKDF2AlgorithmIdentifier1: AlgorithmIdentifier & {
+guard PBKDF2Identifier1: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
 		ASN1Sequence & {
@@ -40,7 +40,7 @@ guard PBKDF2AlgorithmIdentifier1: AlgorithmIdentifier & {
 	]
 };
 
-guard PBKDF2AlgorithmIdentifier2: AlgorithmIdentifier & {
+guard PBKDF2Identifier2: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.12" | "KoZIhvcNAQUM" },
 		ASN1Sequence & {
@@ -53,7 +53,9 @@ guard PBKDF2AlgorithmIdentifier2: AlgorithmIdentifier & {
 	]
 };
 
-guard PBES2AlgorithmIdentifier: AlgorithmIdentifier & {
+guard PBKDF2Identifier: PBKDF2Identifier1 | PBKDF2Identifier2;
+
+guard PBES2Identifier: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.13" | "KoZIhvcNAQUN" },
 		ASN1Sequence & {

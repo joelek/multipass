@@ -43,3 +43,18 @@ export const BIT_STRING: schema.BitString = {
 	type: "BIT_STRING",
 	data: ""
 };
+
+export function encodeUnsignedInteger(number: number): Buffer {
+	if (!Number.isInteger(number) || number < 0) {
+		throw `Expected an unsigned integer!`;
+	}
+	let buffer = Buffer.alloc(4);
+	buffer.writeUIntBE(number, 0, 4);
+	let i = 0;
+	for (; i < 4 - 1; i++) {
+		if (buffer[i] !== 0) {
+			break;
+		}
+	}
+	return buffer.slice(i);
+};

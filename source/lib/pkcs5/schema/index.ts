@@ -52,7 +52,7 @@ export type AlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const AES256CBCAlgorithmIdentifier: autoguard.serialization.MessageGuard<AES256CBCAlgorithmIdentifier> = autoguard.guards.Intersection.of(
+export const AES256CBCIdentifier: autoguard.serialization.MessageGuard<AES256CBCIdentifier> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -70,7 +70,7 @@ export const AES256CBCAlgorithmIdentifier: autoguard.serialization.MessageGuard<
 	}, {})
 );
 
-export type AES256CBCAlgorithmIdentifier = autoguard.guards.Intersection<[
+export type AES256CBCIdentifier = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -88,7 +88,7 @@ export type AES256CBCAlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const HMACSHA256AlgorithmIdentifier: autoguard.serialization.MessageGuard<HMACSHA256AlgorithmIdentifier> = autoguard.guards.Intersection.of(
+export const HMACSHA256Identifier: autoguard.serialization.MessageGuard<HMACSHA256Identifier> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -106,7 +106,7 @@ export const HMACSHA256AlgorithmIdentifier: autoguard.serialization.MessageGuard
 	}, {})
 );
 
-export type HMACSHA256AlgorithmIdentifier = autoguard.guards.Intersection<[
+export type HMACSHA256Identifier = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -124,7 +124,7 @@ export type HMACSHA256AlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const PBKDF2AlgorithmIdentifier1: autoguard.serialization.MessageGuard<PBKDF2AlgorithmIdentifier1> = autoguard.guards.Intersection.of(
+export const PBKDF2Identifier1: autoguard.serialization.MessageGuard<PBKDF2Identifier1> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -155,7 +155,7 @@ export const PBKDF2AlgorithmIdentifier1: autoguard.serialization.MessageGuard<PB
 	}, {})
 );
 
-export type PBKDF2AlgorithmIdentifier1 = autoguard.guards.Intersection<[
+export type PBKDF2Identifier1 = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -186,7 +186,7 @@ export type PBKDF2AlgorithmIdentifier1 = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const PBKDF2AlgorithmIdentifier2: autoguard.serialization.MessageGuard<PBKDF2AlgorithmIdentifier2> = autoguard.guards.Intersection.of(
+export const PBKDF2Identifier2: autoguard.serialization.MessageGuard<PBKDF2Identifier2> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -216,7 +216,7 @@ export const PBKDF2AlgorithmIdentifier2: autoguard.serialization.MessageGuard<PB
 	}, {})
 );
 
-export type PBKDF2AlgorithmIdentifier2 = autoguard.guards.Intersection<[
+export type PBKDF2Identifier2 = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -246,7 +246,17 @@ export type PBKDF2AlgorithmIdentifier2 = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const PBES2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBES2AlgorithmIdentifier> = autoguard.guards.Intersection.of(
+export const PBKDF2Identifier: autoguard.serialization.MessageGuard<PBKDF2Identifier> = autoguard.guards.Union.of(
+	autoguard.guards.Reference.of(() => PBKDF2Identifier1),
+	autoguard.guards.Reference.of(() => PBKDF2Identifier2)
+);
+
+export type PBKDF2Identifier = autoguard.guards.Union<[
+	autoguard.guards.Reference<PBKDF2Identifier1>,
+	autoguard.guards.Reference<PBKDF2Identifier2>
+]>;
+
+export const PBES2Identifier: autoguard.serialization.MessageGuard<PBES2Identifier> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -272,7 +282,7 @@ export const PBES2AlgorithmIdentifier: autoguard.serialization.MessageGuard<PBES
 	}, {})
 );
 
-export type PBES2AlgorithmIdentifier = autoguard.guards.Intersection<[
+export type PBES2Identifier = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -327,11 +337,12 @@ export namespace Autoguard {
 		"ASN1OctetString": autoguard.guards.Reference.of(() => ASN1OctetString),
 		"ASN1Sequence": autoguard.guards.Reference.of(() => ASN1Sequence),
 		"AlgorithmIdentifier": autoguard.guards.Reference.of(() => AlgorithmIdentifier),
-		"AES256CBCAlgorithmIdentifier": autoguard.guards.Reference.of(() => AES256CBCAlgorithmIdentifier),
-		"HMACSHA256AlgorithmIdentifier": autoguard.guards.Reference.of(() => HMACSHA256AlgorithmIdentifier),
-		"PBKDF2AlgorithmIdentifier1": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier1),
-		"PBKDF2AlgorithmIdentifier2": autoguard.guards.Reference.of(() => PBKDF2AlgorithmIdentifier2),
-		"PBES2AlgorithmIdentifier": autoguard.guards.Reference.of(() => PBES2AlgorithmIdentifier),
+		"AES256CBCIdentifier": autoguard.guards.Reference.of(() => AES256CBCIdentifier),
+		"HMACSHA256Identifier": autoguard.guards.Reference.of(() => HMACSHA256Identifier),
+		"PBKDF2Identifier1": autoguard.guards.Reference.of(() => PBKDF2Identifier1),
+		"PBKDF2Identifier2": autoguard.guards.Reference.of(() => PBKDF2Identifier2),
+		"PBKDF2Identifier": autoguard.guards.Reference.of(() => PBKDF2Identifier),
+		"PBES2Identifier": autoguard.guards.Reference.of(() => PBES2Identifier),
 		"EncryptedPrivateKeyInfo": autoguard.guards.Reference.of(() => EncryptedPrivateKeyInfo)
 	};
 
