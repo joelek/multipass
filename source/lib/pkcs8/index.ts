@@ -2,7 +2,6 @@ import * as asn1 from "../asn1";
 import * as der from "../der";
 import * as jwk from "../jwk";
 import * as pkcs1 from "../pkcs1";
-import * as pkcs5 from "../pkcs5";
 import * as schema from "./schema";
 import * as parsing from "../parsing";
 
