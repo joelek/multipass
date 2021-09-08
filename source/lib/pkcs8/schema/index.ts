@@ -79,7 +79,7 @@ export type PrivateKeyInfo = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
-export const RSAAlgorithmIdentifier: autoguard.serialization.MessageGuard<RSAAlgorithmIdentifier> = autoguard.guards.Intersection.of(
+export const RSAIdentifier: autoguard.serialization.MessageGuard<RSAIdentifier> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
@@ -97,7 +97,7 @@ export const RSAAlgorithmIdentifier: autoguard.serialization.MessageGuard<RSAAlg
 	}, {})
 );
 
-export type RSAAlgorithmIdentifier = autoguard.guards.Intersection<[
+export type RSAIdentifier = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
@@ -119,7 +119,7 @@ export const RSAPublicKey: autoguard.serialization.MessageGuard<RSAPublicKey> = 
 	autoguard.guards.Reference.of(() => PublicKeyInfo),
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
-			autoguard.guards.Reference.of(() => RSAAlgorithmIdentifier),
+			autoguard.guards.Reference.of(() => RSAIdentifier),
 			autoguard.guards.Reference.of(() => ASN1BitString)
 		)
 	}, {})
@@ -129,7 +129,7 @@ export type RSAPublicKey = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<PublicKeyInfo>,
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
-			autoguard.guards.Reference<RSAAlgorithmIdentifier>,
+			autoguard.guards.Reference<RSAIdentifier>,
 			autoguard.guards.Reference<ASN1BitString>
 		]>
 	}, {}>
@@ -140,7 +140,7 @@ export const RSAPrivateKey: autoguard.serialization.MessageGuard<RSAPrivateKey> 
 	autoguard.guards.Object.of({
 		"data": autoguard.guards.Tuple.of(
 			autoguard.guards.Reference.of(() => ASN1Integer),
-			autoguard.guards.Reference.of(() => RSAAlgorithmIdentifier),
+			autoguard.guards.Reference.of(() => RSAIdentifier),
 			autoguard.guards.Reference.of(() => ASN1OctetString)
 		)
 	}, {})
@@ -151,7 +151,7 @@ export type RSAPrivateKey = autoguard.guards.Intersection<[
 	autoguard.guards.Object<{
 		"data": autoguard.guards.Tuple<[
 			autoguard.guards.Reference<ASN1Integer>,
-			autoguard.guards.Reference<RSAAlgorithmIdentifier>,
+			autoguard.guards.Reference<RSAIdentifier>,
 			autoguard.guards.Reference<ASN1OctetString>
 		]>
 	}, {}>
@@ -168,7 +168,7 @@ export namespace Autoguard {
 		"PKCS5AlgorithmIdentifier": autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
 		"PublicKeyInfo": autoguard.guards.Reference.of(() => PublicKeyInfo),
 		"PrivateKeyInfo": autoguard.guards.Reference.of(() => PrivateKeyInfo),
-		"RSAAlgorithmIdentifier": autoguard.guards.Reference.of(() => RSAAlgorithmIdentifier),
+		"RSAIdentifier": autoguard.guards.Reference.of(() => RSAIdentifier),
 		"RSAPublicKey": autoguard.guards.Reference.of(() => RSAPublicKey),
 		"RSAPrivateKey": autoguard.guards.Reference.of(() => RSAPrivateKey)
 	};

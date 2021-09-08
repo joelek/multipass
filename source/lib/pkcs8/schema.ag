@@ -21,7 +21,7 @@ guard PrivateKeyInfo: ASN1Sequence & {
 	]
 };
 
-guard RSAAlgorithmIdentifier: PKCS5AlgorithmIdentifier & {
+guard RSAIdentifier: PKCS5AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.1" | "KoZIhvcNAQEB" },
 		ASN1Null
@@ -30,7 +30,7 @@ guard RSAAlgorithmIdentifier: PKCS5AlgorithmIdentifier & {
 
 guard RSAPublicKey: PublicKeyInfo & {
 	data: [
-		RSAAlgorithmIdentifier,
+		RSAIdentifier,
 		ASN1BitString
 	]
 };
@@ -38,7 +38,7 @@ guard RSAPublicKey: PublicKeyInfo & {
 guard RSAPrivateKey: PrivateKeyInfo & {
 	data: [
 		ASN1Integer,
-		RSAAlgorithmIdentifier,
+		RSAIdentifier,
 		ASN1OctetString
 	]
 };
