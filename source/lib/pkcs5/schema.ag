@@ -33,6 +33,20 @@ guard AES256CBCIdentifier: AlgorithmIdentifier & {
 	]
 };
 
+guard HMACSHA1Identifier: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.7" },
+		ASN1Null
+	]
+};
+
+guard HMACSHA224Identifier: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.8" },
+		ASN1Null
+	]
+};
+
 guard HMACSHA256Identifier: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.9" },
