@@ -68,6 +68,20 @@ guard HMACSHA512Identifier: AlgorithmIdentifier & {
 	]
 };
 
+guard HMACSHA512224Identifier: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.12" },
+		ASN1Null
+	]
+};
+
+guard HMACSHA512256Identifier: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.2.13" },
+		ASN1Null
+	]
+};
+
 guard PBKDF2Identifier1: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.5.12" },

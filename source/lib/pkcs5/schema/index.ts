@@ -292,6 +292,66 @@ export type HMACSHA512Identifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
+export const HMACSHA512224Identifier: autoguard.serialization.MessageGuard<HMACSHA512224Identifier> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.113549.2.12")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type HMACSHA512224Identifier = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.113549.2.12">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
+export const HMACSHA512256Identifier: autoguard.serialization.MessageGuard<HMACSHA512256Identifier> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.113549.2.13")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type HMACSHA512256Identifier = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.113549.2.13">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
 export const PBKDF2Identifier1: autoguard.serialization.MessageGuard<PBKDF2Identifier1> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
@@ -495,6 +555,8 @@ export namespace Autoguard {
 		"HMACSHA256Identifier": autoguard.guards.Reference.of(() => HMACSHA256Identifier),
 		"HMACSHA384Identifier": autoguard.guards.Reference.of(() => HMACSHA384Identifier),
 		"HMACSHA512Identifier": autoguard.guards.Reference.of(() => HMACSHA512Identifier),
+		"HMACSHA512224Identifier": autoguard.guards.Reference.of(() => HMACSHA512224Identifier),
+		"HMACSHA512256Identifier": autoguard.guards.Reference.of(() => HMACSHA512256Identifier),
 		"PBKDF2Identifier1": autoguard.guards.Reference.of(() => PBKDF2Identifier1),
 		"PBKDF2Identifier2": autoguard.guards.Reference.of(() => PBKDF2Identifier2),
 		"PBKDF2Identifier": autoguard.guards.Reference.of(() => PBKDF2Identifier),

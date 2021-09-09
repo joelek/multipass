@@ -23,6 +23,12 @@ export function fromIdentifier(node: schema.AlgorithmIdentifier): DigestAlgorith
 	try {
 		return HMACSHA512Algorithm.fromIdentifier(node);
 	} catch (error) {}
+	try {
+		return HMACSHA512224Algorithm.fromIdentifier(node);
+	} catch (error) {}
+	try {
+		return HMACSHA512256Algorithm.fromIdentifier(node);
+	} catch (error) {}
 	throw `Expected digest algorithm to be known!`;
 };
 
@@ -191,6 +197,74 @@ export class HMACSHA512Algorithm implements DigestAlgorithm {
 		if (schema.HMACSHA512Identifier.is(node)) {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA512Algorithm();
+		}
+		throw ``;
+	}
+};
+
+export class HMACSHA512224Algorithm implements DigestAlgorithm {
+	constructor(options?: Partial<{}>) {
+
+	}
+
+	getIdentifier(): schema.HMACSHA512224Identifier {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.113549.2.12"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	getType(): string {
+		return "sha512-224";
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): HMACSHA512224Algorithm {
+		if (schema.HMACSHA512224Identifier.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new HMACSHA512224Algorithm();
+		}
+		throw ``;
+	}
+};
+
+export class HMACSHA512256Algorithm implements DigestAlgorithm {
+	constructor(options?: Partial<{}>) {
+
+	}
+
+	getIdentifier(): schema.HMACSHA512256Identifier {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.113549.2.13"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	getType(): string {
+		return "sha512-256";
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): HMACSHA512256Algorithm {
+		if (schema.HMACSHA512256Identifier.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new HMACSHA512256Algorithm();
 		}
 		throw ``;
 	}
