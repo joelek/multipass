@@ -17,6 +17,12 @@ export function fromIdentifier(node: schema.AlgorithmIdentifier): DigestAlgorith
 	try {
 		return HMACSHA256Algorithm.fromIdentifier(node);
 	} catch (error) {}
+	try {
+		return HMACSHA384Algorithm.fromIdentifier(node);
+	} catch (error) {}
+	try {
+		return HMACSHA512Algorithm.fromIdentifier(node);
+	} catch (error) {}
 	throw `Expected digest algorithm to be known!`;
 };
 
@@ -117,6 +123,74 @@ export class HMACSHA256Algorithm implements DigestAlgorithm {
 		if (schema.HMACSHA256Identifier.is(node)) {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA256Algorithm();
+		}
+		throw ``;
+	}
+};
+
+export class HMACSHA384Algorithm implements DigestAlgorithm {
+	constructor(options?: Partial<{}>) {
+
+	}
+
+	getIdentifier(): schema.HMACSHA384Identifier {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.113549.2.10"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	getType(): string {
+		return "sha384";
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): HMACSHA384Algorithm {
+		if (schema.HMACSHA384Identifier.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new HMACSHA384Algorithm();
+		}
+		throw ``;
+	}
+};
+
+export class HMACSHA512Algorithm implements DigestAlgorithm {
+	constructor(options?: Partial<{}>) {
+
+	}
+
+	getIdentifier(): schema.HMACSHA512Identifier {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.113549.2.11"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	getType(): string {
+		return "sha512";
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): HMACSHA512Algorithm {
+		if (schema.HMACSHA512Identifier.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new HMACSHA512Algorithm();
 		}
 		throw ``;
 	}
