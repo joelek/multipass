@@ -44,17 +44,41 @@ export const BIT_STRING: schema.BitString = {
 	data: ""
 };
 
-export function encodeUnsignedInteger(number: number): Buffer {
-	if (!Number.isInteger(number) || number < 0) {
-		throw `Expected an unsigned integer!`;
+export function decodeInteger(buffer: Buffer, options?: Partial<{ paddedUnsigned: boolean }>): bigint {
+	let paddedUnsigned = options?.paddedUnsigned ?? true;
+	let hex = buffer.toString("hex");
+	let number = BigInt(`0x${hex}`);
+	if (buffer[0] < 0x80 || !paddedUnsigned) {
+		return number;
+	} else {
+		let bias = BigInt(1) << BigInt(buffer.length * 8);
+		return number - bias;
 	}
-	let buffer = Buffer.alloc(4);
-	buffer.writeUIntBE(number, 0, 4);
-	let i = 0;
-	for (; i < 4 - 1; i++) {
-		if (buffer[i] !== 0) {
-			break;
+};
+
+export function encodeInteger(number: bigint, options?: Partial<{ paddedUnsigned: boolean }>): Buffer {
+	function getNibbles(number: bigint): Array<number> {
+		let nibbles = [...number.toString(16)].map((part) => Number.parseInt(part, 16));
+		if ((nibbles.length % 2) === 1) {
+			nibbles.unshift(0);
 		}
+		return nibbles;
+	};
+	let paddedUnsigned = options?.paddedUnsigned ?? true;
+	if (number >= 0) {
+		let nibbles = getNibbles(number);
+		if (nibbles[0] >= 0x8 && paddedUnsigned) {
+			nibbles.unshift(0, 0);
+		}
+		let hex = nibbles.map((nibble) => nibble.toString(16)).join("");
+		return Buffer.from(hex, "hex");
+	} else {
+		let bias = BigInt(1) << BigInt(getNibbles(BigInt(0) - number).length * 4);
+		let nibbles = getNibbles(number + bias);
+		if (nibbles[0] < 0x8) {
+			nibbles.unshift(0xF, 0xF);
+		}
+		let hex = nibbles.map((nibble) => nibble.toString(16)).join("");
+		return Buffer.from(hex, "hex");
 	}
-	return buffer.slice(i);
 };

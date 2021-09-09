@@ -50,7 +50,7 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 							},
 							{
 								...asn1.INTEGER,
-								data: asn1.encodeUnsignedInteger(this.iterations).toString("base64url")
+								data: asn1.encodeInteger(BigInt(this.iterations)).toString("base64url")
 							},
 							{
 								...this.digestAlgorithm.getIdentifier()
@@ -76,11 +76,11 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 							},
 							{
 								...asn1.INTEGER,
-								data: asn1.encodeUnsignedInteger(this.iterations).toString("base64url")
+								data: asn1.encodeInteger(BigInt(this.iterations)).toString("base64url")
 							},
 							{
 								...asn1.INTEGER,
-								data: asn1.encodeUnsignedInteger(this.keyLength).toString("base64url")
+								data: asn1.encodeInteger(BigInt(this.keyLength)).toString("base64url")
 							},
 							{
 								...this.digestAlgorithm.getIdentifier()
@@ -103,8 +103,8 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 				let digestAlgorithm = digest.fromIdentifier(digestNode);
 				return new PBKDF2Algorithm({
 					salt,
-					iterations: iterations.readUIntBE(0, iterations.length),
-					keyLength: keyLength.readUIntBE(0, keyLength.length),
+					iterations: Number(asn1.decodeInteger(iterations)),
+					keyLength: Number(asn1.decodeInteger(keyLength)),
 					digestAlgorithm
 				});
 			}
@@ -118,7 +118,7 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 				let digestAlgorithm = digest.fromIdentifier(digestNode);
 				return new PBKDF2Algorithm({
 					salt,
-					iterations: iterations.readUIntBE(0, iterations.length),
+					iterations: Number(asn1.decodeInteger(iterations)),
 					digestAlgorithm
 				});
 			}
