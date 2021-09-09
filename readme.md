@@ -17,3 +17,4 @@ certhero \
 
 * JWK: Remove and add leadings zeroes from integers.
 * JWS: Add support for other signature algorithms.
+* PKCS8: Add support for elliptic curve keys.
