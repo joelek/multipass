@@ -17,8 +17,8 @@ export function parseRSAPublicKey(buffer: Buffer): jwk.RSAPublicKey {
 	} catch (error) {}
 	let parser = new parsing.Parser(buffer);
 	let node = schema.RSAPublicKey.as(der.node.parse(parser));
-	let n = node.data[0].data;
-	let e = node.data[1].data;
+	let n = jwk.getJWKInteger(node.data[0].data);
+	let e = jwk.getJWKInteger(node.data[1].data);
 	return {
 		kty: "RSA",
 		n,
@@ -33,11 +33,11 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 		data: [
 			{
 				...asn1.INTEGER,
-				data: n
+				data: jwk.getASN1Integer(n)
 			},
 			{
 				...asn1.INTEGER,
-				data: e
+				data: jwk.getASN1Integer(e)
 			}
 		]
 	};
@@ -47,18 +47,18 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 export function parseRSAPrivateKey(buffer: Buffer): jwk.RSAPrivateKey {
 	let parser = new parsing.Parser(buffer);
 	let node = schema.RSAPrivateKey.as(der.node.parse(parser));
-	let n = node.data[1].data;
-	let e = node.data[2].data;
-	let d = node.data[3].data;
-	let p = node.data[4].data;
-	let q = node.data[5].data;
-	let dp = node.data[6].data;
-	let dq = node.data[7].data;
-	let qi = node.data[8].data;
+	let n = jwk.getJWKInteger(node.data[1].data);
+	let e = jwk.getJWKInteger(node.data[2].data);
+	let d = jwk.getJWKInteger(node.data[3].data);
+	let p = jwk.getJWKInteger(node.data[4].data);
+	let q = jwk.getJWKInteger(node.data[5].data);
+	let dp = jwk.getJWKInteger(node.data[6].data);
+	let dq = jwk.getJWKInteger(node.data[7].data);
+	let qi = jwk.getJWKInteger(node.data[8].data);
 	let oth = node.data[9]?.data.map((node: schema.OtherPrimeInfo) => {
-		let r = node.data[0].data;
-		let d = node.data[1].data;
-		let t = node.data[2].data;
+		let r = jwk.getJWKInteger(node.data[0].data);
+		let d = jwk.getJWKInteger(node.data[1].data);
+		let t = jwk.getJWKInteger(node.data[2].data);
 		return {
 			r,
 			d,
@@ -93,35 +93,35 @@ export function serializeRSAPrivateKey(key: jwk.RSAPrivateKey): Buffer {
 			},
 			{
 				...asn1.INTEGER,
-				data: n
+				data: jwk.getASN1Integer(n)
 			},
 			{
 				...asn1.INTEGER,
-				data: e
+				data: jwk.getASN1Integer(e)
 			},
 			{
 				...asn1.INTEGER,
-				data: d
+				data: jwk.getASN1Integer(d)
 			},
 			{
 				...asn1.INTEGER,
-				data: p
+				data: jwk.getASN1Integer(p)
 			},
 			{
 				...asn1.INTEGER,
-				data: q
+				data: jwk.getASN1Integer(q)
 			},
 			{
 				...asn1.INTEGER,
-				data: dp
+				data: jwk.getASN1Integer(dp)
 			},
 			{
 				...asn1.INTEGER,
-				data: dq
+				data: jwk.getASN1Integer(dq)
 			},
 			{
 				...asn1.INTEGER,
-				data: qi
+				data: jwk.getASN1Integer(qi)
 			}
 		] as any
 	};
@@ -134,15 +134,15 @@ export function serializeRSAPrivateKey(key: jwk.RSAPrivateKey): Buffer {
 					data: [
 						{
 							...asn1.INTEGER,
-							data: prime.r
+							data: jwk.getASN1Integer(prime.r)
 						},
 						{
 							...asn1.INTEGER,
-							data: prime.d
+							data: jwk.getASN1Integer(prime.d)
 						},
 						{
 							...asn1.INTEGER,
-							data: prime.t
+							data: jwk.getASN1Integer(prime.t)
 						}
 					]
 				}
