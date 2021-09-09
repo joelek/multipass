@@ -9,7 +9,7 @@ export * from "./schema";
 
 export function decrypt(buffer: Buffer, passphrase: string): Buffer {
 	let parser = new parsing.Parser(buffer);
-	let node = der.parseNode(parser);
+	let node = der.node.parse(parser);
 	if (schema.EncryptedPrivateKeyInfo.is(node)) {
 		let [wrappingNode, ciphertextNode] = node.data;
 		let wrappingAlgorithm = algorithm.wrapping.fromIdentifier(wrappingNode);
@@ -35,5 +35,5 @@ export function encrypt(plaintext: Buffer, passphrase: string, options?: Partial
 			}
 		]
 	};
-	return der.serializeNode(node);
+	return der.node.serialize(node);
 };

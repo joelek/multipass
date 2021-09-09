@@ -1,4 +1,4 @@
-import * as oid from "./";
+import * as oid from "./oid";
 import * as parsing from "../parsing";
 
 (async () => {

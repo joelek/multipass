@@ -16,7 +16,7 @@ export function parseRSAPublicKey(buffer: Buffer): jwk.RSAPublicKey {
 		};
 	} catch (error) {}
 	let parser = new parsing.Parser(buffer);
-	let node = schema.RSAPublicKey.as(der.parseNode(parser));
+	let node = schema.RSAPublicKey.as(der.node.parse(parser));
 	let n = node.data[0].data;
 	let e = node.data[1].data;
 	return {
@@ -41,12 +41,12 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 			}
 		]
 	};
-	return der.serializeNode(node);
+	return der.node.serialize(node);
 };
 
 export function parseRSAPrivateKey(buffer: Buffer): jwk.RSAPrivateKey {
 	let parser = new parsing.Parser(buffer);
-	let node = schema.RSAPrivateKey.as(der.parseNode(parser));
+	let node = schema.RSAPrivateKey.as(der.node.parse(parser));
 	let n = node.data[1].data;
 	let e = node.data[2].data;
 	let d = node.data[3].data;
@@ -149,5 +149,5 @@ export function serializeRSAPrivateKey(key: jwk.RSAPrivateKey): Buffer {
 			})
 		});
 	}
-	return der.serializeNode(node);
+	return der.node.serialize(node);
 };
