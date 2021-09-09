@@ -32,7 +32,7 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 				data: [
 					{
 						...asn1.OBJECT_IDENTIFER,
-						data: "KoZIhvcNAQEB"
+						data: "1.2.840.113549.1.1.1"
 					},
 					{
 						...asn1.NULL,
@@ -71,7 +71,7 @@ export function serializeRSAPrivateKey(key: jwk.RSAPrivateKey): Buffer {
 				data: [
 					{
 						...asn1.OBJECT_IDENTIFER,
-						data: "KoZIhvcNAQEB"
+						data: "1.2.840.113549.1.1.1"
 					},
 					{
 						...asn1.NULL,

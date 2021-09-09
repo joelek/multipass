@@ -23,7 +23,7 @@ guard PrivateKeyInfo: ASN1Sequence & {
 
 guard RSAIdentifier: PKCS5AlgorithmIdentifier & {
 	data: [
-		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.1" | "KoZIhvcNAQEB" },
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.1" },
 		ASN1Null
 	]
 };

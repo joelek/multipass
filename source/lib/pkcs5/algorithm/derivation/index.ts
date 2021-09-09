@@ -39,7 +39,7 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 				data: [
 					{
 						...asn1.OBJECT_IDENTIFER,
-						data: "KoZIhvcNAQUM"
+						data: "1.2.840.113549.1.5.12"
 					},
 					{
 						...asn1.SEQUENCE,
@@ -65,7 +65,7 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 				data: [
 					{
 						...asn1.OBJECT_IDENTIFER,
-						data: "KoZIhvcNAQUM"
+						data: "1.2.840.113549.1.5.12"
 					},
 					{
 						...asn1.SEQUENCE,

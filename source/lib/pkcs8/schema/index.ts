@@ -86,10 +86,7 @@ export const RSAIdentifier: autoguard.serialization.MessageGuard<RSAIdentifier> 
 			autoguard.guards.Intersection.of(
 				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
 				autoguard.guards.Object.of({
-					"data": autoguard.guards.Union.of(
-						autoguard.guards.StringLiteral.of("1.2.840.113549.1.1.1"),
-						autoguard.guards.StringLiteral.of("KoZIhvcNAQEB")
-					)
+					"data": autoguard.guards.StringLiteral.of("1.2.840.113549.1.1.1")
 				}, {})
 			),
 			autoguard.guards.Reference.of(() => ASN1Null)
@@ -104,10 +101,7 @@ export type RSAIdentifier = autoguard.guards.Intersection<[
 			autoguard.guards.Intersection<[
 				autoguard.guards.Reference<ASN1ObjectIdentifier>,
 				autoguard.guards.Object<{
-					"data": autoguard.guards.Union<[
-						autoguard.guards.StringLiteral<"1.2.840.113549.1.1.1">,
-						autoguard.guards.StringLiteral<"KoZIhvcNAQEB">
-					]>
+					"data": autoguard.guards.StringLiteral<"1.2.840.113549.1.1.1">
 				}, {}>
 			]>,
 			autoguard.guards.Reference<ASN1Null>

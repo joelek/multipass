@@ -45,7 +45,7 @@ export class AES256CBCAlgorithm implements CipherAlgorithm {
 			data: [
 				{
 					...asn1.OBJECT_IDENTIFER,
-					data: "YIZIAWUDBAEq"
+					data: "2.16.840.1.101.3.4.1.42"
 				},
 				{
 					...asn1.OCTET_STRING,

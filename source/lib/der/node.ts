@@ -1,4 +1,5 @@
 import * as asn1 from "../asn1";
+import * as oid from "./oid";
 import * as parsing from "../parsing";
 import * as utils from "./utils";
 
@@ -24,6 +25,10 @@ export function parse(parser: parsing.Parser): asn1.Node {
 			type,
 			data: form === `CONSTRUCTED` ? parseArray(new parsing.Parser(buffer)) : buffer.toString(`base64url`)
 		};
+		if (asn1.ObjectIdentifier.is(node)) {
+			let parser = new parsing.Parser(buffer);
+			node.data = oid.parse(parser).join(".");
+		}
 		return node;
 	});
 };
@@ -44,7 +49,13 @@ export function serialize(node: asn1.Node): Buffer {
 		buffers.push(utils.encodeVarlen(type));
 	}
 	if (typeof data === `string`) {
-		let buffer = Buffer.from(data, `base64url`);
+		let buffer = Buffer.alloc(0);
+		if (asn1.ObjectIdentifier.is(node)) {
+			let numbers = node.data.split(".").map((part) => Number.parseInt(part));
+			buffer = oid.serialize(numbers);
+		} else {
+			buffer = Buffer.from(data, `base64url`);
+		}
 		buffers.push(utils.encodeLength(buffer.length));
 		buffers.push(buffer);
 	} else {

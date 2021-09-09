@@ -46,7 +46,7 @@ export class PBES2Algorithm implements WrappingAlgorithm {
 			data: [
 				{
 					...asn1.OBJECT_IDENTIFER,
-					data: "KoZIhvcNAQUN"
+					data: "1.2.840.113549.1.5.13"
 				},
 				{
 					...asn1.SEQUENCE,

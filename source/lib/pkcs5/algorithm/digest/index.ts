@@ -25,7 +25,7 @@ export class HMACSHA256Algorithm implements DigestAlgorithm {
 			data: [
 				{
 					...asn1.OBJECT_IDENTIFER,
-					data: "KoZIhvcNAgk"
+					data: "1.2.840.113549.2.9"
 				},
 				{
 					...asn1.NULL,
