@@ -12,6 +12,20 @@ guard AlgorithmIdentifier: ASN1Sequence & {
 	]
 };
 
+guard AES128CBCIdentifier: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "2.16.840.1.101.3.4.1.2" },
+		ASN1OctetString
+	]
+};
+
+guard AES192CBCIdentifier: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "2.16.840.1.101.3.4.1.22" },
+		ASN1OctetString
+	]
+};
+
 guard AES256CBCIdentifier: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "2.16.840.1.101.3.4.1.42" },
