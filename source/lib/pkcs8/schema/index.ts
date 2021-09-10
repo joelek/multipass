@@ -79,6 +79,132 @@ export type PrivateKeyInfo = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
+export const ECCurvePrime256v1: autoguard.serialization.MessageGuard<ECCurvePrime256v1> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.StringLiteral.of("1.2.840.10045.3.1.7")
+	}, {})
+);
+
+export type ECCurvePrime256v1 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<ASN1ObjectIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.StringLiteral<"1.2.840.10045.3.1.7">
+	}, {}>
+]>;
+
+export const ECCurveAnsip384r1: autoguard.serialization.MessageGuard<ECCurveAnsip384r1> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.StringLiteral.of("1.3.132.0.34")
+	}, {})
+);
+
+export type ECCurveAnsip384r1 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<ASN1ObjectIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.StringLiteral<"1.3.132.0.34">
+	}, {}>
+]>;
+
+export const ECCurveAnsip521r1: autoguard.serialization.MessageGuard<ECCurveAnsip521r1> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.StringLiteral.of("1.3.132.0.35")
+	}, {})
+);
+
+export type ECCurveAnsip521r1 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<ASN1ObjectIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.StringLiteral<"1.3.132.0.35">
+	}, {}>
+]>;
+
+export const ECCurve: autoguard.serialization.MessageGuard<ECCurve> = autoguard.guards.Union.of(
+	autoguard.guards.Reference.of(() => ECCurvePrime256v1),
+	autoguard.guards.Reference.of(() => ECCurveAnsip384r1),
+	autoguard.guards.Reference.of(() => ECCurveAnsip521r1)
+);
+
+export type ECCurve = autoguard.guards.Union<[
+	autoguard.guards.Reference<ECCurvePrime256v1>,
+	autoguard.guards.Reference<ECCurveAnsip384r1>,
+	autoguard.guards.Reference<ECCurveAnsip521r1>
+]>;
+
+export const ECIdentifier: autoguard.serialization.MessageGuard<ECIdentifier> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.10045.2.1")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ECCurve)
+		)
+	}, {})
+);
+
+export type ECIdentifier = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.10045.2.1">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ECCurve>
+		]>
+	}, {}>
+]>;
+
+export const ECPublicKey: autoguard.serialization.MessageGuard<ECPublicKey> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => PublicKeyInfo),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Reference.of(() => ECIdentifier),
+			autoguard.guards.Reference.of(() => ASN1BitString)
+		)
+	}, {})
+);
+
+export type ECPublicKey = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<PublicKeyInfo>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Reference<ECIdentifier>,
+			autoguard.guards.Reference<ASN1BitString>
+		]>
+	}, {}>
+]>;
+
+export const ECPrivateKey: autoguard.serialization.MessageGuard<ECPrivateKey> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => PrivateKeyInfo),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Reference.of(() => ASN1Integer),
+			autoguard.guards.Reference.of(() => ECIdentifier),
+			autoguard.guards.Reference.of(() => ASN1OctetString)
+		)
+	}, {})
+);
+
+export type ECPrivateKey = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<PrivateKeyInfo>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Reference<ASN1Integer>,
+			autoguard.guards.Reference<ECIdentifier>,
+			autoguard.guards.Reference<ASN1OctetString>
+		]>
+	}, {}>
+]>;
+
 export const RSAIdentifier: autoguard.serialization.MessageGuard<RSAIdentifier> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
 	autoguard.guards.Object.of({
@@ -162,6 +288,13 @@ export namespace Autoguard {
 		"PKCS5AlgorithmIdentifier": autoguard.guards.Reference.of(() => PKCS5AlgorithmIdentifier),
 		"PublicKeyInfo": autoguard.guards.Reference.of(() => PublicKeyInfo),
 		"PrivateKeyInfo": autoguard.guards.Reference.of(() => PrivateKeyInfo),
+		"ECCurvePrime256v1": autoguard.guards.Reference.of(() => ECCurvePrime256v1),
+		"ECCurveAnsip384r1": autoguard.guards.Reference.of(() => ECCurveAnsip384r1),
+		"ECCurveAnsip521r1": autoguard.guards.Reference.of(() => ECCurveAnsip521r1),
+		"ECCurve": autoguard.guards.Reference.of(() => ECCurve),
+		"ECIdentifier": autoguard.guards.Reference.of(() => ECIdentifier),
+		"ECPublicKey": autoguard.guards.Reference.of(() => ECPublicKey),
+		"ECPrivateKey": autoguard.guards.Reference.of(() => ECPrivateKey),
 		"RSAIdentifier": autoguard.guards.Reference.of(() => RSAIdentifier),
 		"RSAPublicKey": autoguard.guards.Reference.of(() => RSAPublicKey),
 		"RSAPrivateKey": autoguard.guards.Reference.of(() => RSAPrivateKey)
