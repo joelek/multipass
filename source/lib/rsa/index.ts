@@ -11,7 +11,7 @@ export function generatePrivateKeyDER(options?: Partial<{
 	let pair = libcrypto.generateKeyPairSync("rsa", {
 		modulusLength: modulusLength,
 		publicKeyEncoding: {
-			type: type === "pkcs1" ? "pkcs1" : "spki",
+			type: "pkcs1",
 			format: "der"
 		},
 		privateKeyEncoding: {
