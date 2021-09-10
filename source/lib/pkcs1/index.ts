@@ -17,8 +17,9 @@ export function parseRSAPublicKey(buffer: Buffer): jwk.RSAPublicKey {
 	} catch (error) {}
 	let parser = new parsing.Parser(buffer);
 	let node = schema.RSAPublicKey.as(der.node.parse(parser));
-	let n = jwk.getJWKInteger(node.data[0].data);
-	let e = jwk.getJWKInteger(node.data[1].data);
+	let [nNode, eNode] = node.data;
+	let n = jwk.getJWKInteger(nNode.data);
+	let e = jwk.getJWKInteger(eNode.data);
 	return {
 		kty: "RSA",
 		n,
@@ -47,15 +48,16 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 export function parseRSAPrivateKey(buffer: Buffer): jwk.RSAPrivateKey {
 	let parser = new parsing.Parser(buffer);
 	let node = schema.RSAPrivateKey.as(der.node.parse(parser));
-	let n = jwk.getJWKInteger(node.data[1].data);
-	let e = jwk.getJWKInteger(node.data[2].data);
-	let d = jwk.getJWKInteger(node.data[3].data);
-	let p = jwk.getJWKInteger(node.data[4].data);
-	let q = jwk.getJWKInteger(node.data[5].data);
-	let dp = jwk.getJWKInteger(node.data[6].data);
-	let dq = jwk.getJWKInteger(node.data[7].data);
-	let qi = jwk.getJWKInteger(node.data[8].data);
-	let oth = node.data[9]?.data.map((node: schema.OtherPrimeInfo) => {
+	let [vNode, nNode, eNode, dNode, pNode, qNode, dpNode, dqNode, qiNode, othNode] = node.data;
+	let n = jwk.getJWKInteger(nNode.data);
+	let e = jwk.getJWKInteger(eNode.data);
+	let d = jwk.getJWKInteger(dNode.data);
+	let p = jwk.getJWKInteger(pNode.data);
+	let q = jwk.getJWKInteger(qNode.data);
+	let dp = jwk.getJWKInteger(dpNode.data);
+	let dq = jwk.getJWKInteger(dqNode.data);
+	let qi = jwk.getJWKInteger(qiNode.data);
+	let oth = othNode?.data.map((node: schema.OtherPrimeInfo) => {
 		let r = jwk.getJWKInteger(node.data[0].data);
 		let d = jwk.getJWKInteger(node.data[1].data);
 		let t = jwk.getJWKInteger(node.data[2].data);
