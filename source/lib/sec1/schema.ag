@@ -1,0 +1,27 @@
+guard ASN1BitString: ../asn1/BitString;
+guard ASN1Integer: ../asn1/Integer;
+guard ASN1OctetString: ../asn1/OctetString;
+guard ASN1Sequence: ../asn1/Sequence;
+
+guard ECPrivateKey: ASN1Sequence & {
+	data: [
+		ASN1Integer,
+		ASN1OctetString,
+		{
+			kind: "CONTEXT",
+			form: "CONSTRUCTED",
+			type: "END_OF_CONTENT", # Context-specific type.
+			data: [
+				../pkcs8/ECCurve
+			]
+		},
+		{
+			kind: "CONTEXT",
+			form: "CONSTRUCTED",
+			type: "BOOLEAN", # Context-specific type.
+			data: [
+				ASN1BitString
+			]
+		}
+	]
+};
