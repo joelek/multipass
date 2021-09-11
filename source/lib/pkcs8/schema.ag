@@ -22,9 +22,9 @@ guard PrivateKeyInfo: ASN1Sequence & {
 };
 
 guard ECCurvePrime256v1: ASN1ObjectIdentifier & { data: "1.2.840.10045.3.1.7" };
-guard ECCurveAnsip384r1: ASN1ObjectIdentifier & { data: "1.3.132.0.34" };
-guard ECCurveAnsip521r1: ASN1ObjectIdentifier & { data: "1.3.132.0.35" };
-guard ECCurve: ECCurvePrime256v1 | ECCurveAnsip384r1 | ECCurveAnsip521r1;
+guard ECCurveSecp384r1: ASN1ObjectIdentifier & { data: "1.3.132.0.34" };
+guard ECCurveSecp521r1: ASN1ObjectIdentifier & { data: "1.3.132.0.35" };
+guard ECCurve: ECCurvePrime256v1 | ECCurveSecp384r1 | ECCurveSecp521r1;
 
 guard ECIdentifier: PKCS5AlgorithmIdentifier & {
 	data: [

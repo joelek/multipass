@@ -11,10 +11,10 @@ export function parseCurve(node: asn1.ObjectIdentifier): "P-256" | "P-384" | "P-
 	if (pkcs8.ECCurvePrime256v1.is(node)) {
 		return "P-256";
 	}
-	if (pkcs8.ECCurveAnsip384r1.is(node)) {
+	if (pkcs8.ECCurveSecp384r1.is(node)) {
 		return "P-384";
 	}
-	if (pkcs8.ECCurveAnsip521r1.is(node)) {
+	if (pkcs8.ECCurveSecp521r1.is(node)) {
 		return "P-521";
 	}
 	throw `Expected curve to be known!`;
@@ -29,14 +29,14 @@ export function serializeCurve(curve: "P-256" | "P-384" | "P-521"): pkcs8.ECCurv
 		return node;
 	}
 	if (curve === "P-384") {
-		let node: pkcs8.ECCurveAnsip384r1 = {
+		let node: pkcs8.ECCurveSecp384r1 = {
 			...asn1.OBJECT_IDENTIFER,
 			data: "1.3.132.0.34"
 		};
 		return node;
 	}
 	if (curve === "P-521") {
-		let node: pkcs8.ECCurveAnsip521r1 = {
+		let node: pkcs8.ECCurveSecp521r1 = {
 			...asn1.OBJECT_IDENTIFER,
 			data: "1.3.132.0.35"
 		};
