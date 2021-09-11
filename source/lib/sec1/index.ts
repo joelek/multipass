@@ -46,16 +46,43 @@ export function serializeCurve(curve: "P-256" | "P-384" | "P-521"): pkcs8.ECCurv
 };
 
 export function parsePoint(node: asn1.BitString): { x: string, y: string } {
-	/*
-	bit string of 66 bytes, 0 unused bits leads to 65 bytes left, first byte is 4 which means uncompressed
-	007b68900be859b316ddd7a977444ab82bc19a647e0f6ebd387d0ad5cb5fdb21239770e20141eacfebedb110f24952185c99eaea4ce56485aa5352015a
-	3d22a64f4800d83332ccf006c4d32af31590cd423691f4b26a001377f12debce1c4518f6f58f34a7b5a96651da40ff843a550f7209e32bf7c901f94689
-	*/
-	throw `TODO`;
+	let buffer = Buffer.from(node.data, "base64url");
+	if (buffer[0] !== 0x00) {
+		throw `Expected zero unused bits!`;
+	}
+	if (buffer[1] !== 0x04) {
+		throw `Expected an uncompressed point!`;
+	}
+	buffer = buffer.slice(2);
+	if ((buffer.length % 2) !== 0) {
+		throw `Expected an even number of octets!`;
+	}
+	let xBuffer = buffer.slice(0, buffer.length / 2);
+	let yBuffer = buffer.slice(buffer.length / 2);
+	let xEncoded = asn1.encodeInteger(asn1.decodeInteger(xBuffer, { paddedUnsigned: false }), { paddedUnsigned: false });
+	let yEncoded = asn1.encodeInteger(asn1.decodeInteger(yBuffer, { paddedUnsigned: false }), { paddedUnsigned: false });
+	let x = xEncoded.toString("base64url");
+	let y = yEncoded.toString("base64url");
+	return {
+		x,
+		y
+	};
 };
 
 export function serializePoint(x: string, y: string): asn1.BitString {
-	throw `TODO`;
+	let xBuffer = Buffer.from(x, "base64url");
+	let yBuffer = Buffer.from(y, "base64url");
+	let width = Math.max(xBuffer.length, yBuffer.length);
+	let buffer = Buffer.alloc(2 + width + width);
+	buffer[0] = 0x00;
+	buffer[1] = 0x04;
+	buffer.set(xBuffer, 2 + width - xBuffer.length);
+	buffer.set(yBuffer, 2 + width + width - yBuffer.length);
+	let data = buffer.toString("base64url");
+	return {
+		...asn1.BIT_STRING,
+		data
+	};
 };
 
 export function parseECPrivateKey(buffer: Buffer): jwk.ECPrivateKey {
