@@ -18,12 +18,20 @@ export function parseRSAPublicKey(bufferPKCS8: Buffer): jwk.RSAPublicKey {
 	} catch (error) {}
 	let parser = new parsing.Parser(bufferPKCS8);
 	let node = schema.RSAPublicKey.as(der.node.parse(parser));
-	let bufferPKCS1 = Buffer.from(node.data[1].data, "base64url");
+	let [algoNode, keyNode] = node.data;
+	let bitstring = Buffer.from(keyNode.data, "base64url");
+	if (bitstring[0] !== 0x00) {
+		throw `Expected zero unused bits!`;
+	}
+	let bufferPKCS1 = bitstring.slice(1);
 	return pkcs1.parseRSAPublicKey(bufferPKCS1);
 };
 
 export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 	let bufferPKCS1 = pkcs1.serializeRSAPublicKey(key);
+	let bitstring = Buffer.alloc(bufferPKCS1.length + 1);
+	bitstring[0] = 0x00;
+	bitstring.set(bufferPKCS1, 1);
 	let node: schema.RSAPublicKey = {
 		...asn1.SEQUENCE,
 		data: [
@@ -42,7 +50,7 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 			},
 			{
 				...asn1.BIT_STRING,
-				data: bufferPKCS1.toString("base64url")
+				data: bitstring.toString("base64url")
 			}
 		]
 	};
@@ -53,7 +61,8 @@ export function serializeRSAPublicKey(key: jwk.RSAPublicKey): Buffer {
 export function parseRSAPrivateKey(bufferPKCS8: Buffer): jwk.RSAPrivateKey {
 	let parser = new parsing.Parser(bufferPKCS8);
 	let node = schema.RSAPrivateKey.as(der.node.parse(parser));
-	let bufferPKCS1 = Buffer.from(node.data[2].data, "base64url");
+	let [versionNode, algoNode, keyNode] = node.data;
+	let bufferPKCS1 = Buffer.from(keyNode.data, "base64url");
 	return pkcs1.parseRSAPrivateKey(bufferPKCS1);
 };
 
