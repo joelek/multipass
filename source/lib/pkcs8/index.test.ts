@@ -2,13 +2,13 @@ import * as jwk from "../jwk";
 import * as pkcs8 from "./";
 
 const RSA_PUBLIC_KEY_PKCS8 = Buffer.from(`
-	MFswDQYJKoZIhvcNAQEBBQADSjBIAkEAvmMw/sCvyhhctqv358NSMxVOghIYM4zg
-	5YTjlVLFe5osR0PZJUPVbvso3cOb3AjlF1VbuTLXJ1mWE2tqdv6olQIDAQAB
+	MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL5jMP7Ar8oYXLar9+fDUjMVToISGDOM
+	4OWE45VSxXuaLEdD2SVD1W77KN3Dm9wI5RdVW7ky1ydZlhNranb+qJUCAwEAAQ==
 `, "base64");
 
 const RSA_PUBLIC_KEY_JWK: jwk.RSAPublicKey = {
 	kty: "RSA",
-	n: "AL5jMP7Ar8oYXLar9-fDUjMVToISGDOM4OWE45VSxXuaLEdD2SVD1W77KN3Dm9wI5RdVW7ky1ydZlhNranb-qJU",
+	n: "vmMw_sCvyhhctqv358NSMxVOghIYM4zg5YTjlVLFe5osR0PZJUPVbvso3cOb3AjlF1VbuTLXJ1mWE2tqdv6olQ",
 	e: "AQAB"
 };
 
@@ -25,11 +25,11 @@ const RSA_PRIVATE_KEY_PKCS8 = Buffer.from(`
 
 const RSA_PRIVATE_KEY_JWK: jwk.RSAPrivateKey = {
 	kty: "RSA",
-	n: "AL5jMP7Ar8oYXLar9-fDUjMVToISGDOM4OWE45VSxXuaLEdD2SVD1W77KN3Dm9wI5RdVW7ky1ydZlhNranb-qJU",
+	n: "vmMw_sCvyhhctqv358NSMxVOghIYM4zg5YTjlVLFe5osR0PZJUPVbvso3cOb3AjlF1VbuTLXJ1mWE2tqdv6olQ",
 	e: "AQAB",
 	d: "MqNBSdDIMLFwH2n34t3RhCK7od7cLwHeY02IFpRQUEJIKUzNk3QWqmnPE26y_H2FJQ4Qbuq0g2P8ewUWPT_qIQ",
-	p: "APc9_05YqNP7xAsoRA7luG3S1bl4h0kGZA7iTs_DTZVp",
-	q: "AMUhohUKDwMs-kNGAHZfH9CgWECO9jNDGQq5TkjsM_hN",
+	p: "9z3_Tlio0_vECyhEDuW4bdLVuXiHSQZkDuJOz8NNlWk",
+	q: "xSGiFQoPAyz6Q0YAdl8f0KBYQI72M0MZCrlOSOwz-E0",
 	dp: "CfacoDqgaxJ9PvnbbEJDoWFarYO25_Fy_MqP5H15Vek",
 	dq: "Kic8_369IxK1GTmY07cXmIcRGAz5_JA2hKKHaPSJUGk",
 	qi: "GarTlyv2qmBZ7DNaYscVFR38zWQUWXpKh49Kw5WGt64"
