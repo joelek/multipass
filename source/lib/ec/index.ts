@@ -1,5 +1,6 @@
 import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
+import * as sec1 from "../sec1";
 
 export function generatePrivateKeyDER(options?: Partial<{
 	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string,
@@ -25,5 +26,5 @@ export function generatePrivateKey(): jwk.ECPrivateKey {
 	let buffer = generatePrivateKeyDER({
 		type: "sec1"
 	});
-	throw `TODO`;
+	return sec1.parseECPrivateKey(buffer);
 };
