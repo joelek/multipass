@@ -16,3 +16,4 @@ certhero \
 ## Roadmap
 
 * JWS: Add support for other signature algorithms.
+* Investigate using createPrivateKey({ key, format, type }) and export({ format }) from crypto module.
