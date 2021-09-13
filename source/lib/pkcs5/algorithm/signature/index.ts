@@ -31,6 +31,28 @@ export function fromIdentifier(node: schema.AlgorithmIdentifier): SignatureAlgor
 	throw `Expected signature algorithm to be known!`;
 };
 
+export function fromJoseType(joseType: string): SignatureAlgorithm {
+	if (joseType === "ES256") {
+		return new ECDSAWithSHA256();
+	}
+	if (joseType === "ES384") {
+		return new ECDSAWithSHA384();
+	}
+	if (joseType === "ES512") {
+		return new ECDSAWithSHA512();
+	}
+	if (joseType === "RS256") {
+		return new SHA256WithRSAEncryption();
+	}
+	if (joseType === "RS384") {
+		return new SHA384WithRSAEncryption();
+	}
+	if (joseType === "RS512") {
+		return new SHA512WithRSAEncryption();
+	}
+	throw `Expected signature algorithm to be known!`;
+};
+
 export class ECDSAWithSHA256 implements SignatureAlgorithm {
 	constructor() {
 
