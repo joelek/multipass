@@ -4,6 +4,7 @@ import * as schema from "../../schema";
 import { Algorithm } from "../algorithm";
 
 export interface SignatureAlgorithm extends Algorithm {
+	getJoseType(): string;
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer;
 	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean;
 };
@@ -51,6 +52,10 @@ export class ECDSAWithSHA256 implements SignatureAlgorithm {
 		};
 	}
 
+	getJoseType(): string {
+		return "ES256";
+	}
+
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
 		let sign = libcrypto.createSign("sha256");
 		sign.update(buffer);
@@ -91,6 +96,10 @@ export class ECDSAWithSHA384 implements SignatureAlgorithm {
 				}
 			]
 		};
+	}
+
+	getJoseType(): string {
+		return "ES384";
 	}
 
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
@@ -135,6 +144,10 @@ export class ECDSAWithSHA512 implements SignatureAlgorithm {
 		};
 	}
 
+	getJoseType(): string {
+		return "ES512";
+	}
+
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
 		let sign = libcrypto.createSign("sha512");
 		sign.update(buffer);
@@ -175,6 +188,10 @@ export class SHA256WithRSAEncryption implements SignatureAlgorithm {
 				}
 			]
 		};
+	}
+
+	getJoseType(): string {
+		return "RS256";
 	}
 
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
@@ -219,6 +236,10 @@ export class SHA384WithRSAEncryption implements SignatureAlgorithm {
 		};
 	}
 
+	getJoseType(): string {
+		return "RS384";
+	}
+
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
 		let sign = libcrypto.createSign("sha384");
 		sign.update(buffer);
@@ -259,6 +280,10 @@ export class SHA512WithRSAEncryption implements SignatureAlgorithm {
 				}
 			]
 		};
+	}
+
+	getJoseType(): string {
+		return "RS512";
 	}
 
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
