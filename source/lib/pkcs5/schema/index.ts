@@ -52,6 +52,96 @@ export type AlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
+export const ECDSAWithSHA256: autoguard.serialization.MessageGuard<ECDSAWithSHA256> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.10045.4.3.2")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type ECDSAWithSHA256 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.10045.4.3.2">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
+export const ECDSAWithSHA384: autoguard.serialization.MessageGuard<ECDSAWithSHA384> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.10045.4.3.3")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type ECDSAWithSHA384 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.10045.4.3.3">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
+export const ECDSAWithSHA512: autoguard.serialization.MessageGuard<ECDSAWithSHA512> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.10045.4.3.4")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type ECDSAWithSHA512 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.10045.4.3.4">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
 export const SHA256WithRSAEncryption: autoguard.serialization.MessageGuard<SHA256WithRSAEncryption> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
@@ -637,6 +727,9 @@ export namespace Autoguard {
 		"ASN1OctetString": autoguard.guards.Reference.of(() => ASN1OctetString),
 		"ASN1Sequence": autoguard.guards.Reference.of(() => ASN1Sequence),
 		"AlgorithmIdentifier": autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+		"ECDSAWithSHA256": autoguard.guards.Reference.of(() => ECDSAWithSHA256),
+		"ECDSAWithSHA384": autoguard.guards.Reference.of(() => ECDSAWithSHA384),
+		"ECDSAWithSHA512": autoguard.guards.Reference.of(() => ECDSAWithSHA512),
 		"SHA256WithRSAEncryption": autoguard.guards.Reference.of(() => SHA256WithRSAEncryption),
 		"SHA384WithRSAEncryption": autoguard.guards.Reference.of(() => SHA384WithRSAEncryption),
 		"SHA512WithRSAEncryption": autoguard.guards.Reference.of(() => SHA512WithRSAEncryption),

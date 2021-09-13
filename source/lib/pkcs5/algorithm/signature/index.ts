@@ -9,6 +9,15 @@ export interface SignatureAlgorithm extends Algorithm {
 
 export function fromIdentifier(node: schema.AlgorithmIdentifier): SignatureAlgorithm {
 	try {
+		return ECDSAWithSHA256.fromIdentifier(node);
+	} catch (error) {}
+	try {
+		return ECDSAWithSHA384.fromIdentifier(node);
+	} catch (error) {}
+	try {
+		return ECDSAWithSHA512.fromIdentifier(node);
+	} catch (error) {}
+	try {
 		return SHA256WithRSAEncryption.fromIdentifier(node);
 	} catch (error) {}
 	try {
@@ -18,6 +27,114 @@ export function fromIdentifier(node: schema.AlgorithmIdentifier): SignatureAlgor
 		return SHA512WithRSAEncryption.fromIdentifier(node);
 	} catch (error) {}
 	throw `Expected signature algorithm to be known!`;
+};
+
+export class ECDSAWithSHA256 implements SignatureAlgorithm {
+	constructor() {
+
+	}
+
+	getIdentifier(): schema.ECDSAWithSHA256 {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.10045.4.3.2"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
+		let sign = libcrypto.createSign("sha256");
+		sign.update(buffer);
+		return sign.sign(key);
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): ECDSAWithSHA256 {
+		if (schema.ECDSAWithSHA256.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new ECDSAWithSHA256();
+		}
+		throw ``;
+	}
+};
+
+export class ECDSAWithSHA384 implements SignatureAlgorithm {
+	constructor() {
+
+	}
+
+	getIdentifier(): schema.ECDSAWithSHA384 {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.10045.4.3.3"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
+		let sign = libcrypto.createSign("sha384");
+		sign.update(buffer);
+		return sign.sign(key);
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): ECDSAWithSHA384 {
+		if (schema.ECDSAWithSHA384.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new ECDSAWithSHA384();
+		}
+		throw ``;
+	}
+};
+
+export class ECDSAWithSHA512 implements SignatureAlgorithm {
+	constructor() {
+
+	}
+
+	getIdentifier(): schema.ECDSAWithSHA512 {
+		return {
+			...asn1.SEQUENCE,
+			data: [
+				{
+					...asn1.OBJECT_IDENTIFER,
+					data: "1.2.840.10045.4.3.4"
+				},
+				{
+					...asn1.NULL,
+					data: ""
+				}
+			]
+		};
+	}
+
+	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
+		let sign = libcrypto.createSign("sha512");
+		sign.update(buffer);
+		return sign.sign(key);
+	}
+
+	static fromIdentifier(node: schema.AlgorithmIdentifier): ECDSAWithSHA512 {
+		if (schema.ECDSAWithSHA512.is(node)) {
+			let [algorithmNode, optionsNode] = node.data;
+			return new ECDSAWithSHA512();
+		}
+		throw ``;
+	}
 };
 
 export class SHA256WithRSAEncryption implements SignatureAlgorithm {
