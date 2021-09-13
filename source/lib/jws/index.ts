@@ -33,7 +33,7 @@ export const Body = autoguard.guards.Object.of({
 
 export type Body = ReturnType<typeof Body["as"]>;
 
-export async function sign(private_key: libcrypto.KeyLike, protected_json?: json.Object, payload_json?: json.Any): Promise<Body> {
+export async function sign(private_key: libcrypto.KeyObject, protected_json?: json.Object, payload_json?: json.Any): Promise<Body> {
 	let protected_base64url = await encode({
 		...protected_json,
 		alg: `RS256`
@@ -50,7 +50,7 @@ export async function sign(private_key: libcrypto.KeyLike, protected_json?: json
 	};
 };
 
-export async function verify(body: Body, public_key: libcrypto.KeyLike): Promise<boolean> {
+export async function verify(body: Body, public_key: libcrypto.KeyObject): Promise<boolean> {
 	let verifier = libcrypto.createVerify(`SHA256`);
 	verifier.update(`${body.protected}.${body.payload}`);
 	let signature = await encoding.convertBase64URLStringToBuffer(body.signature);
