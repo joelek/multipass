@@ -1,0 +1,24 @@
+table SignatureAlgorithm: {
+	"HS256",
+	"HS384",
+	"HS512",
+	"RS256",
+	"RS384",
+	"RS512",
+	"ES256",
+	"ES384",
+	"ES512",
+	"PS256",
+	"PS384",
+	"PS512"
+};
+
+guard Protected: {
+	alg: SignatureAlgorithm.Key
+};
+
+guard Body: {
+	protected: string,
+	payload: string,
+	signature: string
+};
