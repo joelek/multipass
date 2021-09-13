@@ -1,6 +1,8 @@
 import * as libcrypto from "crypto";
 import * as encoding from "../encoding";
 import * as json from "../json";
+import * as jwk from "../jwk";
+import * as pkcs5 from "../pkcs5";
 import * as schema from "./schema";
 
 export * from "./schema";
@@ -12,15 +14,29 @@ async function encode(json: json.Any): Promise<string> {
 		.then(encoding.convertBufferToBase64URLString);
 };
 
-export async function sign(private_key: libcrypto.KeyObject, protected_json?: json.Object, payload_json?: json.Any): Promise<schema.Body> {
+export function getDefaultAlgorithm(key: libcrypto.KeyObject): pkcs5.signature.SignatureAlgorithm {
+	let keyJwk = key.export({ format: "jwk" });
+	if (jwk.RSAKey.is(keyJwk)) {
+		return new pkcs5.signature.SHA256WithRSAEncryption();
+	}
+	if (jwk.ECKey.is(keyJwk)) {
+		return new pkcs5.signature.ECDSAWithSHA256();
+	}
+	throw `Expected code to be unreachable!`;
+};
+
+export async function sign(key: libcrypto.KeyObject, options?: Partial<{
+	protected: json.Object,
+	payload: json.Any,
+	signatureAlgorithm: pkcs5.signature.SignatureAlgorithm
+}>): Promise<schema.Body> {
+	let signatureAlgorithm = options?.signatureAlgorithm ?? getDefaultAlgorithm(key);
 	let protected_base64url = await encode({
-		...protected_json,
-		alg: `RS256`
+		...options?.protected,
+		alg: signatureAlgorithm.getJoseType()
 	});
-	let payload_base64url = (payload_json != null ? await encode(payload_json) : ``);
-	let signer = libcrypto.createSign(`SHA256`);
-	signer.update(`${protected_base64url}.${payload_base64url}`);
-	let signature = signer.sign(private_key);
+	let payload_base64url = (options?.payload != null ? await encode(options.payload) : "");
+	let signature = signatureAlgorithm.sign(Buffer.from(`${protected_base64url}.${payload_base64url}`), key);
 	let signature_base64url = await encoding.convertBufferToBase64URLString(signature);
 	return {
 		protected: protected_base64url,
@@ -29,9 +45,9 @@ export async function sign(private_key: libcrypto.KeyObject, protected_json?: js
 	};
 };
 
-export async function verify(body: schema.Body, public_key: libcrypto.KeyObject): Promise<boolean> {
-	let verifier = libcrypto.createVerify(`SHA256`);
-	verifier.update(`${body.protected}.${body.payload}`);
+export async function verify(body: schema.Body, key: libcrypto.KeyObject): Promise<boolean> {
 	let signature = await encoding.convertBase64URLStringToBuffer(body.signature);
-	return verifier.verify(public_key, signature);
+	let joseType = schema.Protected.as(JSON.parse(Buffer.from(body.protected, "base64url").toString())).alg;
+	let signatureAlgorithm = pkcs5.signature.fromJoseType(joseType);
+	return signatureAlgorithm.verify(Buffer.from(`${body.protected}.${body.payload}`), key, signature);
 };

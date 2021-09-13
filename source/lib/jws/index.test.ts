@@ -21,28 +21,48 @@ vPzLFyOAoueVK3jl1gvKH+HDLtHvAgMBAAE=
 `);
 
 (async () => {
-	let blob = await jws.sign(PRIVATE_KEY, { food: `räksmörgås` }, `räksmörgås`);
-	let observed = blob.protected;
-	let expected = `eyJmb29kIjoicsOka3Ntw7ZyZ8OlcyIsImFsZyI6IlJTMjU2In0`;
-	console.assert(observed === expected, `It should encode the protected section properly.`);
+	let body = await jws.sign(PRIVATE_KEY, {
+		protected: {
+			food: "räksmörgås"
+		},
+		payload: "räksmörgås"
+	});
+	let observed = body.protected;
+	let expected = "eyJmb29kIjoicsOka3Ntw7ZyZ8OlcyIsImFsZyI6IlJTMjU2In0";
+	console.assert(observed === expected, "It should encode the protected section properly.");
 })();
 
 (async () => {
-	let blob = await jws.sign(PRIVATE_KEY, { food: `räksmörgås` }, `räksmörgås`);
-	let observed = blob.payload;
-	let expected = `InLDpGtzbcO2cmfDpXMi`;
-	console.assert(observed === expected, `It should encode the payload section properly.`);
+	let body = await jws.sign(PRIVATE_KEY, {
+		protected: {
+			food: "räksmörgås"
+		},
+		payload: "räksmörgås"
+	});
+	let observed = body.payload;
+	let expected = "InLDpGtzbcO2cmfDpXMi";
+	console.assert(observed === expected, "It should encode the payload section properly.");
 })();
 
 (async () => {
-	let blob = await jws.sign(PRIVATE_KEY, { food: `räksmörgås` }, `räksmörgås`);
-	let observed = blob.signature;
-	let expected = `cPl6tjXiYHgHC7uvUBe66VGD3zdg3GSm3v_tGWlkYfpVUGUcA7JQ7SF9u5mEPr3sI2sje8ycRi2Dm1qJl3U_hA`;
-	console.assert(observed === expected, `It should sign the protected and payload sections properly.`);
+	let body = await jws.sign(PRIVATE_KEY, {
+		protected: {
+			food: "räksmörgås"
+		},
+		payload: "räksmörgås"
+	});
+	let observed = body.signature;
+	let expected = "cPl6tjXiYHgHC7uvUBe66VGD3zdg3GSm3v_tGWlkYfpVUGUcA7JQ7SF9u5mEPr3sI2sje8ycRi2Dm1qJl3U_hA";
+	console.assert(observed === expected, "It should sign the protected and payload sections properly.");
 })();
 
 (async () => {
-	let blob = await jws.sign(PRIVATE_KEY, { food: `räksmörgås` }, `räksmörgås`);
-	let verification = await jws.verify(blob, PUBLIC_KEY);
-	console.assert(verification, `It should verify the signature properly.`);
+	let body = await jws.sign(PRIVATE_KEY, {
+		protected: {
+			food: "räksmörgås"
+		},
+		payload: "räksmörgås"
+	});
+	let verification = await jws.verify(body, PUBLIC_KEY);
+	console.assert(verification, "It should verify the signature properly.");
 })();
