@@ -5,6 +5,7 @@ import { Algorithm } from "../algorithm";
 
 export interface SignatureAlgorithm extends Algorithm {
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer;
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean;
 };
 
 export function fromIdentifier(node: schema.AlgorithmIdentifier): SignatureAlgorithm {
@@ -56,6 +57,12 @@ export class ECDSAWithSHA256 implements SignatureAlgorithm {
 		return sign.sign(key);
 	}
 
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
+		let verify = libcrypto.createVerify("sha256");
+		verify.update(buffer);
+		return verify.verify(key, signature);
+	}
+
 	static fromIdentifier(node: schema.AlgorithmIdentifier): ECDSAWithSHA256 {
 		if (schema.ECDSAWithSHA256.is(node)) {
 			let [algorithmNode, optionsNode] = node.data;
@@ -90,6 +97,12 @@ export class ECDSAWithSHA384 implements SignatureAlgorithm {
 		let sign = libcrypto.createSign("sha384");
 		sign.update(buffer);
 		return sign.sign(key);
+	}
+
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
+		let verify = libcrypto.createVerify("sha384");
+		verify.update(buffer);
+		return verify.verify(key, signature);
 	}
 
 	static fromIdentifier(node: schema.AlgorithmIdentifier): ECDSAWithSHA384 {
@@ -128,6 +141,12 @@ export class ECDSAWithSHA512 implements SignatureAlgorithm {
 		return sign.sign(key);
 	}
 
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
+		let verify = libcrypto.createVerify("sha512");
+		verify.update(buffer);
+		return verify.verify(key, signature);
+	}
+
 	static fromIdentifier(node: schema.AlgorithmIdentifier): ECDSAWithSHA512 {
 		if (schema.ECDSAWithSHA512.is(node)) {
 			let [algorithmNode, optionsNode] = node.data;
@@ -162,6 +181,12 @@ export class SHA256WithRSAEncryption implements SignatureAlgorithm {
 		let sign = libcrypto.createSign("sha256");
 		sign.update(buffer);
 		return sign.sign(key);
+	}
+
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
+		let verify = libcrypto.createVerify("sha256");
+		verify.update(buffer);
+		return verify.verify(key, signature);
 	}
 
 	static fromIdentifier(node: schema.AlgorithmIdentifier): SHA256WithRSAEncryption {
@@ -200,6 +225,12 @@ export class SHA384WithRSAEncryption implements SignatureAlgorithm {
 		return sign.sign(key);
 	}
 
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
+		let verify = libcrypto.createVerify("sha384");
+		verify.update(buffer);
+		return verify.verify(key, signature);
+	}
+
 	static fromIdentifier(node: schema.AlgorithmIdentifier): SHA384WithRSAEncryption {
 		if (schema.SHA384WithRSAEncryption.is(node)) {
 			let [algorithmNode, optionsNode] = node.data;
@@ -234,6 +265,12 @@ export class SHA512WithRSAEncryption implements SignatureAlgorithm {
 		let sign = libcrypto.createSign("sha512");
 		sign.update(buffer);
 		return sign.sign(key);
+	}
+
+	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
+		let verify = libcrypto.createVerify("sha512");
+		verify.update(buffer);
+		return verify.verify(key, signature);
 	}
 
 	static fromIdentifier(node: schema.AlgorithmIdentifier): SHA512WithRSAEncryption {
