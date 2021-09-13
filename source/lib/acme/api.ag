@@ -56,8 +56,14 @@ guard Order: {
 
 # ==============================================================================
 
-route getDirectory(): GET:/<path*>
-	=> Directory;
+guard Protected: {
+	"nonce": string,
+	"url": string
+};
+
+guard CreateAccountProtected: Protected & {
+	"jwk": ../jwk/AssymetricKey
+};
 
 guard CreateAccountPayload: {
 	"contact"?: string[],
@@ -66,9 +72,14 @@ guard CreateAccountPayload: {
 	"externalAccountBinding"?: {}
 };
 
-route createAccount(): POST:/<path*>
+# ==============================================================================
+
+route getDirectory(): GET:/<path*>
+	=> Directory;
+
+route newAccount(): POST:/<path*>
 	<= <{ "Content-Type" }> ../jws/Body
-	=> Account;
+	=> <{ "Replay-Nonce", "Location" }> Account;
 
 route newNonce(): HEAD:/<path*>
 	=> <{ "Replay-Nonce" }>;

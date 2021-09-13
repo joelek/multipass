@@ -30,8 +30,8 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
-	"createAccount": async (request) => {
-		let guard = shared.Autoguard.Requests["createAccount"];
+	"newAccount": async (request) => {
+		let guard = shared.Autoguard.Requests["newAccount"];
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -50,9 +50,11 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
+			headers["replay-nonce"] = autoguard.api.decodeHeaderValue(raw.headers, "replay-nonce", true);
+			headers["location"] = autoguard.api.decodeHeaderValue(raw.headers, "location", true);
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["createAccount"];
+			let guard = shared.Autoguard.Responses["newAccount"];
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}

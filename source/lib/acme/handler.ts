@@ -1,6 +1,10 @@
+import * as libcrypto from "crypto";
+import * as liburl from "url";
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
 import * as api from "./api";
 import * as apiclient from "./api/client";
+import * as jwk from "../jwk";
+import * as jws from "../jws";
 
 type Client = ReturnType<typeof apiclient.makeClient>;
 
@@ -12,14 +16,6 @@ function makeClient(urlPrefix: string): Client {
 	return client;
 };
 
-type Directory = {
-	keyChange: Array<string>;
-	newAccount: Array<string>;
-	newNonce: Array<string>;
-	newOrder: Array<string>;
-	revokeCert: Array<string>;
-};
-
 function getUrlPath(url: string, urlPrefix: string): Array<string> {
 	if (!url.startsWith(urlPrefix)) {
 		throw `Expected url "${url}" to have prefix "${urlPrefix}"!`;
@@ -29,58 +25,69 @@ function getUrlPath(url: string, urlPrefix: string): Array<string> {
 	return components.map((component) => decodeURIComponent(component));
 };
 
-export class Handler {
-	private client: Client;
-	private directory: Directory;
-	private nonce: string | undefined;
+const CONTENT_TYPE = "application/jose+json";
 
-	private constructor(client: Client, directory: Directory) {
+export class Handler {
+	private key: libcrypto.KeyObject;
+	private client: Client;
+	private directory: api.Directory;
+	private urlPrefix: string;
+	private nextReplayNonce: string | undefined;
+
+	private constructor(key: libcrypto.KeyObject, client: Client, directory: api.Directory, urlPrefix: string) {
+		this.key = key;
 		this.client = client;
 		this.directory = directory;
-		this.nonce = undefined;
+		this.urlPrefix = urlPrefix;
+		this.nextReplayNonce = undefined;
 	}
 
-	createAccount(...[request]: Parameters<Client["createAccount"]>): ReturnType<Client["createAccount"]> {
-		return this.client.createAccount({
-			...request,
+	async createAccount(payloadData: api.CreateAccountPayload): Promise<api.Account> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let key = jwk.getPublicKey(this.key.export({ format: "jwk" }) as any);
+		let protectedData: api.CreateAccountProtected = {
+			jwk: key,
+			nonce: this.nextReplayNonce,
+			url: this.directory.newAccount
+		};
+		let response = await this.client.newAccount({
 			options: {
-				...request.options,
-				path: this.directory.newAccount
+				path: getUrlPath(this.directory.newAccount, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData,
+				payload: payloadData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = await response.payload();
+		return payload;
+	}
+
+	async createNonce(): Promise<string> {
+		let response = await this.client.newNonce({
+			options: {
+				path: getUrlPath(this.directory.newNonce, this.urlPrefix)
 			}
 		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		return this.nextReplayNonce;
 	}
 
-	newNonce(...[request]: Parameters<Client["newNonce"]>): ReturnType<Client["newNonce"]> {
-		return this.client.newNonce({
-			...request,
-			options: {
-				...request.options,
-				path: this.directory.newNonce
-			}
-		});
-	}
-
-	static async make(urlPrefix: string, options?: Partial<{ path: Array<string> }>): Promise<Handler> {
-		let path = options?.path ?? ["directory"];
+	static async make(url: string, key: libcrypto.KeyObject): Promise<Handler> {
+		let urlPrefix = new liburl.URL(url).origin;
 		let client = makeClient(urlPrefix);
 		let response = await client.getDirectory({
 			options: {
-				path
+				path: getUrlPath(url, urlPrefix)
 			}
 		});
 		let payload = await response.payload();
-		let keyChange = getUrlPath(payload.keyChange, urlPrefix);
-		let newAccount = getUrlPath(payload.newAccount, urlPrefix);
-		let newNonce = getUrlPath(payload.newNonce, urlPrefix);
-		let newOrder = getUrlPath(payload.newOrder, urlPrefix);
-		let revokeCert = getUrlPath(payload.revokeCert, urlPrefix);
-		let directory: Directory = {
-			keyChange,
-			newAccount,
-			newNonce,
-			newOrder,
-			revokeCert
-		};
-		return new Handler(client, directory);
+		return new Handler(key, client, payload, urlPrefix);
 	};
 };

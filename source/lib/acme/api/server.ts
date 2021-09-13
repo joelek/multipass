@@ -57,17 +57,19 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 				headers["content-type"] = autoguard.api.decodeHeaderValue(raw.headers, "content-type", true);
 				headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 				let payload = await autoguard.api.deserializePayload(raw.payload);
-				let guard = shared.Autoguard.Requests["createAccount"];
+				let guard = shared.Autoguard.Requests["newAccount"];
 				let request = guard.as({ options, headers, payload }, "request");
 				return {
 					handleRequest: async () => {
-						let response = await routes["createAccount"](new autoguard.api.ClientRequest(request, false, auxillary));
+						let response = await routes["newAccount"](new autoguard.api.ClientRequest(request, false, auxillary));
 						return {
 							validateResponse: async () => {
-								let guard = shared.Autoguard.Responses["createAccount"];
+								let guard = shared.Autoguard.Responses["newAccount"];
 								guard.as(response, "response");
 								let status = response.status ?? 200;
 								let headers = new Array<[string, string]>();
+								headers.push(...autoguard.api.encodeHeaderPairs("replay-nonce", [response.headers?.["replay-nonce"]], true));
+								headers.push(...autoguard.api.encodeHeaderPairs("location", [response.headers?.["location"]], true));
 								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
 								let payload = autoguard.api.serializePayload(response.payload);
 								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
