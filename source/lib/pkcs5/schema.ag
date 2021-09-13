@@ -12,6 +12,27 @@ guard AlgorithmIdentifier: ASN1Sequence & {
 	]
 };
 
+guard SHA256WithRSAEncryption: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.11" },
+		ASN1Null
+	]
+};
+
+guard SHA384WithRSAEncryption: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.12" },
+		ASN1Null
+	]
+};
+
+guard SHA512WithRSAEncryption: AlgorithmIdentifier & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.1.13" },
+		ASN1Null
+	]
+};
+
 guard AES128CBCIdentifier: AlgorithmIdentifier & {
 	data: [
 		ASN1ObjectIdentifier & { data: "2.16.840.1.101.3.4.1.2" },

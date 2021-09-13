@@ -52,6 +52,96 @@ export type AlgorithmIdentifier = autoguard.guards.Intersection<[
 	}, {}>
 ]>;
 
+export const SHA256WithRSAEncryption: autoguard.serialization.MessageGuard<SHA256WithRSAEncryption> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.113549.1.1.11")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type SHA256WithRSAEncryption = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.113549.1.1.11">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
+export const SHA384WithRSAEncryption: autoguard.serialization.MessageGuard<SHA384WithRSAEncryption> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.113549.1.1.12")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type SHA384WithRSAEncryption = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.113549.1.1.12">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
+export const SHA512WithRSAEncryption: autoguard.serialization.MessageGuard<SHA512WithRSAEncryption> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+	autoguard.guards.Object.of({
+		"data": autoguard.guards.Tuple.of(
+			autoguard.guards.Intersection.of(
+				autoguard.guards.Reference.of(() => ASN1ObjectIdentifier),
+				autoguard.guards.Object.of({
+					"data": autoguard.guards.StringLiteral.of("1.2.840.113549.1.1.13")
+				}, {})
+			),
+			autoguard.guards.Reference.of(() => ASN1Null)
+		)
+	}, {})
+);
+
+export type SHA512WithRSAEncryption = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<AlgorithmIdentifier>,
+	autoguard.guards.Object<{
+		"data": autoguard.guards.Tuple<[
+			autoguard.guards.Intersection<[
+				autoguard.guards.Reference<ASN1ObjectIdentifier>,
+				autoguard.guards.Object<{
+					"data": autoguard.guards.StringLiteral<"1.2.840.113549.1.1.13">
+				}, {}>
+			]>,
+			autoguard.guards.Reference<ASN1Null>
+		]>
+	}, {}>
+]>;
+
 export const AES128CBCIdentifier: autoguard.serialization.MessageGuard<AES128CBCIdentifier> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => AlgorithmIdentifier),
 	autoguard.guards.Object.of({
@@ -547,6 +637,9 @@ export namespace Autoguard {
 		"ASN1OctetString": autoguard.guards.Reference.of(() => ASN1OctetString),
 		"ASN1Sequence": autoguard.guards.Reference.of(() => ASN1Sequence),
 		"AlgorithmIdentifier": autoguard.guards.Reference.of(() => AlgorithmIdentifier),
+		"SHA256WithRSAEncryption": autoguard.guards.Reference.of(() => SHA256WithRSAEncryption),
+		"SHA384WithRSAEncryption": autoguard.guards.Reference.of(() => SHA384WithRSAEncryption),
+		"SHA512WithRSAEncryption": autoguard.guards.Reference.of(() => SHA512WithRSAEncryption),
 		"AES128CBCIdentifier": autoguard.guards.Reference.of(() => AES128CBCIdentifier),
 		"AES192CBCIdentifier": autoguard.guards.Reference.of(() => AES192CBCIdentifier),
 		"AES256CBCIdentifier": autoguard.guards.Reference.of(() => AES256CBCIdentifier),
