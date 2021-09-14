@@ -1,7 +1,7 @@
 guard Account: {
 	"contact"?: string[],
 	"externalAccountBinding"?: {},
-	"orders": string,
+	"orders"?: string,
 	"status": "valid" | "deactivated" | "revoked",
 	"termsOfServiceAgreed"?: boolean
 };

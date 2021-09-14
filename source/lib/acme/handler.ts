@@ -11,7 +11,8 @@ type Client = ReturnType<typeof apiclient.makeClient>;
 function makeClient(urlPrefix: string): Client {
 	let client = apiclient.makeClient({
 		urlPrefix: urlPrefix,
-		requestHandler: autoguard.api.makeNodeRequestHandler()
+		requestHandler: autoguard.api.makeNodeRequestHandler(),
+		debugMode: true
 	});
 	return client;
 };

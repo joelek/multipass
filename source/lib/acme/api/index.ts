@@ -5,7 +5,6 @@ import { AssymetricKey } from "../../jwk";
 import { Body } from "../../jws";
 
 export const Account: autoguard.serialization.MessageGuard<Account> = autoguard.guards.Object.of({
-	"orders": autoguard.guards.String,
 	"status": autoguard.guards.Union.of(
 		autoguard.guards.StringLiteral.of("valid"),
 		autoguard.guards.StringLiteral.of("deactivated"),
@@ -14,11 +13,11 @@ export const Account: autoguard.serialization.MessageGuard<Account> = autoguard.
 }, {
 	"contact": autoguard.guards.Array.of(autoguard.guards.String),
 	"externalAccountBinding": autoguard.guards.Object.of({}, {}),
+	"orders": autoguard.guards.String,
 	"termsOfServiceAgreed": autoguard.guards.Boolean
 });
 
 export type Account = autoguard.guards.Object<{
-	"orders": autoguard.guards.String,
 	"status": autoguard.guards.Union<[
 		autoguard.guards.StringLiteral<"valid">,
 		autoguard.guards.StringLiteral<"deactivated">,
@@ -27,6 +26,7 @@ export type Account = autoguard.guards.Object<{
 }, {
 	"contact": autoguard.guards.Array<autoguard.guards.String>,
 	"externalAccountBinding": autoguard.guards.Object<{}, {}>,
+	"orders": autoguard.guards.String,
 	"termsOfServiceAgreed": autoguard.guards.Boolean
 }>;
 
