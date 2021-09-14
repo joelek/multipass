@@ -5,7 +5,7 @@ export * as config from "./config";
 
 const URL_PREFIX = "https://api.dynu.com/v2";
 
-export function makeClient(config: config.Config) {
+export function makeClient(config: config.Config): api.Client {
 	let client = api.makeClient({
 		urlPrefix: URL_PREFIX,
 		requestHandler: autoguard.api.makeNodeRequestHandler(),

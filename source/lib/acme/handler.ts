@@ -6,9 +6,7 @@ import * as apiclient from "./api/client";
 import * as jwk from "../jwk";
 import * as jws from "../jws";
 
-type Client = ReturnType<typeof apiclient.makeClient>;
-
-function makeClient(urlPrefix: string): Client {
+function makeClient(urlPrefix: string): apiclient.Client {
 	let client = apiclient.makeClient({
 		urlPrefix: urlPrefix,
 		requestHandler: autoguard.api.makeNodeRequestHandler(),
@@ -30,12 +28,12 @@ const CONTENT_TYPE = "application/jose+json";
 
 export class Handler {
 	private key: libcrypto.KeyObject;
-	private client: Client;
+	private client: apiclient.Client;
 	private directory: api.Directory;
 	private urlPrefix: string;
 	private nextReplayNonce: string | undefined;
 
-	private constructor(key: libcrypto.KeyObject, client: Client, directory: api.Directory, urlPrefix: string) {
+	private constructor(key: libcrypto.KeyObject, client: apiclient.Client, directory: api.Directory, urlPrefix: string) {
 		this.key = key;
 		this.client = client;
 		this.directory = directory;
