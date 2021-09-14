@@ -41,7 +41,7 @@ export class Handler {
 		this.nextReplayNonce = undefined;
 	}
 
-	async createAccount(payloadData: api.CreateAccountPayload): Promise<api.Account> {
+	async createAccount(payloadData: api.CreateAccountPayload): Promise<{ account: api.Account, location: string }> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
@@ -64,8 +64,12 @@ export class Handler {
 			})
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		let payload = await response.payload();
-		return payload;
+		let account = await response.payload();
+		let location = response.headers()["location"];
+		return {
+			account,
+			location
+		};
 	}
 
 	async createNonce(): Promise<string> {
@@ -76,6 +80,36 @@ export class Handler {
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
 		return this.nextReplayNonce;
+	}
+
+	async createOrder(kid: string, payloadData: api.CreateOrderPayload): Promise<{ order: api.Order, location: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.CreateOrderProtected = {
+			kid: kid,
+			nonce: this.nextReplayNonce,
+			url: this.directory.newAccount
+		};
+		let response = await this.client.newOrder({
+			options: {
+				path: getUrlPath(this.directory.newAccount, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData,
+				payload: payloadData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let order = await response.payload();
+		let location = response.headers()["location"];
+		return {
+			order,
+			location
+		};
 	}
 
 	static async make(url: string, key: libcrypto.KeyObject): Promise<Handler> {

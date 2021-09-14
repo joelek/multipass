@@ -1,7 +1,7 @@
 guard Account: {
 	"contact"?: string[],
 	"externalAccountBinding"?: {},
-	"orders"?: string,
+	"orders": string,
 	"status": "valid" | "deactivated" | "revoked",
 	"termsOfServiceAgreed"?: boolean
 };
@@ -72,6 +72,16 @@ guard CreateAccountPayload: {
 	"externalAccountBinding"?: {}
 };
 
+guard CreateOrderProtected: Protected & {
+	"kid": string
+};
+
+guard CreateOrderPayload: {
+	"identifiers": Identifier[],
+	"notBefore"?: string,
+	"notAfter"?: string
+};
+
 # ==============================================================================
 
 route getDirectory(): GET:/<path*>
@@ -83,3 +93,7 @@ route newAccount(): POST:/<path*>
 
 route newNonce(): HEAD:/<path*>
 	=> <{ "Replay-Nonce" }>;
+
+route newOrder(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce", "Location" }> Order;

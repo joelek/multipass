@@ -5,6 +5,7 @@ import { AssymetricKey } from "../../jwk";
 import { Body } from "../../jws";
 
 export const Account: autoguard.serialization.MessageGuard<Account> = autoguard.guards.Object.of({
+	"orders": autoguard.guards.String,
 	"status": autoguard.guards.Union.of(
 		autoguard.guards.StringLiteral.of("valid"),
 		autoguard.guards.StringLiteral.of("deactivated"),
@@ -13,11 +14,11 @@ export const Account: autoguard.serialization.MessageGuard<Account> = autoguard.
 }, {
 	"contact": autoguard.guards.Array.of(autoguard.guards.String),
 	"externalAccountBinding": autoguard.guards.Object.of({}, {}),
-	"orders": autoguard.guards.String,
 	"termsOfServiceAgreed": autoguard.guards.Boolean
 });
 
 export type Account = autoguard.guards.Object<{
+	"orders": autoguard.guards.String,
 	"status": autoguard.guards.Union<[
 		autoguard.guards.StringLiteral<"valid">,
 		autoguard.guards.StringLiteral<"deactivated">,
@@ -26,7 +27,6 @@ export type Account = autoguard.guards.Object<{
 }, {
 	"contact": autoguard.guards.Array<autoguard.guards.String>,
 	"externalAccountBinding": autoguard.guards.Object<{}, {}>,
-	"orders": autoguard.guards.String,
 	"termsOfServiceAgreed": autoguard.guards.Boolean
 }>;
 
@@ -208,6 +208,34 @@ export type CreateAccountPayload = autoguard.guards.Object<{}, {
 	"externalAccountBinding": autoguard.guards.Object<{}, {}>
 }>;
 
+export const CreateOrderProtected: autoguard.serialization.MessageGuard<CreateOrderProtected> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => Protected),
+	autoguard.guards.Object.of({
+		"kid": autoguard.guards.String
+	}, {})
+);
+
+export type CreateOrderProtected = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<Protected>,
+	autoguard.guards.Object<{
+		"kid": autoguard.guards.String
+	}, {}>
+]>;
+
+export const CreateOrderPayload: autoguard.serialization.MessageGuard<CreateOrderPayload> = autoguard.guards.Object.of({
+	"identifiers": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Identifier))
+}, {
+	"notBefore": autoguard.guards.String,
+	"notAfter": autoguard.guards.String
+});
+
+export type CreateOrderPayload = autoguard.guards.Object<{
+	"identifiers": autoguard.guards.Array<autoguard.guards.Reference<Identifier>>
+}, {
+	"notBefore": autoguard.guards.String,
+	"notAfter": autoguard.guards.String
+}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Account": autoguard.guards.Reference.of(() => Account),
@@ -218,7 +246,9 @@ export namespace Autoguard {
 		"Order": autoguard.guards.Reference.of(() => Order),
 		"Protected": autoguard.guards.Reference.of(() => Protected),
 		"CreateAccountProtected": autoguard.guards.Reference.of(() => CreateAccountProtected),
-		"CreateAccountPayload": autoguard.guards.Reference.of(() => CreateAccountPayload)
+		"CreateAccountPayload": autoguard.guards.Reference.of(() => CreateAccountPayload),
+		"CreateOrderProtected": autoguard.guards.Reference.of(() => CreateOrderProtected),
+		"CreateOrderPayload": autoguard.guards.Reference.of(() => CreateOrderPayload)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
@@ -265,6 +295,22 @@ export namespace Autoguard {
 				autoguard.api.Headers
 			),
 			"payload": autoguard.api.Binary
+		}),
+		"newOrder": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
 		})
 	};
 
@@ -302,6 +348,18 @@ export namespace Autoguard {
 		}, {
 			"status": autoguard.guards.Number,
 			"payload": autoguard.api.Binary
+		}),
+		"newOrder": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String,
+					"location": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Order)
+		}, {
+			"status": autoguard.guards.Number
 		})
 	};
 
