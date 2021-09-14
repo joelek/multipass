@@ -16,11 +16,19 @@ async function encode(json: json.Any): Promise<string> {
 
 export function getDefaultAlgorithm(key: libcrypto.KeyObject): pkcs5.signature.SignatureAlgorithm {
 	let keyJwk = key.export({ format: "jwk" });
-	if (jwk.RSAKey.is(keyJwk)) {
+	if (jwk.RSAPublicKey.is(keyJwk)) {
 		return new pkcs5.signature.SHA256WithRSAEncryption();
 	}
-	if (jwk.ECKey.is(keyJwk)) {
-		return new pkcs5.signature.ECDSAWithSHA256();
+	if (jwk.ECPublicKey.is(keyJwk)) {
+		if (keyJwk.crv === "P-256") {
+			return new pkcs5.signature.ECDSAWithSHA256();
+		}
+		if (keyJwk.crv === "P-384") {
+			return new pkcs5.signature.ECDSAWithSHA384();
+		}
+		if (keyJwk.crv === "P-521") {
+			return new pkcs5.signature.ECDSAWithSHA512();
+		}
 	}
 	throw `Expected code to be unreachable!`;
 };
