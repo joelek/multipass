@@ -54,8 +54,10 @@ export function fromJoseType(joseType: string): SignatureAlgorithm {
 };
 
 export class ECDSAWithSHA256 implements SignatureAlgorithm {
-	constructor() {
+	private format: "ieee-p1363" | "der";
 
+	constructor(options?: Partial<{ format: "ieee-p1363" | "der" }>) {
+		this.format = options?.format ?? "ieee-p1363";
 	}
 
 	getIdentifier(): schema.ECDSAWithSHA256 {
@@ -81,7 +83,10 @@ export class ECDSAWithSHA256 implements SignatureAlgorithm {
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
 		let sign = libcrypto.createSign("sha256");
 		sign.update(buffer);
-		return sign.sign(key);
+		return sign.sign({
+			key,
+			dsaEncoding: this.format
+		});
 	}
 
 	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
@@ -100,8 +105,10 @@ export class ECDSAWithSHA256 implements SignatureAlgorithm {
 };
 
 export class ECDSAWithSHA384 implements SignatureAlgorithm {
-	constructor() {
+	private format: "ieee-p1363" | "der";
 
+	constructor(options?: Partial<{ format: "ieee-p1363" | "der" }>) {
+		this.format = options?.format ?? "ieee-p1363";
 	}
 
 	getIdentifier(): schema.ECDSAWithSHA384 {
@@ -127,7 +134,10 @@ export class ECDSAWithSHA384 implements SignatureAlgorithm {
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
 		let sign = libcrypto.createSign("sha384");
 		sign.update(buffer);
-		return sign.sign(key);
+		return sign.sign({
+			key,
+			dsaEncoding: this.format
+		});
 	}
 
 	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
@@ -146,8 +156,10 @@ export class ECDSAWithSHA384 implements SignatureAlgorithm {
 };
 
 export class ECDSAWithSHA512 implements SignatureAlgorithm {
-	constructor() {
+	private format: "ieee-p1363" | "der";
 
+	constructor(options?: Partial<{ format: "ieee-p1363" | "der" }>) {
+		this.format = options?.format ?? "ieee-p1363";
 	}
 
 	getIdentifier(): schema.ECDSAWithSHA512 {
@@ -173,7 +185,10 @@ export class ECDSAWithSHA512 implements SignatureAlgorithm {
 	sign(buffer: Buffer, key: libcrypto.KeyObject): Buffer {
 		let sign = libcrypto.createSign("sha512");
 		sign.update(buffer);
-		return sign.sign(key);
+		return sign.sign({
+			key,
+			dsaEncoding: this.format
+		});
 	}
 
 	verify(buffer: Buffer, key: libcrypto.KeyObject, signature: Buffer): boolean {
