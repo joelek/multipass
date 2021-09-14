@@ -3,7 +3,7 @@
 		"certhero": "./dist/cli/index.js"
 	},
 	"dependencies": {
-		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.8"
+		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.9"
 	},
 	"devDependencies": {
 		"@types/node": "^16.7",
