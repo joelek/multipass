@@ -3,9 +3,11 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-client";
 import * as shared from "./index";
 
-export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses> => ({
+export type Client = autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses>;
+
+export const makeClient = (clientOptions?: autoguard.api.ClientOptions): Client => ({
 	"listDomains": async (request) => {
-		let guard = shared.Autoguard.Requests["listDomains"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["listDomains"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -20,19 +22,19 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/octet-stream"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["listDomains"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["listDomains"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
 	"listDomainRecords": async (request) => {
-		let guard = shared.Autoguard.Requests["listDomainRecords"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["listDomainRecords"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -47,19 +49,19 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["listDomainRecords"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["listDomainRecords"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
 	"createDomainRecord": async (request) => {
-		let guard = shared.Autoguard.Requests["createDomainRecord"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["createDomainRecord"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -74,19 +76,19 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["createDomainRecord"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["createDomainRecord"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
 	"updateDomainRecord": async (request) => {
-		let guard = shared.Autoguard.Requests["updateDomainRecord"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["updateDomainRecord"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -101,19 +103,19 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["updateDomainRecord"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["updateDomainRecord"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
 	"deleteDomainRecord": async (request) => {
-		let guard = shared.Autoguard.Requests["deleteDomainRecord"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["deleteDomainRecord"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -128,13 +130,13 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["deleteDomainRecord"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["deleteDomainRecord"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}

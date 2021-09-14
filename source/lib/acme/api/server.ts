@@ -3,7 +3,9 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
 import * as shared from "./index";
 
-export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Requests, shared.Autoguard.Responses>, serverOptions?: autoguard.api.MakeServerOptions): autoguard.api.RequestListener => {
+export type Server = autoguard.api.RequestListener;
+
+export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Requests, shared.Autoguard.Responses>, serverOptions?: autoguard.api.ServerOptions): Server => {
 	let endpoints = new Array<autoguard.api.Endpoint>();
 	endpoints.push((raw, auxillary) => {
 		let method = "GET";
@@ -19,14 +21,14 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 				let headers: Record<string, autoguard.api.JSON> = {};
 				headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 				let payload = raw.payload;
-				let guard = shared.Autoguard.Requests["getDirectory"];
+				let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getDirectory"], serverOptions?.debugMode);
 				let request = guard.as({ options, headers, payload }, "request");
 				return {
 					handleRequest: async () => {
 						let response = await routes["getDirectory"](new autoguard.api.ClientRequest(request, true, auxillary));
 						return {
 							validateResponse: async () => {
-								let guard = shared.Autoguard.Responses["getDirectory"];
+								let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getDirectory"], serverOptions?.debugMode);
 								guard.as(response, "response");
 								let status = response.status ?? 200;
 								let headers = new Array<[string, string]>();
@@ -57,14 +59,14 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 				headers["content-type"] = autoguard.api.decodeHeaderValue(raw.headers, "content-type", true);
 				headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 				let payload = await autoguard.api.deserializePayload(raw.payload);
-				let guard = shared.Autoguard.Requests["newAccount"];
+				let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newAccount"], serverOptions?.debugMode);
 				let request = guard.as({ options, headers, payload }, "request");
 				return {
 					handleRequest: async () => {
 						let response = await routes["newAccount"](new autoguard.api.ClientRequest(request, false, auxillary));
 						return {
 							validateResponse: async () => {
-								let guard = shared.Autoguard.Responses["newAccount"];
+								let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["newAccount"], serverOptions?.debugMode);
 								guard.as(response, "response");
 								let status = response.status ?? 200;
 								let headers = new Array<[string, string]>();
@@ -96,14 +98,14 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 				let headers: Record<string, autoguard.api.JSON> = {};
 				headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 				let payload = raw.payload;
-				let guard = shared.Autoguard.Requests["newNonce"];
+				let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newNonce"], serverOptions?.debugMode);
 				let request = guard.as({ options, headers, payload }, "request");
 				return {
 					handleRequest: async () => {
 						let response = await routes["newNonce"](new autoguard.api.ClientRequest(request, true, auxillary));
 						return {
 							validateResponse: async () => {
-								let guard = shared.Autoguard.Responses["newNonce"];
+								let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["newNonce"], serverOptions?.debugMode);
 								guard.as(response, "response");
 								let status = response.status ?? 200;
 								let headers = new Array<[string, string]>();

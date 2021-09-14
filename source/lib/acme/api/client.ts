@@ -3,9 +3,11 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-client";
 import * as shared from "./index";
 
-export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses> => ({
+export type Client = autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses>;
+
+export const makeClient = (clientOptions?: autoguard.api.ClientOptions): Client => ({
 	"getDirectory": async (request) => {
-		let guard = shared.Autoguard.Requests["getDirectory"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getDirectory"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "GET";
 		let components = new Array<string>();
@@ -19,19 +21,19 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/octet-stream"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["getDirectory"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getDirectory"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
 	"newAccount": async (request) => {
-		let guard = shared.Autoguard.Requests["newAccount"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newAccount"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "POST";
 		let components = new Array<string>();
@@ -46,7 +48,7 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
 		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
@@ -54,13 +56,13 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 			headers["location"] = autoguard.api.decodeHeaderValue(raw.headers, "location", true);
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
-			let guard = shared.Autoguard.Responses["newAccount"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["newAccount"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}
 	},
 	"newNonce": async (request) => {
-		let guard = shared.Autoguard.Requests["newNonce"];
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newNonce"], clientOptions?.debugMode);
 		guard.as(request, "request");
 		let method = "HEAD";
 		let components = new Array<string>();
@@ -74,14 +76,14 @@ export const makeClient = (clientOptions?: autoguard.api.MakeClientOptions): aut
 		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
 		defaultHeaders.push(["Content-Type", "application/octet-stream"]);
 		defaultHeaders.push(["Accept", "application/octet-stream"]);
-		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions?.urlPrefix);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
 		{
 			let status = raw.status;
 			let headers: Record<string, autoguard.api.JSON> = {};
 			headers["replay-nonce"] = autoguard.api.decodeHeaderValue(raw.headers, "replay-nonce", true);
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = raw.payload;
-			let guard = shared.Autoguard.Responses["newNonce"];
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["newNonce"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, true);
 		}
