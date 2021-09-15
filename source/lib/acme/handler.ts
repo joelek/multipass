@@ -72,14 +72,13 @@ export class Handler {
 		};
 	}
 
-	async createNonce(): Promise<string> {
+	async createNonce(): Promise<void> {
 		let response = await this.client.newNonce({
 			options: {
 				path: getUrlPath(this.directory.newNonce, this.urlPrefix)
 			}
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		return this.nextReplayNonce;
 	}
 
 	async createOrder(kid: string, payloadData: api.CreateOrderPayload): Promise<{ order: api.Order, location: string }> {
