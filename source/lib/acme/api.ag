@@ -1,7 +1,7 @@
 guard Account: {
 	"contact"?: string[],
 	"externalAccountBinding"?: {},
-	"orders"?: string,
+	"orders"?: string, # This field is required accoring to the specification.
 	"status": "valid" | "deactivated" | "revoked",
 	"termsOfServiceAgreed"?: boolean
 };
@@ -17,10 +17,24 @@ guard Authorization: {
 guard Challenge: {
 	"error"?: {},
 	"status": "pending" | "processing" | "valid" | "invalid",
-	"token": string,
 	"type": string,
 	"url": string,
 	"validated"?: string
+};
+
+guard ChallengeHTTP01: Challenge & {
+	"type": "http-01",
+	"token": string
+};
+
+guard ChallengeDNS01: Challenge & {
+	"type": "dns-01",
+	"token": string
+};
+
+guard ChallengeTLSALPN01: Challenge & {
+	"type": "tls-alpn-01",
+	"token": string
 };
 
 guard Directory: {

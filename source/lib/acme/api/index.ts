@@ -69,7 +69,6 @@ export const Challenge: autoguard.serialization.MessageGuard<Challenge> = autogu
 		autoguard.guards.StringLiteral.of("valid"),
 		autoguard.guards.StringLiteral.of("invalid")
 	),
-	"token": autoguard.guards.String,
 	"type": autoguard.guards.String,
 	"url": autoguard.guards.String
 }, {
@@ -84,13 +83,60 @@ export type Challenge = autoguard.guards.Object<{
 		autoguard.guards.StringLiteral<"valid">,
 		autoguard.guards.StringLiteral<"invalid">
 	]>,
-	"token": autoguard.guards.String,
 	"type": autoguard.guards.String,
 	"url": autoguard.guards.String
 }, {
 	"error": autoguard.guards.Object<{}, {}>,
 	"validated": autoguard.guards.String
 }>;
+
+export const ChallengeHTTP01: autoguard.serialization.MessageGuard<ChallengeHTTP01> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => Challenge),
+	autoguard.guards.Object.of({
+		"type": autoguard.guards.StringLiteral.of("http-01"),
+		"token": autoguard.guards.String
+	}, {})
+);
+
+export type ChallengeHTTP01 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<Challenge>,
+	autoguard.guards.Object<{
+		"type": autoguard.guards.StringLiteral<"http-01">,
+		"token": autoguard.guards.String
+	}, {}>
+]>;
+
+export const ChallengeDNS01: autoguard.serialization.MessageGuard<ChallengeDNS01> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => Challenge),
+	autoguard.guards.Object.of({
+		"type": autoguard.guards.StringLiteral.of("dns-01"),
+		"token": autoguard.guards.String
+	}, {})
+);
+
+export type ChallengeDNS01 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<Challenge>,
+	autoguard.guards.Object<{
+		"type": autoguard.guards.StringLiteral<"dns-01">,
+		"token": autoguard.guards.String
+	}, {}>
+]>;
+
+export const ChallengeTLSALPN01: autoguard.serialization.MessageGuard<ChallengeTLSALPN01> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => Challenge),
+	autoguard.guards.Object.of({
+		"type": autoguard.guards.StringLiteral.of("tls-alpn-01"),
+		"token": autoguard.guards.String
+	}, {})
+);
+
+export type ChallengeTLSALPN01 = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<Challenge>,
+	autoguard.guards.Object<{
+		"type": autoguard.guards.StringLiteral<"tls-alpn-01">,
+		"token": autoguard.guards.String
+	}, {}>
+]>;
 
 export const Directory: autoguard.serialization.MessageGuard<Directory> = autoguard.guards.Object.of({
 	"keyChange": autoguard.guards.String,
@@ -243,6 +289,9 @@ export namespace Autoguard {
 		"Account": autoguard.guards.Reference.of(() => Account),
 		"Authorization": autoguard.guards.Reference.of(() => Authorization),
 		"Challenge": autoguard.guards.Reference.of(() => Challenge),
+		"ChallengeHTTP01": autoguard.guards.Reference.of(() => ChallengeHTTP01),
+		"ChallengeDNS01": autoguard.guards.Reference.of(() => ChallengeDNS01),
+		"ChallengeTLSALPN01": autoguard.guards.Reference.of(() => ChallengeTLSALPN01),
 		"Directory": autoguard.guards.Reference.of(() => Directory),
 		"Identifier": autoguard.guards.Reference.of(() => Identifier),
 		"Order": autoguard.guards.Reference.of(() => Order),
