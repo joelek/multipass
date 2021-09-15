@@ -1,6 +1,7 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
 import * as api from "./api/client";
 import * as config from "./config";
+
 export * as config from "./config";
 
 const URL_PREFIX = "https://api.glesys.com";
