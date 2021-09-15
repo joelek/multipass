@@ -41,12 +41,12 @@ export class Handler {
 		this.nextReplayNonce = undefined;
 	}
 
-	async createAccount(payloadData: api.CreateAccountPayload): Promise<{ account: api.Account, location: string }> {
+	async createAccount(payloadData: api.CreateAccountPayload): Promise<{ payload: api.Account, url: string }> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
 		let key = jwk.getPublicKey(this.key.export({ format: "jwk" }) as any);
-		let protectedData: api.CreateAccountProtected = {
+		let protectedData: api.ProtectedWithJWK = {
 			jwk: key,
 			nonce: this.nextReplayNonce,
 			url: this.directory.newAccount
@@ -64,11 +64,11 @@ export class Handler {
 			})
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		let account = await response.payload();
-		let location = response.headers()["location"];
+		let payload = await response.payload();
+		let url = response.headers()["location"];
 		return {
-			account,
-			location
+			payload,
+			url
 		};
 	}
 
@@ -81,11 +81,11 @@ export class Handler {
 		this.nextReplayNonce = response.headers()["replay-nonce"];
 	}
 
-	async createOrder(kid: string, payloadData: api.CreateOrderPayload): Promise<{ order: api.Order, location: string }> {
+	async createOrder(kid: string, payloadData: api.CreateOrderPayload): Promise<{ payload: api.Order, url: string }> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
-		let protectedData: api.CreateOrderProtected = {
+		let protectedData: api.ProtectedWithKID = {
 			kid: kid,
 			nonce: this.nextReplayNonce,
 			url: this.directory.newOrder
@@ -103,11 +103,11 @@ export class Handler {
 			})
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		let order = await response.payload();
-		let location = response.headers()["location"];
+		let payload = await response.payload();
+		let url = response.headers()["location"];
 		return {
-			order,
-			location
+			payload,
+			url
 		};
 	}
 
