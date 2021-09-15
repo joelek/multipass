@@ -1,7 +1,7 @@
 guard Account: {
 	"contact"?: string[],
 	"externalAccountBinding"?: {},
-	"orders": string,
+	"orders"?: string,
 	"status": "valid" | "deactivated" | "revoked",
 	"termsOfServiceAgreed"?: boolean
 };
@@ -17,6 +17,7 @@ guard Authorization: {
 guard Challenge: {
 	"error"?: {},
 	"status": "pending" | "processing" | "valid" | "invalid",
+	"token": string,
 	"type": string,
 	"url": string,
 	"validated"?: string
