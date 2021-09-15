@@ -62,8 +62,12 @@ guard Protected: {
 	"url": string
 };
 
-guard CreateAccountProtected: Protected & {
+guard ProtectedWithJWK: Protected & {
 	"jwk": ../jwk/AssymetricKey
+};
+
+guard ProtectedWithKID: Protected & {
+	"kid": string
 };
 
 guard CreateAccountPayload: {
@@ -71,10 +75,6 @@ guard CreateAccountPayload: {
 	"termsOfServiceAgreed"?: boolean,
 	"onlyReturnExisting"?: boolean,
 	"externalAccountBinding"?: {}
-};
-
-guard CreateOrderProtected: Protected & {
-	"kid": string
 };
 
 guard CreateOrderPayload: {

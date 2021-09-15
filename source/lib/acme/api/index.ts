@@ -182,17 +182,31 @@ export type Protected = autoguard.guards.Object<{
 	"url": autoguard.guards.String
 }, {}>;
 
-export const CreateAccountProtected: autoguard.serialization.MessageGuard<CreateAccountProtected> = autoguard.guards.Intersection.of(
+export const ProtectedWithJWK: autoguard.serialization.MessageGuard<ProtectedWithJWK> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => Protected),
 	autoguard.guards.Object.of({
 		"jwk": autoguard.guards.Reference.of(() => AssymetricKey)
 	}, {})
 );
 
-export type CreateAccountProtected = autoguard.guards.Intersection<[
+export type ProtectedWithJWK = autoguard.guards.Intersection<[
 	autoguard.guards.Reference<Protected>,
 	autoguard.guards.Object<{
 		"jwk": autoguard.guards.Reference<AssymetricKey>
+	}, {}>
+]>;
+
+export const ProtectedWithKID: autoguard.serialization.MessageGuard<ProtectedWithKID> = autoguard.guards.Intersection.of(
+	autoguard.guards.Reference.of(() => Protected),
+	autoguard.guards.Object.of({
+		"kid": autoguard.guards.String
+	}, {})
+);
+
+export type ProtectedWithKID = autoguard.guards.Intersection<[
+	autoguard.guards.Reference<Protected>,
+	autoguard.guards.Object<{
+		"kid": autoguard.guards.String
 	}, {}>
 ]>;
 
@@ -209,20 +223,6 @@ export type CreateAccountPayload = autoguard.guards.Object<{}, {
 	"onlyReturnExisting": autoguard.guards.Boolean,
 	"externalAccountBinding": autoguard.guards.Object<{}, {}>
 }>;
-
-export const CreateOrderProtected: autoguard.serialization.MessageGuard<CreateOrderProtected> = autoguard.guards.Intersection.of(
-	autoguard.guards.Reference.of(() => Protected),
-	autoguard.guards.Object.of({
-		"kid": autoguard.guards.String
-	}, {})
-);
-
-export type CreateOrderProtected = autoguard.guards.Intersection<[
-	autoguard.guards.Reference<Protected>,
-	autoguard.guards.Object<{
-		"kid": autoguard.guards.String
-	}, {}>
-]>;
 
 export const CreateOrderPayload: autoguard.serialization.MessageGuard<CreateOrderPayload> = autoguard.guards.Object.of({
 	"identifiers": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Identifier))
@@ -247,9 +247,9 @@ export namespace Autoguard {
 		"Identifier": autoguard.guards.Reference.of(() => Identifier),
 		"Order": autoguard.guards.Reference.of(() => Order),
 		"Protected": autoguard.guards.Reference.of(() => Protected),
-		"CreateAccountProtected": autoguard.guards.Reference.of(() => CreateAccountProtected),
+		"ProtectedWithJWK": autoguard.guards.Reference.of(() => ProtectedWithJWK),
+		"ProtectedWithKID": autoguard.guards.Reference.of(() => ProtectedWithKID),
 		"CreateAccountPayload": autoguard.guards.Reference.of(() => CreateAccountPayload),
-		"CreateOrderProtected": autoguard.guards.Reference.of(() => CreateOrderProtected),
 		"CreateOrderPayload": autoguard.guards.Reference.of(() => CreateOrderPayload)
 	};
 
