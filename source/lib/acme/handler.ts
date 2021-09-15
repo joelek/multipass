@@ -89,11 +89,11 @@ export class Handler {
 		let protectedData: api.CreateOrderProtected = {
 			kid: kid,
 			nonce: this.nextReplayNonce,
-			url: this.directory.newAccount
+			url: this.directory.newOrder
 		};
 		let response = await this.client.newOrder({
 			options: {
-				path: getUrlPath(this.directory.newAccount, this.urlPrefix)
+				path: getUrlPath(this.directory.newOrder, this.urlPrefix)
 			},
 			headers: {
 				"content-type": CONTENT_TYPE
