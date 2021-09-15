@@ -111,6 +111,118 @@ export class Handler {
 		};
 	}
 
+	async getAccount(url: string): Promise<{ payload: api.Account, url: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.ProtectedWithKID = {
+			kid: url,
+			nonce: this.nextReplayNonce,
+			url: url
+		};
+		let response = await this.client.getAccount({
+			options: {
+				path: getUrlPath(url, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = await response.payload();
+		return {
+			payload,
+			url
+		};
+	}
+
+	async getAuthorization(kid: string, url: string): Promise<{ payload: api.Authorization, url: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.ProtectedWithKID = {
+			kid: kid,
+			nonce: this.nextReplayNonce,
+			url: url
+		};
+		let response = await this.client.getAuthorization({
+			options: {
+				path: getUrlPath(url, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = await response.payload();
+		return {
+			payload,
+			url
+		};
+	}
+
+	async getChallenge(kid: string, url: string): Promise<{ payload: api.Challenge, url: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.ProtectedWithKID = {
+			kid: kid,
+			nonce: this.nextReplayNonce,
+			url: url
+		};
+		let response = await this.client.getChallenge({
+			options: {
+				path: getUrlPath(url, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = await response.payload();
+		return {
+			payload,
+			url
+		};
+	}
+
+	async getOrder(kid: string, url: string): Promise<{ payload: api.Order, url: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.ProtectedWithKID = {
+			kid: kid,
+			nonce: this.nextReplayNonce,
+			url: url
+		};
+		let response = await this.client.getOrder({
+			options: {
+				path: getUrlPath(url, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = await response.payload();
+		return {
+			payload,
+			url
+		};
+	}
+
 	static async make(url: string, key: libcrypto.KeyObject): Promise<Handler> {
 		let urlPrefix = new liburl.URL(url).origin;
 		let client = makeClient(urlPrefix);

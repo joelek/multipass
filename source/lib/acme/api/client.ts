@@ -6,6 +6,90 @@ import * as shared from "./index";
 export type Client = autoguard.api.Client<shared.Autoguard.Requests, shared.Autoguard.Responses>;
 
 export const makeClient = (clientOptions?: autoguard.api.ClientOptions): Client => ({
+	"getAccount": async (request) => {
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getAccount"], clientOptions?.debugMode);
+		guard.as(request, "request");
+		let method = "POST";
+		let components = new Array<string>();
+		components.push(...autoguard.api.encodeComponents(request.options?.["path"] ?? [], true));
+		let parameters = new Array<[string, string]>();
+		parameters.push(...autoguard.api.encodeUndeclaredParameterPairs(request.options ?? {}, [...["path"], ...parameters.map((parameter) => parameter[0])]));
+		let headers = new Array<[string, string]>();
+		headers.push(...autoguard.api.encodeHeaderPairs("content-type", [request.headers?.["content-type"]], true));
+		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
+		let payload = autoguard.api.serializePayload(request.payload);
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
+		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
+		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+		{
+			let status = raw.status;
+			let headers: Record<string, autoguard.api.JSON> = {};
+			headers["replay-nonce"] = autoguard.api.decodeHeaderValue(raw.headers, "replay-nonce", true);
+			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
+			let payload = await autoguard.api.deserializePayload(raw.payload);
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getAccount"], clientOptions?.debugMode);
+			let response = guard.as({ status, headers, payload }, "response");
+			return new autoguard.api.ServerResponse(response, false);
+		}
+	},
+	"getAuthorization": async (request) => {
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getAuthorization"], clientOptions?.debugMode);
+		guard.as(request, "request");
+		let method = "POST";
+		let components = new Array<string>();
+		components.push(...autoguard.api.encodeComponents(request.options?.["path"] ?? [], true));
+		let parameters = new Array<[string, string]>();
+		parameters.push(...autoguard.api.encodeUndeclaredParameterPairs(request.options ?? {}, [...["path"], ...parameters.map((parameter) => parameter[0])]));
+		let headers = new Array<[string, string]>();
+		headers.push(...autoguard.api.encodeHeaderPairs("content-type", [request.headers?.["content-type"]], true));
+		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
+		let payload = autoguard.api.serializePayload(request.payload);
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
+		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
+		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+		{
+			let status = raw.status;
+			let headers: Record<string, autoguard.api.JSON> = {};
+			headers["replay-nonce"] = autoguard.api.decodeHeaderValue(raw.headers, "replay-nonce", true);
+			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
+			let payload = await autoguard.api.deserializePayload(raw.payload);
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getAuthorization"], clientOptions?.debugMode);
+			let response = guard.as({ status, headers, payload }, "response");
+			return new autoguard.api.ServerResponse(response, false);
+		}
+	},
+	"getChallenge": async (request) => {
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getChallenge"], clientOptions?.debugMode);
+		guard.as(request, "request");
+		let method = "POST";
+		let components = new Array<string>();
+		components.push(...autoguard.api.encodeComponents(request.options?.["path"] ?? [], true));
+		let parameters = new Array<[string, string]>();
+		parameters.push(...autoguard.api.encodeUndeclaredParameterPairs(request.options ?? {}, [...["path"], ...parameters.map((parameter) => parameter[0])]));
+		let headers = new Array<[string, string]>();
+		headers.push(...autoguard.api.encodeHeaderPairs("content-type", [request.headers?.["content-type"]], true));
+		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
+		let payload = autoguard.api.serializePayload(request.payload);
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
+		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
+		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+		{
+			let status = raw.status;
+			let headers: Record<string, autoguard.api.JSON> = {};
+			headers["replay-nonce"] = autoguard.api.decodeHeaderValue(raw.headers, "replay-nonce", true);
+			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
+			let payload = await autoguard.api.deserializePayload(raw.payload);
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getChallenge"], clientOptions?.debugMode);
+			let response = guard.as({ status, headers, payload }, "response");
+			return new autoguard.api.ServerResponse(response, false);
+		}
+	},
 	"getDirectory": async (request) => {
 		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getDirectory"], clientOptions?.debugMode);
 		guard.as(request, "request");
@@ -28,6 +112,34 @@ export const makeClient = (clientOptions?: autoguard.api.ClientOptions): Client 
 			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 			let payload = await autoguard.api.deserializePayload(raw.payload);
 			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getDirectory"], clientOptions?.debugMode);
+			let response = guard.as({ status, headers, payload }, "response");
+			return new autoguard.api.ServerResponse(response, false);
+		}
+	},
+	"getOrder": async (request) => {
+		let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getOrder"], clientOptions?.debugMode);
+		guard.as(request, "request");
+		let method = "POST";
+		let components = new Array<string>();
+		components.push(...autoguard.api.encodeComponents(request.options?.["path"] ?? [], true));
+		let parameters = new Array<[string, string]>();
+		parameters.push(...autoguard.api.encodeUndeclaredParameterPairs(request.options ?? {}, [...["path"], ...parameters.map((parameter) => parameter[0])]));
+		let headers = new Array<[string, string]>();
+		headers.push(...autoguard.api.encodeHeaderPairs("content-type", [request.headers?.["content-type"]], true));
+		headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(request.headers ?? {}, headers.map((header) => header[0])));
+		let payload = autoguard.api.serializePayload(request.payload);
+		let requestHandler = clientOptions?.requestHandler ?? autoguard.api.xhr;
+		let defaultHeaders = clientOptions?.defaultHeaders?.slice() ?? [];
+		defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
+		defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
+		let raw = await requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+		{
+			let status = raw.status;
+			let headers: Record<string, autoguard.api.JSON> = {};
+			headers["replay-nonce"] = autoguard.api.decodeHeaderValue(raw.headers, "replay-nonce", true);
+			headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
+			let payload = await autoguard.api.deserializePayload(raw.payload);
+			let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["getOrder"], clientOptions?.debugMode);
 			let response = guard.as({ status, headers, payload }, "response");
 			return new autoguard.api.ServerResponse(response, false);
 		}

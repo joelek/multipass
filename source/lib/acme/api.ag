@@ -85,8 +85,24 @@ guard CreateOrderPayload: {
 
 # ==============================================================================
 
+route getAccount(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> Account;
+
+route getAuthorization(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> Authorization;
+
+route getChallenge(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> Challenge;
+
 route getDirectory(): GET:/<path*>
 	=> Directory;
+
+route getOrder(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> Order;
 
 route newAccount(): POST:/<path*>
 	<= <{ "Content-Type" }> ../jws/Body

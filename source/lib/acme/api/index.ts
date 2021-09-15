@@ -256,6 +256,54 @@ export namespace Autoguard {
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
 
 	export const Requests = {
+		"getAccount": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
+		}),
+		"getAuthorization": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
+		}),
+		"getChallenge": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
+		}),
 		"getDirectory": autoguard.guards.Object.of({}, {
 			"options": autoguard.guards.Intersection.of(
 				autoguard.guards.Object.of({}, {
@@ -268,6 +316,22 @@ export namespace Autoguard {
 				autoguard.api.Headers
 			),
 			"payload": autoguard.api.Binary
+		}),
+		"getOrder": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
 		}),
 		"newAccount": autoguard.guards.Object.of({
 			"headers": autoguard.guards.Intersection.of(
@@ -319,6 +383,39 @@ export namespace Autoguard {
 	export type Requests = { [A in keyof typeof Requests]: ReturnType<typeof Requests[A]["as"]>; };
 
 	export const Responses = {
+		"getAccount": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Account)
+		}, {
+			"status": autoguard.guards.Number
+		}),
+		"getAuthorization": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Authorization)
+		}, {
+			"status": autoguard.guards.Number
+		}),
+		"getChallenge": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Challenge)
+		}, {
+			"status": autoguard.guards.Number
+		}),
 		"getDirectory": autoguard.guards.Object.of({
 			"payload": autoguard.guards.Reference.of(() => Directory)
 		}, {
@@ -327,6 +424,17 @@ export namespace Autoguard {
 				autoguard.guards.Object.of({}, {}),
 				autoguard.api.Headers
 			)
+		}),
+		"getOrder": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Order)
+		}, {
+			"status": autoguard.guards.Number
 		}),
 		"newAccount": autoguard.guards.Object.of({
 			"headers": autoguard.guards.Intersection.of(
