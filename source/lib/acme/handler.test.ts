@@ -1,7 +1,12 @@
 import * as libcrypto from "crypto";
+import * as libdns from "dns";
 import * as libfs from "fs";
+import * as config from "../config";
 import * as acme from "./";
+import * as dynu from "../dynu";
 import * as glesys from "../glesys";
+
+const CONFIG = config.Options.as(JSON.parse(libfs.readFileSync("./private/config/config.json", "utf-8")));
 
 const ACME_URL = "https://acme-staging-v02.api.letsencrypt.org/directory";
 
@@ -17,53 +22,152 @@ const EC_KEY = libcrypto.createPrivateKey({
 	type: "sec1"
 });
 
-async function makeDNSHandler(): Promise<DNSHandler> {
-	let config = glesys.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/glesys.json", "utf-8")));
-	let client = glesys.makeClient(config);
-	return {
-		create() {
+interface Undoable {
+	undo(): Promise<void>;
+};
 
-		},
-		delete() {
-
+function findSuitableProvider(hostname: string): { credentials: config.Credentials, domain: string, subdomain: string } {
+	let hostnameParts = hostname.split(".").reverse();
+	provider: for (let { domains, credentials } of CONFIG.providers ?? []) {
+		domain: for (let domain of domains) {
+			let domainParts = domain.split(".").reverse();
+			for (let i = 0; i < domainParts.length; i++) {
+				if (domainParts[i] !== hostnameParts[i]) {
+					continue domain;
+				}
+			}
+			let subdomain = hostnameParts.slice(domainParts.length).reverse().join(".");
+			return {
+				credentials,
+				domain,
+				subdomain
+			};
 		}
-	};
+	}
+	throw `Expected a provider!`;
 };
 
-interface DNSHandler {
-	create(): Promise<void>;
-	delete(): Promise<void>;
+async function provisionRecord(hostname: string, content: string): Promise<Undoable> {
+	let details = findSuitableProvider(hostname);
+	if (config.DynuCredentials.is(details.credentials)) {
+		let client = dynu.makeClient(details.credentials);
+		let domains = await (await client.listDomains({})).payload();
+		const domain = domains.domains.find((domain) => domain.name === details.domain);
+		if (domain == null) {
+			throw `Expected a domain!`;
+		}
+		let record = await (await client.createDomainRecord({
+			options: {
+				domainid: domain.id
+			},
+			payload: {
+				nodeName: details.subdomain,
+				recordType: "TXT",
+				textData: content
+			}
+		})).payload();
+		return {
+			async undo() {
+				client.deleteDomainRecord({
+					options: {
+						domainid: domain.id,
+						recordid: record.id
+					}
+				})
+			}
+		};
+	}
+	if (config.GlesysCredentials.is(details.credentials)) {
+		let client = glesys.makeClient(details.credentials);
+		let record = await (await client.createDomainRecord({
+			payload: {
+				domainname: details.domain,
+				host: details.subdomain || "@",
+				type: "TXT",
+				data: content
+			}
+		})).payload();
+		return {
+			async undo() {
+				client.deleteDomainRecord({
+					payload: {
+						recordid: record.response.record.recordid
+					}
+				})
+			}
+		};
+	}
+	throw `Expected code to be unreachable!`;
 };
+
+async function getCanonicalName(hostname: string): Promise<string> {
+	while (true) {
+		let hostnames = new Array<string>();
+		try {
+			hostnames = await libdns.promises.resolveCname(hostname);
+		} catch (error) {
+			break;
+		}
+		if (hostnames.length !== 1) {
+			throw `Expected exactly one hostname!`;
+		}
+		hostname = hostnames[0];
+	}
+	return hostname;
+};
+
+function makeProvisionHostname(hostname: string): string {
+	if (hostname.startsWith("*.")) {
+		return `_acme-challenge.${hostname.slice(2)}`;
+	} else {
+		return `_acme-challenge.${hostname}`;
+	}
+};
+
+const HOSTNAMES = [
+	"test.joelek.se"
+];
 
 (async () => {
-	let dnsHandler = await makeDNSHandler();
-	let handler = await acme.handler.Handler.make(ACME_URL, EC_KEY);
-	await handler.createNonce();
-/* 	let account = await handler.createAccount({
-		termsOfServiceAgreed: true
-	}); */
-/* 	let order = await handler.createOrder(account.location, {
-		identifiers: [
-			{
+	let undoables = new Array<Undoable>();
+	try {
+		let handler = await acme.handler.Handler.make(ACME_URL, EC_KEY);
+		await handler.createNonce();
+/* 		let account = await handler.createAccount({
+			termsOfServiceAgreed: true
+		}); */
+		let account = await handler.getAccount("https://acme-staging-v02.api.letsencrypt.org/acme/acct/26566358");
+/* 		let order = await handler.createOrder(account.url, {
+			identifiers: HOSTNAMES.map((hostname) => ({
 				type: "dns",
-				value: "test.joelek.se"
+				value: hostname
+			}))
+		}); */
+		let order = await handler.getOrder(account.url, "https://acme-staging-v02.api.letsencrypt.org/acme/order/26566358/537985198");
+		for (let url of order.payload.authorizations) {
+			let authorization = await handler.getAuthorization(account.url, url);
+			let challenges = authorization.payload.challenges.filter((challenge): challenge is acme.api.ChallengeDNS01 => {
+				return acme.api.ChallengeDNS01.is(challenge);
+			});
+			let challenge = challenges.pop();
+			if (challenge == null) {
+				throw `Expected a "dns-01" challenge!`;
 			}
-		]
-	}); */
-	let account = await handler.getAccount("https://acme-staging-v02.api.letsencrypt.org/acme/acct/26566358");
-	let order = await handler.getOrder(account.url, "https://acme-staging-v02.api.letsencrypt.org/acme/order/26566358/537985198");
-	for (let url of order.payload.authorizations) {
-		let authorization = await handler.getAuthorization(account.url, url);
-		let challenge = authorization.payload.challenges.filter((challenge): challenge is acme.api.ChallengeDNS01 => acme.api.ChallengeDNS01.is(challenge)).pop();
-		if (challenge == null) {
-			throw `Expected a "dns-01" challenge!`;
+			let hostname = await getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
+			let content = acme.computeKeyAuthorization(challenge.token, EC_KEY.export({ format: "jwk" }) as any);
+			let undoable = await provisionRecord(hostname, content);
+			undoables.push(undoable);
+			// send {} to challenge url
 		}
-		// provision using api
-		// send {} to challenge url
-		// "www.example.org" => _acme-challenge.www.example.org
+		// poll authorization status
+		// send { csr: base64url of csr } to finalize
+		// download cert
+	} catch (error) {
+		console.log(String(error));
+		throw error;
+	} finally {
+		for (let undoable of undoables) {
+			await undoable.undo();
+		}
 	}
-	// poll authorization status
-	// send { csr: base64url of csr } to finalize
-	// download cert
-	// remove all provisioned dns records
-})().catch((error) => console.log(String(error)));
+})();
