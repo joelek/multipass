@@ -1,4 +1,3 @@
 guard Config: {
-	"api_key": string,
-	"hostname": string
+	"key": string
 };

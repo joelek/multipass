@@ -5,9 +5,9 @@ async function test(): Promise<void> {
 	let config = dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
 	let client = dynu.makeClient(config);
 	let domains = await (await client.listDomains({})).payload();
-	let domain = domains.domains.find((domain) => domain.name === config.hostname);
+	let domain = domains.domains.pop();
 	if (domain == null) {
-		throw "Expected to find a matching domain id!";
+		throw "Expected a domain!";
 	}
 	console.log(JSON.stringify({ domain }, null, "\t"));
 	let created = await (await client.createDomainRecord({
