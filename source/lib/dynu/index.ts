@@ -11,7 +11,7 @@ export function makeClient(config: config.Config): api.Client {
 		urlPrefix: URL_PREFIX,
 		requestHandler: autoguard.api.makeNodeRequestHandler(),
 		defaultHeaders: [
-			["API-Key", config.api_key]
+			["API-Key", config.key]
 		]
 	});
 	return client;
