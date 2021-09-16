@@ -1,31 +1,30 @@
-guard DynuApi: {
+guard DynuCredentials: {
 	"name": "dynu",
-	"hostname": string,
 	"key": string
 };
 
-guard GlesysApi: {
+guard GlesysCredentials: {
 	"name": "glesys",
-	"hostname": string,
-	"account": string,
-	"key": string
+	"username": string,
+	"password": string
 };
 
-guard Api: DynuApi | GlesysApi;
+guard Credentials: DynuCredentials | GlesysCredentials;
 
-guard Domain: {
-	"hostname": string,
-	"api": Api
+guard Provider: {
+	"domains": string[],
+	"credentials": Credentials
 };
 
 guard Certificate: {
-	"domains"?: Domain[],
-	"root"?: string,
+	"domains": string[],
+	"root": string,
 	"account"?: string,
 	"key"?: string,
 	"cert"?: string
 };
 
 guard Options: {
+	"providers"?: Provider[],
 	"certificates"?: Certificate[]
 };
