@@ -305,6 +305,22 @@ export namespace Autoguard {
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
 
 	export const Requests = {
+		"finalizeChallenge": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
+		}),
 		"getAccount": autoguard.guards.Object.of({
 			"headers": autoguard.guards.Intersection.of(
 				autoguard.guards.Object.of({
@@ -432,6 +448,17 @@ export namespace Autoguard {
 	export type Requests = { [A in keyof typeof Requests]: ReturnType<typeof Requests[A]["as"]>; };
 
 	export const Responses = {
+		"finalizeChallenge": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Challenge)
+		}, {
+			"status": autoguard.guards.Number
+		}),
 		"getAccount": autoguard.guards.Object.of({
 			"headers": autoguard.guards.Intersection.of(
 				autoguard.guards.Object.of({

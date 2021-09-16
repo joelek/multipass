@@ -99,6 +99,10 @@ guard CreateOrderPayload: {
 
 # ==============================================================================
 
+route finalizeChallenge(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> Challenge;
+
 route getAccount(): POST:/<path*>
 	<= <{ "Content-Type" }> ../jws/Body
 	=> <{ "Replay-Nonce" }> Account;

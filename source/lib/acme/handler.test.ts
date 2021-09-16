@@ -26,7 +26,7 @@ interface Undoable {
 	undo(): Promise<void>;
 };
 
-function findSuitableProvider(hostname: string): { credentials: config.Credentials, domain: string, subdomain: string } {
+function getProviderDetails(hostname: string): { credentials: config.Credentials, domain: string, subdomain: string } {
 	let hostnameParts = hostname.split(".").reverse();
 	provider: for (let { domains, credentials } of CONFIG.providers ?? []) {
 		domain: for (let domain of domains) {
@@ -48,7 +48,7 @@ function findSuitableProvider(hostname: string): { credentials: config.Credentia
 };
 
 async function provisionRecord(hostname: string, content: string): Promise<Undoable> {
-	let details = findSuitableProvider(hostname);
+	let details = getProviderDetails(hostname);
 	if (config.DynuCredentials.is(details.credentials)) {
 		let client = dynu.makeClient(details.credentials);
 		let domains = await (await client.listDomains({})).payload();
@@ -124,6 +124,22 @@ function makeProvisionHostname(hostname: string): string {
 	}
 };
 
+async function retryWithExponentialBackoff<A>(delay: number, attempts: number, handler: () => Promise<A>): Promise<A> {
+	for (let i = 0; i < attempts; i++) {
+		await new Promise((resolve, reject) => {
+			console.log(`Delaying ${delay} ms...`);
+			setTimeout(resolve, delay);
+		});
+		try {
+			return await handler();
+		} catch (error) {
+			let factor = 1.5 + Math.random();
+			delay *= factor;
+		}
+	}
+	throw `Expected operation to succeed!`;
+};
+
 const HOSTNAMES = [
 	"test.joelek.se"
 ];
@@ -133,33 +149,52 @@ const HOSTNAMES = [
 	try {
 		let handler = await acme.handler.Handler.make(ACME_URL, EC_KEY);
 		await handler.createNonce();
-/* 		let account = await handler.createAccount({
+		let account = await handler.createAccount({
 			termsOfServiceAgreed: true
-		}); */
-		let account = await handler.getAccount("https://acme-staging-v02.api.letsencrypt.org/acme/acct/26566358");
-/* 		let order = await handler.createOrder(account.url, {
+		});
+/* 		let account = await handler.getAccount("https://acme-staging-v02.api.letsencrypt.org/acme/acct/26566358"); */
+		let order = await handler.createOrder(account.url, {
 			identifiers: HOSTNAMES.map((hostname) => ({
 				type: "dns",
 				value: hostname
 			}))
-		}); */
-		let order = await handler.getOrder(account.url, "https://acme-staging-v02.api.letsencrypt.org/acme/order/26566358/537985198");
-		for (let url of order.payload.authorizations) {
-			let authorization = await handler.getAuthorization(account.url, url);
-			let challenges = authorization.payload.challenges.filter((challenge): challenge is acme.api.ChallengeDNS01 => {
-				return acme.api.ChallengeDNS01.is(challenge);
-			});
-			let challenge = challenges.pop();
-			if (challenge == null) {
-				throw `Expected a "dns-01" challenge!`;
+		});
+/* 		let order = await handler.getOrder(account.url, "https://acme-staging-v02.api.letsencrypt.org/acme/order/26566358/537985198"); */
+		if (order.payload.status === "pending") {
+			for (let url of order.payload.authorizations) {
+				let authorization = await handler.getAuthorization(account.url, url);
+				if (authorization.payload.status === "pending") {
+					let challenges = authorization.payload.challenges.filter((challenge): challenge is acme.api.ChallengeDNS01 => {
+						return acme.api.ChallengeDNS01.is(challenge);
+					});
+					let challenge = challenges.pop();
+					if (challenge == null) {
+						throw `Expected a "dns-01" challenge!`;
+					}
+					if (challenge.status === "pending") {
+						let hostname = await getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
+						let content = acme.computeKeyAuthorization(challenge.token, EC_KEY.export({ format: "jwk" }) as any);
+						let undoable = await provisionRecord(hostname, content);
+						undoables.push(undoable);
+						await handler.finalizeChallenge(account.url, challenge.url);
+						authorization = await retryWithExponentialBackoff(2000, 8, async () => {
+							let updatedAuthorization = await handler.getAuthorization(account.url, url);
+							if (updatedAuthorization.payload.status === "pending") {
+								throw ``;
+							}
+							return updatedAuthorization;
+						});
+					}
+				}
 			}
-			let hostname = await getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
-			let content = acme.computeKeyAuthorization(challenge.token, EC_KEY.export({ format: "jwk" }) as any);
-			let undoable = await provisionRecord(hostname, content);
-			undoables.push(undoable);
-			// send {} to challenge url
+			order = await retryWithExponentialBackoff(2000, 8, async () => {
+				let updatedOrder = await handler.getOrder(account.url, order.url);
+				if (updatedOrder.payload.status === "pending") {
+					throw ``;
+				}
+				return updatedOrder;
+			});
 		}
-		// poll authorization status
 		// send { csr: base64url of csr } to finalize
 		// download cert
 	} catch (error) {
