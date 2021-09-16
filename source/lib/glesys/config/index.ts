@@ -3,13 +3,11 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 
 export const Config: autoguard.serialization.MessageGuard<Config> = autoguard.guards.Object.of({
-	"domainname": autoguard.guards.String,
 	"username": autoguard.guards.String,
 	"password": autoguard.guards.String
 }, {});
 
 export type Config = autoguard.guards.Object<{
-	"domainname": autoguard.guards.String,
 	"username": autoguard.guards.String,
 	"password": autoguard.guards.String
 }, {}>;
