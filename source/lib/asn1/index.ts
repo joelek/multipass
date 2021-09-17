@@ -9,6 +9,13 @@ export const SEQUENCE: schema.Sequence = {
 	data: []
 };
 
+export const SET: schema.Set = {
+	kind: "UNIVERSAL",
+	form: "CONSTRUCTED",
+	type: "SET",
+	data: []
+};
+
 export const INTEGER: schema.Integer = {
 	kind: "UNIVERSAL",
 	form: "PRIMITIVE",

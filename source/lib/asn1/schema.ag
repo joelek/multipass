@@ -98,3 +98,10 @@ guard Sequence: {
 	type: "SEQUENCE",
 	data: Node[]
 };
+
+guard Set: {
+	kind: "UNIVERSAL",
+	form: "CONSTRUCTED",
+	type: "SET",
+	data: Node[]
+};

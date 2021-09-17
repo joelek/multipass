@@ -396,6 +396,20 @@ export type Sequence = autoguard.guards.Object<{
 	"data": autoguard.guards.Array<autoguard.guards.Reference<Node>>
 }, {}>;
 
+export const Set: autoguard.serialization.MessageGuard<Set> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("CONSTRUCTED"),
+	"type": autoguard.guards.StringLiteral.of("SET"),
+	"data": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Node))
+}, {});
+
+export type Set = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"CONSTRUCTED">,
+	"type": autoguard.guards.StringLiteral<"SET">,
+	"data": autoguard.guards.Array<autoguard.guards.Reference<Node>>
+}, {}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Node": autoguard.guards.Reference.of(() => Node),
@@ -404,7 +418,8 @@ export namespace Autoguard {
 		"Null": autoguard.guards.Reference.of(() => Null),
 		"ObjectIdentifier": autoguard.guards.Reference.of(() => ObjectIdentifier),
 		"OctetString": autoguard.guards.Reference.of(() => OctetString),
-		"Sequence": autoguard.guards.Reference.of(() => Sequence)
+		"Sequence": autoguard.guards.Reference.of(() => Sequence),
+		"Set": autoguard.guards.Reference.of(() => Set)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
