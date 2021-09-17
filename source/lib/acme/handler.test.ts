@@ -8,6 +8,10 @@ import * as glesys from "../glesys";
 
 const CONFIG = config.Options.as(JSON.parse(libfs.readFileSync("./private/config/config.json", "utf-8")));
 
+const HOSTNAMES = [
+	"test4.joelek.se"
+];
+
 const ACME_URL = "https://acme-staging-v02.api.letsencrypt.org/directory";
 
 const EC_PRIVATE_KEY_SEC1 = Buffer.from(`
@@ -63,7 +67,8 @@ async function provisionRecord(hostname: string, content: string): Promise<Undoa
 			payload: {
 				nodeName: details.subdomain,
 				recordType: "TXT",
-				textData: content
+				textData: content,
+				ttl: 60
 			}
 		})).payload();
 		return {
@@ -84,7 +89,8 @@ async function provisionRecord(hostname: string, content: string): Promise<Undoa
 				domainname: details.domain,
 				host: details.subdomain || "@",
 				type: "TXT",
-				data: content
+				data: content,
+				ttl: 60
 			}
 		})).payload();
 		return {
@@ -124,25 +130,22 @@ function makeProvisionHostname(hostname: string): string {
 	}
 };
 
-async function retryWithExponentialBackoff<A>(delay: number, attempts: number, handler: () => Promise<A>): Promise<A> {
+async function retryWithExponentialBackoff<A>(seconds: number, attempts: number, handler: () => Promise<A>): Promise<A> {
+	let milliseconds = seconds * 1000;
 	for (let i = 0; i < attempts; i++) {
 		await new Promise((resolve, reject) => {
-			console.log(`Delaying ${delay} ms...`);
-			setTimeout(resolve, delay);
+			console.log(`Waiting ${milliseconds} ms...`);
+			setTimeout(resolve, milliseconds);
 		});
 		try {
 			return await handler();
 		} catch (error) {
 			let factor = 1.5 + Math.random();
-			delay *= factor;
+			milliseconds = Math.round(milliseconds * factor);
 		}
 	}
 	throw `Expected operation to succeed!`;
 };
-
-const HOSTNAMES = [
-	"test.joelek.se"
-];
 
 (async () => {
 	let undoables = new Array<Undoable>();
@@ -152,14 +155,12 @@ const HOSTNAMES = [
 		let account = await handler.createAccount({
 			termsOfServiceAgreed: true
 		});
-/* 		let account = await handler.getAccount("https://acme-staging-v02.api.letsencrypt.org/acme/acct/26566358"); */
 		let order = await handler.createOrder(account.url, {
 			identifiers: HOSTNAMES.map((hostname) => ({
 				type: "dns",
 				value: hostname
 			}))
 		});
-/* 		let order = await handler.getOrder(account.url, "https://acme-staging-v02.api.letsencrypt.org/acme/order/26566358/537985198"); */
 		if (order.payload.status === "pending") {
 			for (let url of order.payload.authorizations) {
 				let authorization = await handler.getAuthorization(account.url, url);
@@ -176,30 +177,26 @@ const HOSTNAMES = [
 						let content = acme.computeKeyAuthorization(challenge.token, EC_KEY.export({ format: "jwk" }) as any);
 						let undoable = await provisionRecord(hostname, content);
 						undoables.push(undoable);
-						await handler.finalizeChallenge(account.url, challenge.url);
-						authorization = await retryWithExponentialBackoff(2000, 8, async () => {
-							let updatedAuthorization = await handler.getAuthorization(account.url, url);
-							if (updatedAuthorization.payload.status === "pending") {
+						await retryWithExponentialBackoff(60, 3, async () => {
+							let records = (await libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
+							if (!records.includes(content)) {
 								throw ``;
 							}
-							return updatedAuthorization;
 						});
+						await handler.finalizeChallenge(account.url, challenge.url);
 					}
 				}
 			}
-			order = await retryWithExponentialBackoff(2000, 8, async () => {
-				let updatedOrder = await handler.getOrder(account.url, order.url);
-				if (updatedOrder.payload.status === "pending") {
+			order = await retryWithExponentialBackoff(15, 4, async () => {
+				let updated = await handler.getOrder(account.url, order.url);
+				if (updated.payload.status === "pending") {
 					throw ``;
 				}
-				return updatedOrder;
+				return updated;
 			});
 		}
 		// send { csr: base64url of csr } to finalize
 		// download cert
-	} catch (error) {
-		console.log(String(error));
-		throw error;
 	} finally {
 		for (let undoable of undoables) {
 			await undoable.undo();
