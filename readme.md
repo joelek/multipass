@@ -14,5 +14,3 @@ certhero \
 ```
 
 ## Roadmap
-
-* Investigate using createPrivateKey({ key, format, type }) and export({ format }) from crypto module.
