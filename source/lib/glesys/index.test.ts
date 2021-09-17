@@ -15,7 +15,8 @@ async function test(): Promise<void> {
 			domainname: domain.domainname,
 			host: "_acme-challenge",
 			type: "TXT",
-			data: "TBD1"
+			data: "TBD1",
+			ttl: 60
 		}
 	})).payload();
 	console.log(JSON.stringify({ created }, null, "\t"));
@@ -24,7 +25,8 @@ async function test(): Promise<void> {
 			recordid: created.response.record.recordid,
 			host: "_acme-challenge",
 			type: "TXT",
-			data: "TBD2"
+			data: "TBD2",
+			ttl: 60
 		}
 	})).payload();
 	console.log(JSON.stringify({ updated }, null, "\t"));
