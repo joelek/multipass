@@ -105,3 +105,10 @@ guard Set: {
 	type: "SET",
 	data: Node[]
 };
+
+guard UTF8String: {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "UTF8_STRING",
+	data: string
+};

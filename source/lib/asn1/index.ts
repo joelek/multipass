@@ -51,6 +51,13 @@ export const BIT_STRING: schema.BitString = {
 	data: ""
 };
 
+export const UTF8_STRING: schema.UTF8String = {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "UTF8_STRING",
+	data: ""
+};
+
 export function decodeInteger(buffer: Buffer, options?: Partial<{ paddedUnsigned: boolean }>): bigint {
 	let paddedUnsigned = options?.paddedUnsigned ?? true;
 	let hex = buffer.toString("hex");

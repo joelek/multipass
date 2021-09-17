@@ -410,6 +410,20 @@ export type Set = autoguard.guards.Object<{
 	"data": autoguard.guards.Array<autoguard.guards.Reference<Node>>
 }, {}>;
 
+export const UTF8String: autoguard.serialization.MessageGuard<UTF8String> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("UTF8_STRING"),
+	"data": autoguard.guards.String
+}, {});
+
+export type UTF8String = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"UTF8_STRING">,
+	"data": autoguard.guards.String
+}, {}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Node": autoguard.guards.Reference.of(() => Node),
@@ -419,7 +433,8 @@ export namespace Autoguard {
 		"ObjectIdentifier": autoguard.guards.Reference.of(() => ObjectIdentifier),
 		"OctetString": autoguard.guards.Reference.of(() => OctetString),
 		"Sequence": autoguard.guards.Reference.of(() => Sequence),
-		"Set": autoguard.guards.Reference.of(() => Set)
+		"Set": autoguard.guards.Reference.of(() => Set),
+		"UTF8String": autoguard.guards.Reference.of(() => UTF8String)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
