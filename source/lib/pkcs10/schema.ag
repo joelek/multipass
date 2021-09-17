@@ -1,0 +1,28 @@
+guard ASN1BitString: ../asn1/BitString;
+guard ASN1Integer: ../asn1/Integer;
+guard ASN1Null: ../asn1/Null;
+guard ASN1Node: ../asn1/Node;
+guard ASN1ObjectIdentifier: ../asn1/ObjectIdentifier;
+guard ASN1OctetString: ../asn1/OctetString;
+guard ASN1Sequence: ../asn1/Sequence;
+
+guard CertificationRequestInfo: ASN1Sequence & {
+	data: [
+		ASN1Integer,
+		ASN1Node,
+		../pkcs8/PublicKeyInfo,
+		{
+			kind: "CONTEXT",
+			form: "CONSTRUCTED",
+			type: "END_OF_CONTENT" # Context-specific type.
+		}
+	]
+};
+
+guard CertificationRequest: ASN1Sequence & {
+	data: [
+		CertificationRequestInfo,
+		../pkcs5/AlgorithmIdentifier,
+		ASN1BitString
+	]
+};
