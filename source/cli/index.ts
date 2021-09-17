@@ -504,7 +504,7 @@ let get_domains = (cb: Callback<ApiResponse<DnsDomains>>): void => {
 		path: '/v2/dns',
 		headers: {
 			'Accept': 'application/json',
-			'API-Key': cfgdynu.api_key
+			'API-Key': cfgdynu.key
 		}
 	}, {}, cb);
 };
@@ -512,7 +512,7 @@ let get_domains = (cb: Callback<ApiResponse<DnsDomains>>): void => {
 let get_domain_id = (cb: Callback<number>): void => {
 	get_domains((response) => {
 		let found = response.body.domains.find((value) => {
-			return value.name === cfgdynu.hostname;
+			return value.name === "HOSTNAME"; // TODO:
 		});
 		if (found === undefined) {
 			throw new Error();
@@ -545,7 +545,7 @@ let add_domain_record_for_domain_id = (domain_id: number, text_data: string, cb:
 		path: `/v2/dns/${domain_id}/record`,
 		headers: {
 			'Accept': 'application/json',
-			'API-Key': cfgdynu.api_key
+			'API-Key': cfgdynu.key
 		}
 	}, {
 		nodeName: '',
@@ -564,7 +564,7 @@ let dynu_delete_record = (domain_id: number, record_id: number, cb: Callback<Api
 		path: `/v2/dns/${domain_id}/record/${record_id}`,
 		headers: {
 			'Accept': 'application/json',
-			'API-Key': cfgdynu.api_key
+			'API-Key': cfgdynu.key
 		}
 	}, {}, cb);
 };
@@ -727,7 +727,7 @@ let convert_to_der_from_pem = (pem: string): Array<ASNOInstance> => {
 	return instances;
 };
 
-const certificate_path = './private/certificate/';
+const certificate_path = './private/certificates/test.joelek.se/';
 
 let read_key = (name: string, cb: Callback<string | null>): void => {
 	libfs.readFile(libpath.join(certificate_path, name), { encoding: 'utf8' }, (error, key) => {
@@ -790,7 +790,8 @@ let get_key = (name: string, cb: Callback<string>): void => {
 
 
 
-const acme_hostname = 'acme-v02.api.letsencrypt.org';
+const acme_hostname_prod = 'acme-v02.api.letsencrypt.org';
+const acme_hostname = "acme-staging-v02.api.letsencrypt.org";
 
 let acme_get_new_nonce = (cb: Callback<string>): void => {
 	get_response_buffer({
@@ -1150,10 +1151,11 @@ let acme_get_certificate = (cb: Callback<string>): void => {
 									}); */
 									glesysClient.createDomainRecord({
 										payload: {
-											domainname: cfgglesys.domainname,
-											host: "@", // "@" if CNAME was used to delegate, "_acme-challenge" otherwise
+											domainname: "rydaform.se",
+											host: "test.joelek.se.acme", // "@" if CNAME was used to delegate, "_acme-challenge" otherwise
 											type: "TXT",
-											data: key_authorization
+											data: key_authorization,
+											ttl: 60
 										}
 									}).then(async (response) => {
 										let payload = await response.payload();
