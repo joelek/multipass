@@ -2,13 +2,31 @@ import * as libcrypto from "crypto";
 import * as asn1 from "../asn1";
 import * as der from "../der";
 import * as jwk from "../jwk";
-import * as jws from "../jws";
 import * as pkcs5 from "../pkcs5";
 import * as pkcs8 from "../pkcs8";
 import * as schema from "./schema";
 import * as parsing from "../parsing";
 
 export * as schema from "./schema";
+
+export function getDefaultAlgorithm(key: libcrypto.KeyObject): pkcs5.signature.SignatureAlgorithm {
+	let keyJwk = key.export({ format: "jwk" });
+	if (jwk.RSAPublicKey.is(keyJwk)) {
+		return new pkcs5.signature.SHA256WithRSAEncryption();
+	}
+	if (jwk.ECPublicKey.is(keyJwk)) {
+		if (keyJwk.crv === "P-256") {
+			return new pkcs5.signature.ECDSAWithSHA256({ format: "der" });
+		}
+		if (keyJwk.crv === "P-384") {
+			return new pkcs5.signature.ECDSAWithSHA384({ format: "der" });
+		}
+		if (keyJwk.crv === "P-521") {
+			return new pkcs5.signature.ECDSAWithSHA512({ format: "der" });
+		}
+	}
+	throw `Expected code to be unreachable!`;
+};
 
 export function createExtension(hostnames: Array<string>): Buffer {
 	if (hostnames.length === 0) {
@@ -35,7 +53,7 @@ export function createCertificateRequest(hostnames: Array<string>, key: libcrypt
 	if (hostnames.length === 0) {
 		throw `Expected at least one hostname!`;
 	}
-	let signatureAlgorithm = options?.signatureAlgorithm ?? jws.getDefaultAlgorithm(key);
+	let signatureAlgorithm = options?.signatureAlgorithm ?? getDefaultAlgorithm(key);
 	let subject: asn1.Node = {
 		...asn1.SEQUENCE,
 		data: [
