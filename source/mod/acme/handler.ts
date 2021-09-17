@@ -111,7 +111,7 @@ export class Handler {
 		};
 	}
 
-	async downloadCertificate(kid: string, url: string): Promise<{ payload: Buffer, url: string }> {
+	async downloadCertificate(kid: string, url: string): Promise<Buffer> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
@@ -132,14 +132,11 @@ export class Handler {
 			})
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		let payload = Buffer.from(await response.payload() ?? new Uint8Array());
-		return {
-			payload,
-			url
-		};
+		let buffer = Buffer.from(await response.payload() ?? new Uint8Array());
+		return buffer;
 	}
 
-	async finalizeChallenge(kid: string, url: string): Promise<{ payload: api.Challenge, url: string }> {
+	async finalizeChallenge(kid: string, url: string): Promise<void> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
@@ -161,14 +158,9 @@ export class Handler {
 			})
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		let payload = await response.payload();
-		return {
-			payload,
-			url
-		};
 	}
 
-	async finalizeOrder(kid: string, url: string, payloadData: api.FinalizeOrderPayload): Promise<{ payload: api.Order, url: string }> {
+	async finalizeOrder(kid: string, url: string, payloadData: api.FinalizeOrderPayload): Promise<void> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
@@ -190,11 +182,6 @@ export class Handler {
 			})
 		});
 		this.nextReplayNonce = response.headers()["replay-nonce"];
-		let payload = await response.payload();
-		return {
-			payload,
-			url
-		};
 	}
 
 	async getAccount(url: string): Promise<{ payload: api.Account, url: string }> {

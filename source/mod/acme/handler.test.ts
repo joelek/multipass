@@ -223,7 +223,7 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 			throw `Expected a certificate url!`;
 		}
 		let certificate = await handler.downloadCertificate(account.url, url);
-		console.log(certificate.payload.toString());
+		console.log(certificate.toString());
 	} finally {
 		for (let undoable of undoables) {
 			await undoable.undo();
