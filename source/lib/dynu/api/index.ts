@@ -15,12 +15,16 @@ export type Domain = autoguard.guards.Object<{
 export const DomainRecordStubGeneric: autoguard.serialization.MessageGuard<DomainRecordStubGeneric> = autoguard.guards.Object.of({
 	"nodeName": autoguard.guards.String,
 	"recordType": autoguard.guards.String
-}, {});
+}, {
+	"ttl": autoguard.guards.Number
+});
 
 export type DomainRecordStubGeneric = autoguard.guards.Object<{
 	"nodeName": autoguard.guards.String,
 	"recordType": autoguard.guards.String
-}, {}>;
+}, {
+	"ttl": autoguard.guards.Number
+}>;
 
 export const DomainRecordStubTXT: autoguard.serialization.MessageGuard<DomainRecordStubTXT> = autoguard.guards.Intersection.of(
 	autoguard.guards.Reference.of(() => DomainRecordStubGeneric),

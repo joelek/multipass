@@ -17,7 +17,8 @@ async function test(): Promise<void> {
 		payload: {
 			nodeName: "_acme-challenge",
 			recordType: "TXT",
-			textData: "TBD1"
+			textData: "TBD1",
+			ttl: 60
 		}
 	})).payload();
 	console.log(JSON.stringify({ created }, null, "\t"));
@@ -29,7 +30,8 @@ async function test(): Promise<void> {
 		payload: {
 			nodeName: "_acme-challenge",
 			recordType: "TXT",
-			textData: "TBD2"
+			textData: "TBD2",
+			ttl: 60
 		}
 	})).payload();
 	console.log(JSON.stringify({ updated }, null, "\t"));
