@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// THIS ENTIRE FILE IS LEGACY CODE THAT HAS BEEN DEPRECATED.
+
 import * as libcrypto from 'crypto';
 import * as libcp from 'child_process';
 import * as libfs from 'fs';
