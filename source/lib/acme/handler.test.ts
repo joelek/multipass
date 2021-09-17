@@ -205,11 +205,25 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 				return updated;
 			});
 		}
-		let csr = pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), CERTIFICATE_KEY);
-		order = await handler.finalizeOrder(account.url, order.payload.finalize, {
-			csr: csr.toString("base64url")
+		if (order.payload.status === "ready") {
+			let csr = pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), CERTIFICATE_KEY);
+			await handler.finalizeOrder(account.url, order.payload.finalize, {
+				csr: csr.toString("base64url")
+			});
+		}
+		order = await retryWithExponentialBackoff(15, 4, async () => {
+			let updated = await handler.getOrder(account.url, order.url);
+			if (updated.payload.status === "processing") {
+				throw ``;
+			}
+			return updated;
 		});
-		// download cert
+		let url = order.payload.certificate;
+		if (url == null) {
+			throw `Expected a certificate url!`;
+		}
+		let certificate = await handler.downloadCertificate(account.url, url);
+		console.log(certificate.payload.toString());
 	} finally {
 		for (let undoable of undoables) {
 			await undoable.undo();

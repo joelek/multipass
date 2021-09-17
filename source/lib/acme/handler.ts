@@ -111,6 +111,34 @@ export class Handler {
 		};
 	}
 
+	async downloadCertificate(kid: string, url: string): Promise<{ payload: Buffer, url: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.ProtectedWithKID = {
+			kid: kid,
+			nonce: this.nextReplayNonce,
+			url: url
+		};
+		let response = await this.client.downloadCertificate({
+			options: {
+				path: getUrlPath(url, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = Buffer.from(await response.payload() ?? new Uint8Array());
+		return {
+			payload,
+			url
+		};
+	}
+
 	async finalizeChallenge(kid: string, url: string): Promise<{ payload: api.Challenge, url: string }> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;

@@ -103,6 +103,10 @@ guard FinalizeOrderPayload: {
 
 # ==============================================================================
 
+route downloadCertificate(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> binary;
+
 route finalizeChallenge(): POST:/<path*>
 	<= <{ "Content-Type" }> ../jws/Body
 	=> <{ "Replay-Nonce" }> Challenge;
