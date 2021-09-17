@@ -14,14 +14,23 @@ const HOSTNAMES = [
 
 const ACME_URL = "https://acme-staging-v02.api.letsencrypt.org/directory";
 
-const EC_PRIVATE_KEY_SEC1 = Buffer.from(`
-	MHcCAQEEIB4AKlzxRI2sTVxq7SCJ9l5MeaCyvUqeEQqoZDc3M0OvoAoGCCqGSM49
-	AwEHoUQDQgAEQcfTwyj10DdQpZ/2ZBWTEYvhW+z2OKZcWI/CJGuiMgVjy5cCjg8P
-	22yJzfRBXT/Mc33quG4nPynPbc8aUPCuxQ==
-`, "base64");
+const ACCOUNT_KEY = libcrypto.createPrivateKey({
+	key: Buffer.from(`
+		MHcCAQEEIB4AKlzxRI2sTVxq7SCJ9l5MeaCyvUqeEQqoZDc3M0OvoAoGCCqGSM49
+		AwEHoUQDQgAEQcfTwyj10DdQpZ/2ZBWTEYvhW+z2OKZcWI/CJGuiMgVjy5cCjg8P
+		22yJzfRBXT/Mc33quG4nPynPbc8aUPCuxQ==
+	`, "base64"),
+	format: "der",
+	type: "sec1"
+});
 
-const EC_KEY = libcrypto.createPrivateKey({
-	key: EC_PRIVATE_KEY_SEC1,
+const CERTIFICATE_KEY = libcrypto.createPrivateKey({
+	key: Buffer.from(`
+		MIGkAgEBBDDJ9wyXr+EvaaVU6wxQgl0+jkk/DzlR7FHOijM1N9TUAd+/mtKNTUIu
+		rToI8+sYYzGgBwYFK4EEACKhZANiAARzcfwXM/sMo4kMTduiJejmqI0hjISOEqeb
+		NReVCsyR8wRBg0VvEueim6tijQn6qP0G80JNx4jWElOUefVITEFPxfNwy4tphAvg
+		T8t1Uvzm8v472y3W7kexag22dG/eWxU=
+	`, "base64"),
 	format: "der",
 	type: "sec1"
 });
@@ -150,7 +159,7 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 (async () => {
 	let undoables = new Array<Undoable>();
 	try {
-		let handler = await acme.handler.Handler.make(ACME_URL, EC_KEY);
+		let handler = await acme.handler.Handler.make(ACME_URL, ACCOUNT_KEY);
 		await handler.createNonce();
 		let account = await handler.createAccount({
 			termsOfServiceAgreed: true
@@ -174,7 +183,7 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 					}
 					if (challenge.status === "pending") {
 						let hostname = await getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
-						let content = acme.computeKeyAuthorization(challenge.token, EC_KEY.export({ format: "jwk" }) as any);
+						let content = acme.computeKeyAuthorization(challenge.token, ACCOUNT_KEY.export({ format: "jwk" }) as any);
 						let undoable = await provisionRecord(hostname, content);
 						undoables.push(undoable);
 						await retryWithExponentialBackoff(60, 3, async () => {
