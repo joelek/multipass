@@ -140,6 +140,35 @@ export class Handler {
 		};
 	}
 
+	async finalizeOrder(kid: string, url: string, payloadData: api.FinalizeOrderPayload): Promise<{ payload: api.Order, url: string }> {
+		if (this.nextReplayNonce == null) {
+			throw `Expected next replay nonce to be set!`;
+		}
+		let protectedData: api.ProtectedWithKID = {
+			kid: kid,
+			nonce: this.nextReplayNonce,
+			url: url
+		};
+		let response = await this.client.finalizeOrder({
+			options: {
+				path: getUrlPath(url, this.urlPrefix)
+			},
+			headers: {
+				"content-type": CONTENT_TYPE
+			},
+			payload: await jws.sign(this.key, {
+				protected: protectedData,
+				payload: payloadData
+			})
+		});
+		this.nextReplayNonce = response.headers()["replay-nonce"];
+		let payload = await response.payload();
+		return {
+			payload,
+			url
+		};
+	}
+
 	async getAccount(url: string): Promise<{ payload: api.Account, url: string }> {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;

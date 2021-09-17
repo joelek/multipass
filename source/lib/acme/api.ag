@@ -97,11 +97,19 @@ guard CreateOrderPayload: {
 	"notAfter"?: string
 };
 
+guard FinalizeOrderPayload: {
+	csr: string
+};
+
 # ==============================================================================
 
 route finalizeChallenge(): POST:/<path*>
 	<= <{ "Content-Type" }> ../jws/Body
 	=> <{ "Replay-Nonce" }> Challenge;
+
+route finalizeOrder(): POST:/<path*>
+	<= <{ "Content-Type" }> ../jws/Body
+	=> <{ "Replay-Nonce" }> Order;
 
 route getAccount(): POST:/<path*>
 	<= <{ "Content-Type" }> ../jws/Body

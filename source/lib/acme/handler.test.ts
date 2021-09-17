@@ -1,15 +1,16 @@
 import * as libcrypto from "crypto";
 import * as libdns from "dns";
 import * as libfs from "fs";
-import * as config from "../config";
 import * as acme from "./";
+import * as config from "../config";
 import * as dynu from "../dynu";
 import * as glesys from "../glesys";
+import * as pkcs10 from "../pkcs10";
 
 const CONFIG = config.Options.as(JSON.parse(libfs.readFileSync("./private/config/config.json", "utf-8")));
 
 const HOSTNAMES = [
-	"test4.joelek.se"
+	"test.joelek.se"
 ];
 
 const ACME_URL = "https://acme-staging-v02.api.letsencrypt.org/directory";
@@ -204,7 +205,10 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 				return updated;
 			});
 		}
-		// send { csr: base64url of csr } to finalize
+		let csr = pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), CERTIFICATE_KEY);
+		order = await handler.finalizeOrder(account.url, order.payload.finalize, {
+			csr: csr.toString("base64url")
+		});
 		// download cert
 	} finally {
 		for (let undoable of undoables) {

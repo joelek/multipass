@@ -284,6 +284,14 @@ export type CreateOrderPayload = autoguard.guards.Object<{
 	"notAfter": autoguard.guards.String
 }>;
 
+export const FinalizeOrderPayload: autoguard.serialization.MessageGuard<FinalizeOrderPayload> = autoguard.guards.Object.of({
+	"csr": autoguard.guards.String
+}, {});
+
+export type FinalizeOrderPayload = autoguard.guards.Object<{
+	"csr": autoguard.guards.String
+}, {}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Account": autoguard.guards.Reference.of(() => Account),
@@ -299,13 +307,30 @@ export namespace Autoguard {
 		"ProtectedWithJWK": autoguard.guards.Reference.of(() => ProtectedWithJWK),
 		"ProtectedWithKID": autoguard.guards.Reference.of(() => ProtectedWithKID),
 		"CreateAccountPayload": autoguard.guards.Reference.of(() => CreateAccountPayload),
-		"CreateOrderPayload": autoguard.guards.Reference.of(() => CreateOrderPayload)
+		"CreateOrderPayload": autoguard.guards.Reference.of(() => CreateOrderPayload),
+		"FinalizeOrderPayload": autoguard.guards.Reference.of(() => FinalizeOrderPayload)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
 
 	export const Requests = {
 		"finalizeChallenge": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"content-type": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Body)
+		}, {
+			"options": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({}, {
+					"path": autoguard.guards.Array.of(autoguard.guards.String)
+				}),
+				autoguard.api.Options
+			)
+		}),
+		"finalizeOrder": autoguard.guards.Object.of({
 			"headers": autoguard.guards.Intersection.of(
 				autoguard.guards.Object.of({
 					"content-type": autoguard.guards.String
@@ -456,6 +481,17 @@ export namespace Autoguard {
 				autoguard.api.Headers
 			),
 			"payload": autoguard.guards.Reference.of(() => Challenge)
+		}, {
+			"status": autoguard.guards.Number
+		}),
+		"finalizeOrder": autoguard.guards.Object.of({
+			"headers": autoguard.guards.Intersection.of(
+				autoguard.guards.Object.of({
+					"replay-nonce": autoguard.guards.String
+				}, {}),
+				autoguard.api.Headers
+			),
+			"payload": autoguard.guards.Reference.of(() => Order)
 		}, {
 			"status": autoguard.guards.Number
 		}),

@@ -61,6 +61,45 @@ export const makeServer = (routes: autoguard.api.Server<shared.Autoguard.Request
 				headers["content-type"] = autoguard.api.decodeHeaderValue(raw.headers, "content-type", true);
 				headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
 				let payload = await autoguard.api.deserializePayload(raw.payload);
+				let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["finalizeOrder"], serverOptions?.debugMode);
+				let request = guard.as({ options, headers, payload }, "request");
+				return {
+					handleRequest: async () => {
+						let response = await routes["finalizeOrder"](new autoguard.api.ClientRequest(request, false, auxillary));
+						return {
+							validateResponse: async () => {
+								let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Responses["finalizeOrder"], serverOptions?.debugMode);
+								guard.as(response, "response");
+								let status = response.status ?? 200;
+								let headers = new Array<[string, string]>();
+								headers.push(...autoguard.api.encodeHeaderPairs("replay-nonce", [response.headers?.["replay-nonce"]], true));
+								headers.push(...autoguard.api.encodeUndeclaredHeaderPairs(response.headers ?? {}, headers.map((header) => header[0])));
+								let payload = autoguard.api.serializePayload(response.payload);
+								let defaultHeaders = serverOptions?.defaultHeaders?.slice() ?? [];
+								defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
+								return autoguard.api.finalizeResponse({ status, headers, payload }, defaultHeaders);
+							}
+						};
+					}
+				};
+			}
+		};
+	});
+	endpoints.push((raw, auxillary) => {
+		let method = "POST";
+		let matchers = new Array<autoguard.api.RouteMatcher>();
+		matchers.push(new autoguard.api.DynamicRouteMatcher(0, Infinity, true, autoguard.guards.String));
+		return {
+			acceptsComponents: () => autoguard.api.acceptsComponents(raw.components, matchers),
+			acceptsMethod: () => autoguard.api.acceptsMethod(raw.method, method),
+			validateRequest: async () => {
+				let options: Record<string, autoguard.api.JSON> = {};
+				options["path"] = matchers[0].getValue();
+				options = { ...options, ...autoguard.api.decodeUndeclaredParameters(raw.parameters, Object.keys(options)) };
+				let headers: Record<string, autoguard.api.JSON> = {};
+				headers["content-type"] = autoguard.api.decodeHeaderValue(raw.headers, "content-type", true);
+				headers = { ...headers, ...autoguard.api.decodeUndeclaredHeaders(raw.headers, Object.keys(headers)) };
+				let payload = await autoguard.api.deserializePayload(raw.payload);
 				let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getAccount"], serverOptions?.debugMode);
 				let request = guard.as({ options, headers, payload }, "request");
 				return {
