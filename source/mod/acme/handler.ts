@@ -9,8 +9,7 @@ import * as jws from "../jws";
 function makeClient(urlPrefix: string): apiclient.Client {
 	let client = apiclient.makeClient({
 		urlPrefix: urlPrefix,
-		requestHandler: autoguard.api.makeNodeRequestHandler(),
-		debugMode: true
+		requestHandler: autoguard.api.makeNodeRequestHandler()
 	});
 	return client;
 };
