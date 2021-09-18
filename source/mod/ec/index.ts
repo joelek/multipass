@@ -2,6 +2,16 @@ import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
 import * as sec1 from "../sec1";
 
+export function generatePrivateKeyObject(options?: Partial<{
+	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string
+}>): libcrypto.KeyObject {
+	let namedCurve = options?.namedCurve ?? "prime256v1";
+	let pair = libcrypto.generateKeyPairSync("ec", {
+		namedCurve: namedCurve
+	});
+	return pair.privateKey;
+};
+
 export function generatePrivateKeyDER(options?: Partial<{
 	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string,
 	type: "pkcs8" | "sec1"
