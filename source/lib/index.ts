@@ -294,6 +294,23 @@ type Validity = {
 	notAfter: number;
 };
 
+function parseUTCTime(node: asn1.UTCTime): number {
+	let string = Buffer.from(node.data, "base64url").toString();
+	let parts = /^([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})?Z$/.exec(string);
+	if (parts == null) {
+		throw `Expected a valid UTC time!`;
+	}
+	let century = (Number.parseInt(string[0]) < 5) ? "20" : "19";
+	let year = parts[1];
+	let month = parts[2];
+	let day = parts[3];
+	let hour = parts[4];
+	let minute = parts[5];
+	let second = parts[6] ?? "00";
+	let iso = `${century}${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
+	return Date.parse(iso);
+};
+
 function getValidityFromCertificate(path: string): Validity | undefined {
 	if (!libfs.existsSync(path)) {
 		return;
@@ -305,10 +322,10 @@ function getValidityFromCertificate(path: string): Validity | undefined {
 	}
 	let node = der.node.parse(new parsing.Parser(section.buffer));
 	let datesNode = asn1.Sequence.as(asn1.Sequence.as(asn1.Sequence.as(node).data[0]).data[4]);
-	let notBeforeNode = asn1.Date.as(datesNode.data[0]);
-	let notAfterNode = asn1.Date.as(datesNode.data[1]);
-	let notBefore = Date.parse(Buffer.from(notBeforeNode.data, "base64url").toString()).valueOf();
-	let notAfter = Date.parse(Buffer.from(notAfterNode.data, "base64url").toString()).valueOf();
+	let notBeforeNode = asn1.UTCTime.as(datesNode.data[0]);
+	let notAfterNode = asn1.UTCTime.as(datesNode.data[1]);
+	let notBefore = parseUTCTime(notBeforeNode);
+	let notAfter = parseUTCTime(notAfterNode);
 	return {
 		notBefore,
 		notAfter
