@@ -19,7 +19,20 @@ export function loadConfig(value: string): config.Options {
 	return config.Options.as(json);
 };
 
+function getDurationFromMilliseconds(ms: number): string {
+	let s = Math.floor(ms / 1000);
+	ms -= s * 1000;
+	let m = Math.floor(s / 60);
+	s -= m * 60;
+	let h = Math.floor(m / 60);
+	m -= h * 60;
+	let d = Math.floor(h / 24);
+	h -= d * 24;
+	return `${d} days, ${h} hours, ${m} minutes, ${s} seconds`;
+};
+
 async function delay(ms: number): Promise<void> {
+	console.log(`Waiting ${getDurationFromMilliseconds(ms)}...`);
 	while (ms > 0) {
 		let current = Math.min(ms, 2147483647);
 		await new Promise((resolve, reject) => {
