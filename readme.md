@@ -137,10 +137,10 @@ Multipass can load configuration files stored using the JSON format shown below.
 
 ```
 {
-	"providers"?: [],
-	"certificates"?: [
+	"providers": [],
+	"certificates": [
 		{
-			"hostnames"?: [
+			"hostnames": [
 				string
 			],
 			"root"?: string
