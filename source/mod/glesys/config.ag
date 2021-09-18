@@ -1,4 +1,4 @@
 guard Config: {
-	"username": string,
-	"password": string
+	"account": string,
+	"key": string
 };
