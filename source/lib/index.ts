@@ -195,7 +195,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 	let undoables = new Array<Undoable>();
 	try {
 		let accountKey = getPrivateKey(entry.account);
-		let certificateKey = getPrivateKey(entry.cert);
+		let certificateKey = getPrivateKey(entry.key);
 		let handler = await acme.handler.Handler.make(acmeUrl, accountKey);
 		await handler.createNonce();
 		let account = await handler.createAccount({
