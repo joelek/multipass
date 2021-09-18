@@ -438,6 +438,20 @@ export type Date = autoguard.guards.Object<{
 	"data": autoguard.guards.String
 }, {}>;
 
+export const UTCTime: autoguard.serialization.MessageGuard<UTCTime> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("UTC_TIME"),
+	"data": autoguard.guards.String
+}, {});
+
+export type UTCTime = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"UTC_TIME">,
+	"data": autoguard.guards.String
+}, {}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Node": autoguard.guards.Reference.of(() => Node),
@@ -449,7 +463,8 @@ export namespace Autoguard {
 		"Sequence": autoguard.guards.Reference.of(() => Sequence),
 		"Set": autoguard.guards.Reference.of(() => Set),
 		"UTF8String": autoguard.guards.Reference.of(() => UTF8String),
-		"Date": autoguard.guards.Reference.of(() => Date)
+		"Date": autoguard.guards.Reference.of(() => Date),
+		"UTCTime": autoguard.guards.Reference.of(() => UTCTime)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };

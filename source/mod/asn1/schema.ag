@@ -119,3 +119,10 @@ guard Date: {
 	type: "DATE",
 	data: string
 };
+
+guard UTCTime: {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "UTC_TIME",
+	data: string
+};
