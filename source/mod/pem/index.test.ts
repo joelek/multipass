@@ -3,7 +3,7 @@ import * as pem from "./";
 (async () => {
 	let string = [
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	console.assert(document.sections.length === 0, `It should parse documents containing zero sections.`);
 })();
 
@@ -12,7 +12,7 @@ import * as pem from "./";
 		let string = [
 			`-----BEGIN NUMBERS-----`
 		].join(`\r\n`);
-		let document = await pem.parse(string);
+		let document = pem.parse(string);
 		console.assert(false, `It should throw an error when parsing documents with incomplete sections.`);
 	} catch (error) {}
 })();
@@ -22,7 +22,7 @@ import * as pem from "./";
 		`-----BEGIN NUMBERS-----`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections.length;
 	let expected = 1;
 	console.assert(observed === expected, `It should parse documents containing one section.`);
@@ -35,7 +35,7 @@ import * as pem from "./";
 		`-----BEGIN STRINGS-----`,
 		`-----END STRINGS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections.length;
 	let expected = 2;
 	console.assert(observed === expected, `It should parse documents containing two sections.`);
@@ -46,7 +46,7 @@ import * as pem from "./";
 		`one`,
 		`two`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.postamble?.join(`\r\n`);
 	let expected = [
 		`one`,
@@ -62,7 +62,7 @@ import * as pem from "./";
 		`-----BEGIN NUMBERS-----`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections[0]?.preamble?.join(`\r\n`);
 	let expected = [
 		`one`,
@@ -76,7 +76,7 @@ import * as pem from "./";
 		`-----BEGIN NUMBERS-----`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections[0]?.label;
 	let expected = `NUMBERS`
 	console.assert(observed === expected, `It should parse section labels properly.`);
@@ -90,7 +90,7 @@ import * as pem from "./";
 		``,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections[0]?.headers?.map((header) => {
 		return `${header.key}:${header.value}`;
 	}).join(`\r\n`);
@@ -111,7 +111,7 @@ import * as pem from "./";
 		``,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections[0]?.headers?.map((header) => {
 		return `${header.key}:${header.value}`;
 	}).join(`\r\n`);
@@ -128,14 +128,14 @@ import * as pem from "./";
 		`AQIDBA==`,
 		`-----END NUMBERS-----`
 	].join(`\r\n`);
-	let document = await pem.parse(string);
+	let document = pem.parse(string);
 	let observed = document.sections[0]?.buffer;
 	let expected = Buffer.from(`AQIDBA==`, `base64`);
 	console.assert(observed?.equals(expected), `It should parse section buffers properly.`);
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: []
 	});
 	let expected = [
@@ -144,7 +144,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [
 			{
 				label: "NUMBERS",
@@ -160,7 +160,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [
 			{
 				label: "NUMBERS",
@@ -182,7 +182,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [],
 		postamble: [
 			`one`,
@@ -197,7 +197,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [
 			{
 				label: "NUMBERS",
@@ -226,7 +226,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [
 			{
 				label: "NUMBERS",
@@ -251,7 +251,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [
 			{
 				preamble: [
@@ -273,7 +273,7 @@ import * as pem from "./";
 })();
 
 (async () => {
-	let observed = await pem.serialize({
+	let observed = pem.serialize({
 		sections: [
 			{
 				label: "NUMBERS",

@@ -127,7 +127,7 @@ export function parseHeaders(lines: Array<string>): Array<Header> {
 	});
 };
 
-export async function parse(string: string): Promise<Document> {
+export function parse(string: string): Document {
 	let sections = new Array<Section>();
 	let lines = string.split(/\r\n|\r|\n/);
 	let index = 0;
@@ -154,7 +154,7 @@ export async function parse(string: string): Promise<Document> {
 				preamble: preamble.splice(0, preamble.length),
 				label: label,
 				headers: headers,
-				buffer: await encoding.convertBase64StringToBuffer(body.join(``))
+				buffer: Buffer.from(body.join(``), "base64")
 			});
 			continue outer;
 		}
@@ -167,7 +167,7 @@ export async function parse(string: string): Promise<Document> {
 	};
 };
 
-export async function serialize(document: Document): Promise<string> {
+export function serialize(document: Document): string {
 	let lines = new Array<string>();
 	for (let section of document.sections) {
 		if (!/^((?:[\x21-\x2C\x2E-\x7E][\x21-\x2C\x2E-\x7E \-]*)?)$/u.test(section.label)) {
@@ -194,7 +194,7 @@ export async function serialize(document: Document): Promise<string> {
 			}
 			lines.push(``);
 		}
-		let base64 = await encoding.convertBufferToBase64String(section.buffer);
+		let base64 = section.buffer.toString("base64")
 		for (let i = 0; i < base64.length; i += 64) {
 			let line = base64.substr(i, 64);
 			lines.push(line);
