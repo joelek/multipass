@@ -2,17 +2,13 @@
 
 import * as lib from "../lib";
 
-const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
-const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
-
 async function run(): Promise<number> {
 	let certificate: lib.config.Certificate = {
 		hostnames: [],
 	};
 	let options: lib.config.Options = {
 		providers: [],
-		certificates: [],
-		acme: LETS_ENCRYPT_STAGING
+		certificates: []
 	};
 	let found_unrecognized_argument = false;
 	for (let argv of process.argv.slice(2)) {
@@ -66,9 +62,6 @@ async function run(): Promise<number> {
 	} else {
 		if (options.certificates.length === 0) {
 			options.certificates.push(certificate);
-		}
-		if (options.acme === "le") {
-			options.acme = LETS_ENCRYPT;
 		}
 		await lib.run(options);
 		return 0;
