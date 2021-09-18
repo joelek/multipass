@@ -112,3 +112,10 @@ guard UTF8String: {
 	type: "UTF8_STRING",
 	data: string
 };
+
+guard Date: {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "DATE",
+	data: string
+};

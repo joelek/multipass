@@ -424,6 +424,20 @@ export type UTF8String = autoguard.guards.Object<{
 	"data": autoguard.guards.String
 }, {}>;
 
+export const Date: autoguard.serialization.MessageGuard<Date> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("DATE"),
+	"data": autoguard.guards.String
+}, {});
+
+export type Date = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"DATE">,
+	"data": autoguard.guards.String
+}, {}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Node": autoguard.guards.Reference.of(() => Node),
@@ -434,7 +448,8 @@ export namespace Autoguard {
 		"OctetString": autoguard.guards.Reference.of(() => OctetString),
 		"Sequence": autoguard.guards.Reference.of(() => Sequence),
 		"Set": autoguard.guards.Reference.of(() => Set),
-		"UTF8String": autoguard.guards.Reference.of(() => UTF8String)
+		"UTF8String": autoguard.guards.Reference.of(() => UTF8String),
+		"Date": autoguard.guards.Reference.of(() => Date)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };

@@ -58,6 +58,13 @@ export const UTF8_STRING: schema.UTF8String = {
 	data: ""
 };
 
+export const DATE: schema.Date = {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "DATE",
+	data: ""
+};
+
 export function decodeInteger(buffer: Buffer, options?: Partial<{ paddedUnsigned: boolean }>): bigint {
 	let paddedUnsigned = options?.paddedUnsigned ?? true;
 	let hex = buffer.toString("hex");
