@@ -1,7 +1,6 @@
 export * as acme from "./acme";
 export * as agext from "./agext";
 export * as asn1 from "./asn1";
-export * as config from "./config";
 export * as der from "./der";
 export * as dynu from "./dynu";
 export * as ec from "./ec";

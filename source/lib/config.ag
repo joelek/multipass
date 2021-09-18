@@ -1,0 +1,24 @@
+guard ProviderDynu: {
+	"type": "dynu",
+	"key": string
+};
+
+guard ProviderGlesys: {
+	"type": "glesys",
+	"account": string,
+	"key": string
+};
+
+guard Provider: ProviderDynu | ProviderGlesys;
+
+guard Certificate: {
+	"hostnames"?: string[],
+	"root"?: string
+};
+
+guard Options: {
+	"providers"?: Provider[],
+	"certificates"?: Certificate[],
+	"acme"?: string,
+	"monitor"?: boolean
+};

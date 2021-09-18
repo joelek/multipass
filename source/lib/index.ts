@@ -1,7 +1,10 @@
 import * as libcrypto from "crypto";
 import * as libdns from "dns";
 import * as libfs from "fs";
-import { acme, config, dynu, glesys, pkcs10 } from "../mod";
+import * as config from "./config";
+import { acme, dynu, glesys, pkcs10 } from "../mod";
+
+export * as config from "./config";
 
 const CONFIG = config.Options.as(JSON.parse(libfs.readFileSync("./private/config/config.json", "utf-8")));
 
