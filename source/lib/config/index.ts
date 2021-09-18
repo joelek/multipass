@@ -34,26 +34,30 @@ export type Provider = autoguard.guards.Union<[
 	autoguard.guards.Reference<ProviderGlesys>
 ]>;
 
-export const Certificate: autoguard.serialization.MessageGuard<Certificate> = autoguard.guards.Object.of({}, {
-	"hostnames": autoguard.guards.Array.of(autoguard.guards.String),
+export const Certificate: autoguard.serialization.MessageGuard<Certificate> = autoguard.guards.Object.of({
+	"hostnames": autoguard.guards.Array.of(autoguard.guards.String)
+}, {
 	"root": autoguard.guards.String
 });
 
-export type Certificate = autoguard.guards.Object<{}, {
-	"hostnames": autoguard.guards.Array<autoguard.guards.String>,
+export type Certificate = autoguard.guards.Object<{
+	"hostnames": autoguard.guards.Array<autoguard.guards.String>
+}, {
 	"root": autoguard.guards.String
 }>;
 
-export const Options: autoguard.serialization.MessageGuard<Options> = autoguard.guards.Object.of({}, {
+export const Options: autoguard.serialization.MessageGuard<Options> = autoguard.guards.Object.of({
 	"providers": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Provider)),
-	"certificates": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Certificate)),
+	"certificates": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Certificate))
+}, {
 	"acme": autoguard.guards.String,
 	"monitor": autoguard.guards.Boolean
 });
 
-export type Options = autoguard.guards.Object<{}, {
+export type Options = autoguard.guards.Object<{
 	"providers": autoguard.guards.Array<autoguard.guards.Reference<Provider>>,
-	"certificates": autoguard.guards.Array<autoguard.guards.Reference<Certificate>>,
+	"certificates": autoguard.guards.Array<autoguard.guards.Reference<Certificate>>
+}, {
 	"acme": autoguard.guards.String,
 	"monitor": autoguard.guards.Boolean
 }>;

@@ -12,13 +12,13 @@ guard ProviderGlesys: {
 guard Provider: ProviderDynu | ProviderGlesys;
 
 guard Certificate: {
-	"hostnames"?: string[],
+	"hostnames": string[],
 	"root"?: string
 };
 
 guard Options: {
-	"providers"?: Provider[],
-	"certificates"?: Certificate[],
+	"providers": Provider[],
+	"certificates": Certificate[],
 	"acme"?: string,
 	"monitor"?: boolean
 };
