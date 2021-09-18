@@ -171,6 +171,7 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 };
 
 function getPrivateKey(path: string): libcrypto.KeyObject {
+	libfs.mkdirSync(libpath.dirname(path), { recursive: true });
 	if (!libfs.existsSync(path)) {
 		let key = ec.generatePrivateKeyObject();
 		let buffer = key.export({ format: "pem", type: "sec1" });
@@ -191,10 +192,10 @@ function getPrivateKey(path: string): libcrypto.KeyObject {
 };
 
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: Client, domains: Array<string> }>): Promise<void> {
-	let accountKey = getPrivateKey(entry.account);
-	let certificateKey = getPrivateKey(entry.cert);
 	let undoables = new Array<Undoable>();
 	try {
+		let accountKey = getPrivateKey(entry.account);
+		let certificateKey = getPrivateKey(entry.cert);
 		let handler = await acme.handler.Handler.make(acmeUrl, accountKey);
 		await handler.createNonce();
 		let account = await handler.createAccount({
@@ -263,7 +264,8 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 			throw `Expected a certificate url!`;
 		}
 		let certificate = await handler.downloadCertificate(account.url, url);
-		console.log(certificate.toString());
+		libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
+		libfs.writeFileSync(entry.cert, certificate);
 	} finally {
 		for (let undoable of undoables) {
 			await undoable.undo();
@@ -366,12 +368,7 @@ export async function run(options: config.Options): Promise<void> {
 				for (let hostname of entry.hostnames) {
 					console.log(`\t${hostname}`);
 				}
-				try {
-					await processEntry(acme, entry, clients);
-					console.log(`\tsuccess!`);
-				} catch (error) {
-					console.log(`\tfailure!`);
-				}
+				await processEntry(acme, entry, clients);
 				let validity = getValidityFromCertificate(entry.cert);
 				if (validity == null) {
 					// Do not retry entry until all other entries have been processed.
