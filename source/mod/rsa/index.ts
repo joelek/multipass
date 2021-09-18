@@ -2,6 +2,16 @@ import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
 import * as pkcs1 from "../pkcs1";
 
+export function generatePrivateKeyObject(options?: Partial<{
+	modulusLength: number
+}>): libcrypto.KeyObject {
+	let modulusLength = options?.modulusLength ?? 4096;
+	let pair = libcrypto.generateKeyPairSync("rsa", {
+		modulusLength: modulusLength
+	});
+	return pair.privateKey;
+};
+
 export function generatePrivateKeyDER(options?: Partial<{
 	modulusLength: number,
 	type: "pkcs1" | "pkcs8"
