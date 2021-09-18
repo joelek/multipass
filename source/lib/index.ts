@@ -264,6 +264,9 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 			throw `Expected a certificate url!`;
 		}
 		let certificate = await handler.downloadCertificate(account.url, url);
+		if (libfs.existsSync(entry.cert)) {
+			libfs.renameSync(entry.cert, `${entry.cert}.old`);
+		}
 		libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
 		libfs.writeFileSync(entry.cert, certificate);
 	} finally {
