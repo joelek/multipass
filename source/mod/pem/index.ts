@@ -147,8 +147,9 @@ export function parse(string: string): Document {
 			}
 			let end = index;
 			let message = lines.slice(start, end - 1);
-			let head = message.slice(0, message.indexOf(``));
-			let body = message.slice(message.indexOf(``) + 1);
+			let emptyIndex = Math.max(0, message.indexOf(""));
+			let head = message.slice(0, emptyIndex);
+			let body = message.slice(emptyIndex);
 			let headers = parseHeaders(head);
 			sections.push({
 				preamble: preamble.splice(0, preamble.length),
