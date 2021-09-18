@@ -1,6 +1,6 @@
 {
 	"bin": {
-		"certhero": "./dist/cli/index.js"
+		"multipass": "./dist/cli/index.js"
 	},
 	"dependencies": {
 		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.9"
@@ -11,10 +11,10 @@
 	},
 	"license": "MIT",
 	"main": "./dist/lib/index.js",
-	"name": "@joelek/certhero",
+	"name": "@joelek/multipass",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/joelek/certhero.git"
+		"url": "https://github.com/joelek/multipass.git"
 	},
 	"scripts": {
 		"build": "npm run codegen && npm run compile && npm run package",
