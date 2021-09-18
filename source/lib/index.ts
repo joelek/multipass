@@ -332,6 +332,15 @@ function getValidityFromCertificate(path: string): Validity | undefined {
 	};
 };
 
+function getDelayFromValidity(validity: Validity | undefined): number {
+	if (validity == null) {
+		return 0;
+	}
+	let renewAfter = validity.notBefore + Math.round((validity.notAfter - validity.notBefore)*0.75);
+	let now = Date.now();
+	return renewAfter - now;
+};
+
 type QueueEntry = {
 	hostnames: Array<string>;
 	account: string,
@@ -401,6 +410,8 @@ export async function run(options: config.Options): Promise<void> {
 				for (let hostname of entry.hostnames) {
 					console.log(`\t${hostname}`);
 				}
+				let ms = getDelayFromValidity(entry.validity);
+				await delay(ms);
 				await processEntry(acme, entry, clients);
 				let validity = getValidityFromCertificate(entry.cert);
 				if (validity == null) {
