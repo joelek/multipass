@@ -34,10 +34,13 @@ function getDurationFromMilliseconds(ms: number): string {
 	m -= h * 60;
 	let d = Math.floor(h / 24);
 	h -= d * 24;
-	return `${d} days, ${h} hours, ${m} minutes, ${s} seconds`;
+	return `${d} days, ${h} hours, ${m} minutes and ${s} seconds`;
 };
 
 async function wait(ms: number): Promise<void> {
+	if (ms <= 0) {
+		return;
+	}
 	console.log(`Waiting ${getDurationFromMilliseconds(ms)}...`);
 	while (ms > 0) {
 		let current = Math.min(ms, 2147483647);
