@@ -1,8 +1,7 @@
 import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
-import * as pkcs1 from "../pkcs1";
 
-export function generatePrivateKeyObject(options?: Partial<{
+export function generatePrivateKey(options?: Partial<{
 	modulusLength: number
 }>): libcrypto.KeyObject {
 	let modulusLength = options?.modulusLength ?? 4096;
@@ -12,29 +11,32 @@ export function generatePrivateKeyObject(options?: Partial<{
 	return pair.privateKey;
 };
 
-export function generatePrivateKeyDER(options?: Partial<{
-	modulusLength: number,
-	type: "pkcs1" | "pkcs8"
+export function generatePrivateKeyPKCS1(options?: Partial<{
+	modulusLength: number
 }>): Buffer {
-	let modulusLength = options?.modulusLength ?? 4096;
-	let type = options?.type ?? "pkcs1";
-	let pair = libcrypto.generateKeyPairSync("rsa", {
-		modulusLength: modulusLength,
-		publicKeyEncoding: {
-			type: "pkcs1",
-			format: "der"
-		},
-		privateKeyEncoding: {
-			type: type,
-			format: "der"
-		}
-	});
-	return pair.privateKey;
-};
-
-export function generatePrivateKey(): jwk.RSAPrivateKey {
-	let buffer = generatePrivateKeyDER({
+	let key = generatePrivateKey(options);
+	return key.export({
+		format: "der",
 		type: "pkcs1"
 	});
-	return pkcs1.parseRSAPrivateKey(buffer);
+};
+
+export function generatePrivateKeyPKCS8(options?: Partial<{
+	modulusLength: number
+}>): Buffer {
+	let key = generatePrivateKey(options);
+	return key.export({
+		format: "der",
+		type: "pkcs8"
+	});
+};
+
+export function generatePrivateKeyJWK(options?: Partial<{
+	modulusLength: number
+}>): jwk.RSAPrivateKey {
+	let key = generatePrivateKey(options);
+	let json = key.export({
+		format: "jwk"
+	});
+	return jwk.RSAPrivateKey.as(json);
 };
