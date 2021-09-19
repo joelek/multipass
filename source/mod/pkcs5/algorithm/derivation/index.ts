@@ -123,6 +123,6 @@ export class PBKDF2Algorithm implements DerivationAlgorithm {
 				});
 			}
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };

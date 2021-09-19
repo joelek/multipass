@@ -69,7 +69,7 @@ export class AES128CBCAlgorithm implements CipherAlgorithm {
 				iv
 			});
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -120,7 +120,7 @@ export class AES192CBCAlgorithm implements CipherAlgorithm {
 				iv
 			});
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -171,6 +171,6 @@ export class AES256CBCAlgorithm implements CipherAlgorithm {
 				iv
 			});
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };

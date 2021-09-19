@@ -100,7 +100,7 @@ export class ECDSAWithSHA256 implements SignatureAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new ECDSAWithSHA256();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -151,7 +151,7 @@ export class ECDSAWithSHA384 implements SignatureAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new ECDSAWithSHA384();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -202,7 +202,7 @@ export class ECDSAWithSHA512 implements SignatureAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new ECDSAWithSHA512();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -248,7 +248,7 @@ export class SHA256WithRSAEncryption implements SignatureAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new SHA256WithRSAEncryption();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -294,7 +294,7 @@ export class SHA384WithRSAEncryption implements SignatureAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new SHA384WithRSAEncryption();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -340,6 +340,6 @@ export class SHA512WithRSAEncryption implements SignatureAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new SHA512WithRSAEncryption();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };

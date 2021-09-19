@@ -74,6 +74,6 @@ export class PBES2Algorithm implements WrappingAlgorithm {
 				cipherAlgorithm
 			});
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };

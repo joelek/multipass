@@ -62,7 +62,7 @@ export class HMACSHA1Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA1Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -96,7 +96,7 @@ export class HMACSHA224Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA224Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -130,7 +130,7 @@ export class HMACSHA256Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA256Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -164,7 +164,7 @@ export class HMACSHA384Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA384Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -198,7 +198,7 @@ export class HMACSHA512Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA512Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -232,7 +232,7 @@ export class HMACSHA512224Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA512224Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
 
@@ -266,6 +266,6 @@ export class HMACSHA512256Algorithm implements DigestAlgorithm {
 			let [algorithmNode, optionsNode] = node.data;
 			return new HMACSHA512256Algorithm();
 		}
-		throw ``;
+		throw `Expected the algorithm expressed using ASN1 syntax!`;
 	}
 };
