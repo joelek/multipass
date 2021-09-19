@@ -181,10 +181,11 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						throw `Expected a "dns-01" challenge!`;
 					}
 					if (challenge.status === "pending") {
-						let hostname = await getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
+						let hostnameToAuthorize = authorization.payload.identifier.value;
+						let hostname = await getCanonicalName(makeProvisionHostname(hostnameToAuthorize));
 						let content = acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }) as any);
 						let { client, domain, subdomain } = getClientDetails(hostname, clients);
-						console.log(`Provisioning text record at ${hostname}...`);
+						console.log(`Provisioning TXT record for ${hostnameToAuthorize} at ${hostname}...`);
 						let undoable = await client.provisionTextRecord({
 							domain,
 							subdomain,
@@ -233,9 +234,11 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		}
 		libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
 		libfs.writeFileSync(entry.cert, certificate);
-		console.log(`Certificate successfully downloaded!`);
+		console.log(`Certificate successfully downloaded.`);
 		entry.validity = getValidityFromCertificate(entry.cert);
 		entry.renewAfter = getRenewAfter(entry.validity);
+	} catch (error) {
+		console.log(String(error));
 	} finally {
 		for (let undoable of undoables) {
 			await undoable.undo();
@@ -316,7 +319,7 @@ export async function run(options: config.Options): Promise<void> {
 		let client = await makeClient(credentials);
 		let domains = await client.listDomains();
 		for (let domain of domains) {
-			console.log(`Credentials accepted for "${domain}"`);
+			console.log(`Credentials accepted for ${domain}.`);
 		}
 		clients.push({
 			client,
