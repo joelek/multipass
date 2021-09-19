@@ -53,7 +53,7 @@ class PBES2Algorithm {
                 cipherAlgorithm
             });
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.PBES2Algorithm = PBES2Algorithm;

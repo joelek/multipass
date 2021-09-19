@@ -11,48 +11,43 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const libfs = require("fs");
 const dynu = require("./");
-function test() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let config = dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
-        let client = dynu.makeClient(config);
-        let domains = yield (yield client.listDomains({})).payload();
-        let domain = domains.domains.pop();
-        if (domain == null) {
-            throw "Expected a domain!";
-        }
-        console.log(JSON.stringify({ domain }, null, "\t"));
-        let created = yield (yield client.createDomainRecord({
-            options: {
-                domainid: domain.id
-            },
-            payload: {
-                nodeName: "_acme-challenge",
-                recordType: "TXT",
-                textData: "TBD1",
-                ttl: 60
-            }
-        })).payload();
-        console.log(JSON.stringify({ created }, null, "\t"));
-        let updated = yield (yield client.updateDomainRecord({
-            options: {
-                domainid: domain.id,
-                recordid: created.id
-            },
-            payload: {
-                nodeName: "_acme-challenge",
-                recordType: "TXT",
-                textData: "TBD2",
-                ttl: 60
-            }
-        })).payload();
-        console.log(JSON.stringify({ updated }, null, "\t"));
-        let deleted = yield (yield client.deleteDomainRecord({
-            options: {
-                domainid: domain.id,
-                recordid: created.id
-            }
-        })).payload();
-        console.log(JSON.stringify({ deleted }, null, "\t"));
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    let config = dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
+    let client = dynu.makeClient(config, {
+        debugMode: true
     });
-}
-test().catch((error) => console.log(String(error)));
+    let domains = yield (yield client.listDomains({})).payload();
+    let domain = domains.domains.pop();
+    if (domain == null) {
+        throw "Expected a domain!";
+    }
+    let created = yield (yield client.createDomainRecord({
+        options: {
+            domainid: domain.id
+        },
+        payload: {
+            nodeName: "_acme-challenge",
+            recordType: "TXT",
+            textData: "TBD1",
+            ttl: 60
+        }
+    })).payload();
+    let updated = yield (yield client.updateDomainRecord({
+        options: {
+            domainid: domain.id,
+            recordid: created.id
+        },
+        payload: {
+            nodeName: "_acme-challenge",
+            recordType: "TXT",
+            textData: "TBD2",
+            ttl: 60
+        }
+    })).payload();
+    let deleted = yield (yield client.deleteDomainRecord({
+        options: {
+            domainid: domain.id,
+            recordid: created.id
+        }
+    })).payload();
+}))();

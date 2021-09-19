@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCertificateRequest = exports.createExtension = exports.getDefaultAlgorithm = exports.schema = void 0;
+exports.createCertificateRequest = exports.createSANExtension = exports.getDefaultAlgorithm = exports.schema = void 0;
 const libcrypto = require("crypto");
 const asn1 = require("../asn1");
 const der = require("../der");
 const jwk = require("../jwk");
+const parsing = require("../parsing");
 const pkcs5 = require("../pkcs5");
 const pkcs8 = require("../pkcs8");
-const parsing = require("../parsing");
 exports.schema = require("./schema");
 function getDefaultAlgorithm(key) {
     let keyJwk = key.export({ format: "jwk" });
@@ -29,10 +29,7 @@ function getDefaultAlgorithm(key) {
 }
 exports.getDefaultAlgorithm = getDefaultAlgorithm;
 ;
-function createExtension(hostnames) {
-    if (hostnames.length === 0) {
-        throw `Expected at least one hostname!`;
-    }
+function createSANExtension(hostnames) {
     let node = Object.assign(Object.assign({}, asn1.SEQUENCE), { data: hostnames.map((hostname) => {
             let buffer = Buffer.from(hostname);
             return {
@@ -44,7 +41,7 @@ function createExtension(hostnames) {
         }) });
     return der.node.serialize(node);
 }
-exports.createExtension = createExtension;
+exports.createSANExtension = createSANExtension;
 ;
 function createCertificateRequest(hostnames, key, options) {
     var _a;
@@ -67,7 +64,7 @@ function createCertificateRequest(hostnames, key, options) {
                     Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
                             Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
                                     Object.assign(Object.assign({}, asn1.OBJECT_IDENTIFER), { data: "2.5.29.17" }),
-                                    Object.assign(Object.assign({}, asn1.OCTET_STRING), { data: createExtension(hostnames).toString("base64url") })
+                                    Object.assign(Object.assign({}, asn1.OCTET_STRING), { data: createSANExtension(hostnames).toString("base64url") })
                                 ] })
                         ] })
                 ] })

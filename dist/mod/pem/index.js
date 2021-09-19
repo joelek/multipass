@@ -6,7 +6,7 @@ function deriveKey(data, salt, keyLength) {
     let last = Buffer.alloc(0);
     let key = Buffer.alloc(0);
     while (key.length < keyLength) {
-        let hash = libcrypto.createHash(`MD5`);
+        let hash = libcrypto.createHash("MD5");
         hash.update(last);
         hash.update(data);
         hash.update(salt);
@@ -19,22 +19,22 @@ exports.deriveKey = deriveKey;
 ;
 function decrypt(section, passphrase) {
     var _a, _b, _c, _d, _e;
-    let procTypes = (_b = (_a = section.headers) === null || _a === void 0 ? void 0 : _a.filter((header) => header.key.toLowerCase() === `proc-type`)) !== null && _b !== void 0 ? _b : [];
+    let procTypes = (_b = (_a = section.headers) === null || _a === void 0 ? void 0 : _a.filter((header) => header.key.toLowerCase() === "proc-type")) !== null && _b !== void 0 ? _b : [];
     if (procTypes.length !== 1) {
         throw `Expected exactly one "Proc-Type" header!`;
     }
-    let procType = procTypes[0].value.trim().split(`,`);
+    let procType = procTypes[0].value.trim().split(",");
     if (procType.length < 2) {
         throw `Expected "Proc-Type" to contain at least 2 values!`;
     }
-    if (procType[0] !== `4` || procType[1] !== `ENCRYPTED`) {
+    if (procType[0] !== "4" || procType[1] !== "ENCRYPTED") {
         throw `Expected an encrypted section!`;
     }
-    let dekInfos = (_d = (_c = section.headers) === null || _c === void 0 ? void 0 : _c.filter((header) => header.key.toLowerCase() === `dek-info`)) !== null && _d !== void 0 ? _d : [];
+    let dekInfos = (_d = (_c = section.headers) === null || _c === void 0 ? void 0 : _c.filter((header) => header.key.toLowerCase() === "dek-info")) !== null && _d !== void 0 ? _d : [];
     if (dekInfos.length !== 1) {
         throw `Expected exactly one "DEK-Info" header!`;
     }
-    let dekInfo = dekInfos[0].value.trim().split(`,`);
+    let dekInfo = dekInfos[0].value.trim().split(",");
     if (dekInfo.length < 2) {
         throw `Expected "DEK-Info" to contain at least 2 values!`;
     }
@@ -43,14 +43,14 @@ function decrypt(section, passphrase) {
     if (ivLength == null || keyLength == null) {
         throw `Expected "${algorithm}" to be a supported cipher!`;
     }
-    let iv = Buffer.from(dekInfo[1], `hex`);
+    let iv = Buffer.from(dekInfo[1], "hex");
     let key = deriveKey(Buffer.from(passphrase), iv.slice(0, 8), keyLength);
     let decipher = libcrypto.createDecipheriv(algorithm, key, iv);
     let buffer = Buffer.concat([decipher.update(section.buffer), decipher.final()]);
     return Object.assign(Object.assign({}, section), { headers: [
             ...((_e = section.headers) !== null && _e !== void 0 ? _e : []).filter((header) => {
                 let key = header.key.toLowerCase();
-                return key !== `proc-type` && key !== `dek-info`;
+                return key !== "proc-type" && key !== "dek-info";
             }),
         ], buffer });
 }
@@ -58,7 +58,7 @@ exports.decrypt = decrypt;
 ;
 function encrypt(section, passphrase, options) {
     var _a, _b, _c;
-    let algorithm = (_a = options === null || options === void 0 ? void 0 : options.algorithm) !== null && _a !== void 0 ? _a : `AES-128-CBC`;
+    let algorithm = (_a = options === null || options === void 0 ? void 0 : options.algorithm) !== null && _a !== void 0 ? _a : "AES-128-CBC";
     let { ivLength, keyLength } = Object.assign({}, libcrypto.getCipherInfo(algorithm));
     if (ivLength == null || keyLength == null) {
         throw `Expected "${algorithm}" to be a supported cipher!`;
@@ -70,12 +70,12 @@ function encrypt(section, passphrase, options) {
     return Object.assign(Object.assign({}, section), { headers: [
             ...((_c = section.headers) !== null && _c !== void 0 ? _c : []),
             {
-                key: `Proc-TYPE`,
-                value: [`4`, `ENCRYPTED`].join(`,`)
+                key: "Proc-TYPE",
+                value: ["4", "ENCRYPTED"].join(",")
             },
             {
-                key: `DEK-Info`,
-                value: [algorithm, iv.toString(`hex`).toUpperCase()].join(`,`)
+                key: "DEK-Info",
+                value: [algorithm, iv.toString("hex").toUpperCase()].join(",")
             }
         ], buffer });
 }
@@ -135,7 +135,7 @@ function parse(string) {
                 preamble: preamble.splice(0, preamble.length),
                 label: label,
                 headers: headers,
-                buffer: Buffer.from(body.join(``), "base64")
+                buffer: Buffer.from(body.join(""), "base64")
             });
             continue outer;
         }
@@ -168,14 +168,14 @@ function serialize(document) {
                 }
                 let parts = (_b = value.match(/.{1,64}/g)) !== null && _b !== void 0 ? _b : [];
                 if (key.length + 1 + parts[0].length > 64) {
-                    parts.unshift(``);
+                    parts.unshift("");
                 }
                 lines.push(`${key}:${parts[0]}`);
                 for (let part of parts.slice(1)) {
                     lines.push(`\t${part}`);
                 }
             }
-            lines.push(``);
+            lines.push("");
         }
         let base64 = section.buffer.toString("base64");
         for (let i = 0; i < base64.length; i += 64) {
@@ -185,7 +185,7 @@ function serialize(document) {
         lines.push(`-----END ${section.label}-----`);
     }
     lines.push(...((_c = document.postamble) !== null && _c !== void 0 ? _c : []));
-    return lines.join(`\r\n`);
+    return lines.join("\r\n");
 }
 exports.serialize = serialize;
 ;

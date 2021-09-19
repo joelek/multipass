@@ -1,11 +1,15 @@
 /// <reference types="node" />
 import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
-export declare function generatePrivateKeyObject(options?: Partial<{
+export declare function generatePrivateKey(options?: Partial<{
     modulusLength: number;
 }>): libcrypto.KeyObject;
-export declare function generatePrivateKeyDER(options?: Partial<{
+export declare function generatePrivateKeyPKCS1(options?: Partial<{
     modulusLength: number;
-    type: "pkcs1" | "pkcs8";
 }>): Buffer;
-export declare function generatePrivateKey(): jwk.RSAPrivateKey;
+export declare function generatePrivateKeyPKCS8(options?: Partial<{
+    modulusLength: number;
+}>): Buffer;
+export declare function generatePrivateKeyJWK(options?: Partial<{
+    modulusLength: number;
+}>): jwk.RSAPrivateKey;

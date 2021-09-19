@@ -1,4 +1,4 @@
-export declare type Any = boolean | null | number | string | undefined | Any[] | {
+export declare type Any = boolean | null | number | string | Any[] | {
     [key: string]: Any;
 };
 export declare type Array = Any[];

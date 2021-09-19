@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generatePrivateKey = exports.generatePrivateKeyDER = exports.generatePrivateKeyObject = void 0;
+exports.generatePrivateKeyJWK = exports.generatePrivateKeySEC1 = exports.generatePrivateKeyPKCS8 = exports.generatePrivateKey = void 0;
 const libcrypto = require("crypto");
-const sec1 = require("../sec1");
-function generatePrivateKeyObject(options) {
+const jwk = require("../jwk");
+function generatePrivateKey(options) {
     var _a;
     let namedCurve = (_a = options === null || options === void 0 ? void 0 : options.namedCurve) !== null && _a !== void 0 ? _a : "prime256v1";
     let pair = libcrypto.generateKeyPairSync("ec", {
@@ -11,32 +11,32 @@ function generatePrivateKeyObject(options) {
     });
     return pair.privateKey;
 }
-exports.generatePrivateKeyObject = generatePrivateKeyObject;
+exports.generatePrivateKey = generatePrivateKey;
 ;
-function generatePrivateKeyDER(options) {
-    var _a, _b;
-    let namedCurve = (_a = options === null || options === void 0 ? void 0 : options.namedCurve) !== null && _a !== void 0 ? _a : "prime256v1";
-    let type = (_b = options === null || options === void 0 ? void 0 : options.type) !== null && _b !== void 0 ? _b : "pkcs8";
-    let pair = libcrypto.generateKeyPairSync("ec", {
-        namedCurve: namedCurve,
-        publicKeyEncoding: {
-            type: "spki",
-            format: "der"
-        },
-        privateKeyEncoding: {
-            type: type,
-            format: "der"
-        }
+function generatePrivateKeyPKCS8(options) {
+    let key = generatePrivateKey(options);
+    return key.export({
+        format: "der",
+        type: "pkcs8"
     });
-    return pair.privateKey;
 }
-exports.generatePrivateKeyDER = generatePrivateKeyDER;
+exports.generatePrivateKeyPKCS8 = generatePrivateKeyPKCS8;
 ;
-function generatePrivateKey() {
-    let buffer = generatePrivateKeyDER({
+function generatePrivateKeySEC1(options) {
+    let key = generatePrivateKey(options);
+    return key.export({
+        format: "der",
         type: "sec1"
     });
-    return sec1.parseECPrivateKey(buffer);
 }
-exports.generatePrivateKey = generatePrivateKey;
+exports.generatePrivateKeySEC1 = generatePrivateKeySEC1;
+;
+function generatePrivateKeyJWK(options) {
+    let key = generatePrivateKey(options);
+    let json = key.export({
+        format: "jwk"
+    });
+    return jwk.ECPrivateKey.as(json);
+}
+exports.generatePrivateKeyJWK = generatePrivateKeyJWK;
 ;

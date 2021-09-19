@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sec1 = exports.rsa = exports.pkcs10 = exports.pkcs8 = exports.pkcs5 = exports.pkcs1 = exports.pem = exports.parsing = exports.jws = exports.jwk = exports.json = exports.glesys = exports.ec = exports.dynu = exports.der = exports.asn1 = exports.agext = exports.acme = void 0;
+exports.sec1 = exports.rsa = exports.pkcs10 = exports.pkcs8 = exports.pkcs5 = exports.pkcs1 = exports.pem = exports.parsing = exports.jws = exports.jwk = exports.json = exports.glesys = exports.ec = exports.dynu = exports.dns = exports.der = exports.asn1 = exports.acme = void 0;
 exports.acme = require("./acme");
-exports.agext = require("./agext");
 exports.asn1 = require("./asn1");
 exports.der = require("./der");
+exports.dns = require("./dns");
 exports.dynu = require("./dynu");
 exports.ec = require("./ec");
 exports.glesys = require("./glesys");

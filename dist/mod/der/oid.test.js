@@ -12,20 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const oid = require("./oid");
 const parsing = require("../parsing");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    let parser = new parsing.Parser(Buffer.from(`KoZIhvcNAQEL`, `base64url`));
-    let observed = oid.parse(parser).join(`.`);
-    let expected = `1.2.840.113549.1.1.11`;
+    let parser = new parsing.Parser(Buffer.from("KoZIhvcNAQEL", "base64url"));
+    let observed = oid.parse(parser).join(".");
+    let expected = "1.2.840.113549.1.1.11";
     console.assert(observed === expected, `It should parse a common cryptographic oid.`);
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    let observed = oid.serialize(`1.2.840.113549.1.1.11`.split(`.`).map((part) => Number.parseInt(part, 10)));
-    let expected = Buffer.from(`KoZIhvcNAQEL`, `base64url`);
+    let observed = oid.serialize("1.2.840.113549.1.1.11".split(".").map((part) => Number.parseInt(part, 10)));
+    let expected = Buffer.from("KoZIhvcNAQEL", "base64url");
     console.assert(observed.equals(expected), `It should serialize a common cryptographic oid.`);
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     let parser = new parsing.Parser(Buffer.of(0x27));
-    let observed = oid.parse(parser).join(`.`);
-    let expected = `0.39`;
+    let observed = oid.parse(parser).join(".");
+    let expected = "0.39";
     console.assert(observed === expected, `It should parse [0, 39] properly.`);
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,8 +42,8 @@ const parsing = require("../parsing");
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     let parser = new parsing.Parser(Buffer.of(0x4F));
-    let observed = oid.parse(parser).join(`.`);
-    let expected = `1.39`;
+    let observed = oid.parse(parser).join(".");
+    let expected = "1.39";
     console.assert(observed === expected, `It should parse [1, 39] properly.`);
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,8 +60,8 @@ const parsing = require("../parsing");
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     let parser = new parsing.Parser(Buffer.of(0x7F));
-    let observed = oid.parse(parser).join(`.`);
-    let expected = `2.47`;
+    let observed = oid.parse(parser).join(".");
+    let expected = "2.47";
     console.assert(observed === expected, `It should parse [2, 47] properly.`);
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,8 +71,8 @@ const parsing = require("../parsing");
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {
     let parser = new parsing.Parser(Buffer.of(0x81, 0x00));
-    let observed = oid.parse(parser).join(`.`);
-    let expected = `2.48`;
+    let observed = oid.parse(parser).join(".");
+    let expected = "2.48";
     console.assert(observed === expected, `It should parse [2, 48] properly.`);
 }))();
 (() => __awaiter(void 0, void 0, void 0, function* () {

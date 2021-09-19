@@ -14,8 +14,8 @@ exports.serializeRSAPrivateKey = exports.parseRSAPrivateKey = exports.serializeR
 const asn1 = require("../asn1");
 const der = require("../der");
 const jwk = require("../jwk");
-const schema = require("./schema");
 const parsing = require("../parsing");
+const schema = require("./schema");
 __exportStar(require("./schema"), exports);
 function parseRSAPublicKey(buffer) {
     try {

@@ -54,7 +54,7 @@ class HMACSHA1Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA1Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA1Algorithm = HMACSHA1Algorithm;
@@ -76,7 +76,7 @@ class HMACSHA224Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA224Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA224Algorithm = HMACSHA224Algorithm;
@@ -98,7 +98,7 @@ class HMACSHA256Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA256Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA256Algorithm = HMACSHA256Algorithm;
@@ -120,7 +120,7 @@ class HMACSHA384Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA384Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA384Algorithm = HMACSHA384Algorithm;
@@ -142,7 +142,7 @@ class HMACSHA512Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA512Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA512Algorithm = HMACSHA512Algorithm;
@@ -164,7 +164,7 @@ class HMACSHA512224Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA512224Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA512224Algorithm = HMACSHA512224Algorithm;
@@ -186,7 +186,7 @@ class HMACSHA512256Algorithm {
             let [algorithmNode, optionsNode] = node.data;
             return new HMACSHA512256Algorithm();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.HMACSHA512256Algorithm = HMACSHA512256Algorithm;

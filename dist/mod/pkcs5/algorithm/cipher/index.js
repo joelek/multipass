@@ -54,7 +54,7 @@ class AES128CBCAlgorithm {
                 iv
             });
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.AES128CBCAlgorithm = AES128CBCAlgorithm;
@@ -65,12 +65,12 @@ class AES192CBCAlgorithm {
         this.iv = (_a = options === null || options === void 0 ? void 0 : options.iv) !== null && _a !== void 0 ? _a : libcrypto.randomBytes(16);
     }
     decrypt(ciphertext, key) {
-        let decipher = libcrypto.createDecipheriv("aes-256-cbc", key, this.iv);
+        let decipher = libcrypto.createDecipheriv("aes-192-cbc", key, this.iv);
         let plaintext = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
         return plaintext;
     }
     encrypt(plaintext, key) {
-        let cipher = libcrypto.createCipheriv("aes-256-cbc", key, this.iv);
+        let cipher = libcrypto.createCipheriv("aes-192-cbc", key, this.iv);
         let ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
         return ciphertext;
     }
@@ -91,7 +91,7 @@ class AES192CBCAlgorithm {
                 iv
             });
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.AES192CBCAlgorithm = AES192CBCAlgorithm;
@@ -128,7 +128,7 @@ class AES256CBCAlgorithm {
                 iv
             });
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.AES256CBCAlgorithm = AES256CBCAlgorithm;

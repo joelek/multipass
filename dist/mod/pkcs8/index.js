@@ -13,9 +13,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.serializeRSAPrivateKey = exports.parseRSAPrivateKey = exports.serializeRSAPublicKey = exports.parseRSAPublicKey = void 0;
 const asn1 = require("../asn1");
 const der = require("../der");
+const parsing = require("../parsing");
 const pkcs1 = require("../pkcs1");
 const schema = require("./schema");
-const parsing = require("../parsing");
 __exportStar(require("./schema"), exports);
 function parseRSAPublicKey(bufferPKCS8) {
     try {

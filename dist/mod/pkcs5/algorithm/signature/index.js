@@ -89,7 +89,7 @@ class ECDSAWithSHA256 {
             let [algorithmNode, optionsNode] = node.data;
             return new ECDSAWithSHA256();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.ECDSAWithSHA256 = ECDSAWithSHA256;
@@ -126,7 +126,7 @@ class ECDSAWithSHA384 {
             let [algorithmNode, optionsNode] = node.data;
             return new ECDSAWithSHA384();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.ECDSAWithSHA384 = ECDSAWithSHA384;
@@ -163,7 +163,7 @@ class ECDSAWithSHA512 {
             let [algorithmNode, optionsNode] = node.data;
             return new ECDSAWithSHA512();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.ECDSAWithSHA512 = ECDSAWithSHA512;
@@ -195,7 +195,7 @@ class SHA256WithRSAEncryption {
             let [algorithmNode, optionsNode] = node.data;
             return new SHA256WithRSAEncryption();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.SHA256WithRSAEncryption = SHA256WithRSAEncryption;
@@ -227,7 +227,7 @@ class SHA384WithRSAEncryption {
             let [algorithmNode, optionsNode] = node.data;
             return new SHA384WithRSAEncryption();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.SHA384WithRSAEncryption = SHA384WithRSAEncryption;
@@ -259,7 +259,7 @@ class SHA512WithRSAEncryption {
             let [algorithmNode, optionsNode] = node.data;
             return new SHA512WithRSAEncryption();
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.SHA512WithRSAEncryption = SHA512WithRSAEncryption;

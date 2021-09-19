@@ -81,7 +81,7 @@ class PBKDF2Algorithm {
                 });
             }
         }
-        throw ``;
+        throw `Expected the algorithm expressed using ASN1 syntax!`;
     }
 }
 exports.PBKDF2Algorithm = PBKDF2Algorithm;

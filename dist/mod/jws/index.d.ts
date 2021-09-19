@@ -9,5 +9,5 @@ export declare function sign(key: libcrypto.KeyObject, options?: Partial<{
     protected: json.Object;
     payload: json.Any;
     signatureAlgorithm: pkcs5.signature.SignatureAlgorithm;
-}>): Promise<schema.Body>;
-export declare function verify(body: schema.Body, key: libcrypto.KeyObject): Promise<boolean>;
+}>): schema.Body;
+export declare function verify(body: schema.Body, key: libcrypto.KeyObject): boolean;

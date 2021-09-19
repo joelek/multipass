@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Handler = void 0;
+const libcrypto = require("crypto");
 const liburl = require("url");
 const autoguard = require("@joelek/ts-autoguard/dist/lib-server");
 const apiclient = require("./api/client");
@@ -46,7 +47,7 @@ class Handler {
             if (this.nextReplayNonce == null) {
                 throw `Expected next replay nonce to be set!`;
             }
-            let key = jwk.getPublicKey(this.key.export({ format: "jwk" }));
+            let key = jwk.PublicKey.as(libcrypto.createPublicKey(this.key).export({ format: "jwk" }));
             let protectedData = {
                 jwk: key,
                 nonce: this.nextReplayNonce,
@@ -59,7 +60,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData,
                     payload: payloadData
                 })
@@ -100,7 +101,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData,
                     payload: payloadData
                 })
@@ -132,7 +133,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData
                 })
             });
@@ -158,7 +159,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData,
                     payload: {}
                 })
@@ -183,7 +184,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData,
                     payload: payloadData
                 })
@@ -208,7 +209,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData
                 })
             });
@@ -237,7 +238,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData
                 })
             });
@@ -266,7 +267,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData
                 })
             });
@@ -295,7 +296,7 @@ class Handler {
                 headers: {
                     "content-type": CONTENT_TYPE
                 },
-                payload: yield jws.sign(this.key, {
+                payload: jws.sign(this.key, {
                     protected: protectedData
                 })
             });

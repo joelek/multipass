@@ -14,8 +14,8 @@ exports.serializeECPrivateKey = exports.parseECPrivateKey = exports.serializePoi
 const asn1 = require("../asn1");
 const der = require("../der");
 const jwk = require("../jwk");
-const pkcs8 = require("../pkcs8");
 const parsing = require("../parsing");
+const pkcs8 = require("../pkcs8");
 const schema = require("./schema");
 __exportStar(require("./schema"), exports);
 function parseCurve(node) {

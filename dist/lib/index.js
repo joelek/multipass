@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.run = exports.loadConfig = exports.LETS_ENCRYPT = exports.LETS_ENCRYPT_STAGING = exports.config = void 0;
+exports.run = exports.loadConfig = exports.config = void 0;
 const libcrypto = require("crypto");
 const libdns = require("dns");
 const libfs = require("fs");
@@ -19,9 +19,14 @@ const mod_1 = require("../mod");
 const mod_2 = require("../mod");
 const mod_3 = require("../mod");
 const mod_4 = require("../mod");
+const mod_5 = require("../mod");
+const mod_6 = require("../mod");
+const mod_7 = require("../mod");
+const mod_8 = require("../mod");
+const mod_9 = require("../mod");
 exports.config = require("./config");
-exports.LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
-exports.LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
+const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
+const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
 function loadConfig(value) {
     let string = libfs.readFileSync(value, "utf-8");
     let json = JSON.parse(string);
@@ -38,10 +43,10 @@ function getDurationFromMilliseconds(ms) {
     m -= h * 60;
     let d = Math.floor(h / 24);
     h -= d * 24;
-    return `${d} days, ${h} hours, ${m} minutes, ${s} seconds`;
+    return `${d} days, ${h} hours, ${m} minutes and ${s} seconds`;
 }
 ;
-function delay(ms) {
+function wait(ms) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`Waiting ${getDurationFromMilliseconds(ms)}...`);
         while (ms > 0) {
@@ -54,90 +59,13 @@ function delay(ms) {
     });
 }
 ;
-;
-;
 function makeClient(credentials) {
     return __awaiter(this, void 0, void 0, function* () {
         if (config.ProviderDynu.is(credentials)) {
-            let client = mod_1.dynu.makeClient(credentials);
-            let domains = (yield (yield client.listDomains({})).payload()).domains;
-            return {
-                listDomains() {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        return domains.map((domain) => domain.name);
-                    });
-                },
-                provisionTextRecord(details) {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        const domain = domains.find((domain) => domain.name === details.domain);
-                        if (domain == null) {
-                            throw `Expected a domain!`;
-                        }
-                        let record = yield (yield client.createDomainRecord({
-                            options: {
-                                domainid: domain.id
-                            },
-                            payload: {
-                                nodeName: details.subdomain,
-                                recordType: "TXT",
-                                textData: details.content,
-                                ttl: 60
-                            }
-                        })).payload();
-                        return {
-                            undo() {
-                                return __awaiter(this, void 0, void 0, function* () {
-                                    client.deleteDomainRecord({
-                                        options: {
-                                            domainid: domain.id,
-                                            recordid: record.id
-                                        }
-                                    });
-                                });
-                            }
-                        };
-                    });
-                }
-            };
+            return mod_4.dynu.makeStandardClient(credentials);
         }
         if (config.ProviderGlesys.is(credentials)) {
-            let client = mod_1.glesys.makeClient(credentials);
-            let domains = (yield (yield client.listDomains({})).payload()).response.domains;
-            return {
-                listDomains() {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        return domains.map((domain) => domain.domainname);
-                    });
-                },
-                provisionTextRecord(details) {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        const domain = domains.find((domain) => domain.domainname === details.domain);
-                        if (domain == null) {
-                            throw `Expected a domain!`;
-                        }
-                        let record = yield (yield client.createDomainRecord({
-                            payload: {
-                                domainname: details.domain,
-                                host: details.subdomain || "@",
-                                type: "TXT",
-                                data: details.content,
-                                ttl: 60
-                            }
-                        })).payload();
-                        return {
-                            undo() {
-                                return __awaiter(this, void 0, void 0, function* () {
-                                    client.deleteDomainRecord({
-                                        payload: {
-                                            recordid: record.response.record.recordid
-                                        }
-                                    });
-                                });
-                            }
-                        };
-                    });
-                }
-            };
+            return mod_6.glesys.makeStandardClient(credentials);
         }
         throw `Expected code to be unreachable!`;
     });
@@ -145,6 +73,7 @@ function makeClient(credentials) {
 ;
 function getCanonicalName(hostname) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(`Resolving canonical name for ${hostname}...`);
         while (true) {
             let hostnames = new Array();
             try {
@@ -156,8 +85,10 @@ function getCanonicalName(hostname) {
             if (hostnames.length !== 1) {
                 throw `Expected exactly one hostname!`;
             }
+            console.log(`Found CNAME record: ${hostname} => ${hostnames[0]}`);
             hostname = hostnames[0];
         }
+        console.log(`Canonical name: ${hostname}`);
         return hostname;
     });
 }
@@ -196,7 +127,7 @@ function retryWithExponentialBackoff(seconds, attempts, handler) {
     return __awaiter(this, void 0, void 0, function* () {
         let milliseconds = seconds * 1000;
         for (let i = 0; i < attempts; i++) {
-            yield delay(milliseconds);
+            yield wait(milliseconds);
             try {
                 return yield handler();
             }
@@ -212,7 +143,7 @@ function retryWithExponentialBackoff(seconds, attempts, handler) {
 function getPrivateKey(path) {
     libfs.mkdirSync(libpath.dirname(path), { recursive: true });
     if (!libfs.existsSync(path)) {
-        let key = mod_1.ec.generatePrivateKeyObject();
+        let key = mod_5.ec.generatePrivateKey();
         let buffer = key.export({ format: "pem", type: "sec1" });
         libfs.writeFileSync(path, buffer);
         return key;
@@ -233,8 +164,22 @@ function getPrivateKey(path) {
     throw `Expected a private key!`;
 }
 ;
+function getTextRecords(hostname) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return (yield libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
+    });
+}
+;
 function processEntry(acmeUrl, entry, clients) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(`Processing entry...`);
+        for (let hostname of entry.hostnames) {
+            console.log(`Hostname: ${hostname}`);
+        }
+        if (entry.validity != null) {
+            let { notBefore, notAfter } = entry.validity;
+            console.log(`Validity: ${new Date(notBefore)} to ${new Date(notAfter)}`);
+        }
         let undoables = new Array();
         try {
             let accountKey = getPrivateKey(entry.account);
@@ -265,14 +210,16 @@ function processEntry(acmeUrl, entry, clients) {
                             let hostname = yield getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
                             let content = mod_1.acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }));
                             let { client, domain, subdomain } = getClientDetails(hostname, clients);
+                            console.log(`Provisioning text record at ${hostname}...`);
                             let undoable = yield client.provisionTextRecord({
                                 domain,
                                 subdomain,
                                 content
                             });
                             undoables.push(undoable);
+                            console.log(`Waiting for propagation...`);
                             yield retryWithExponentialBackoff(60, 3, () => __awaiter(this, void 0, void 0, function* () {
-                                let records = (yield libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
+                                let records = yield getTextRecords(hostname);
                                 if (!records.includes(content)) {
                                     throw ``;
                                 }
@@ -290,7 +237,7 @@ function processEntry(acmeUrl, entry, clients) {
                 }));
             }
             if (order.payload.status === "ready") {
-                let csr = mod_1.pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), certificateKey);
+                let csr = mod_9.pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), certificateKey);
                 yield handler.finalizeOrder(account.url, order.payload.finalize, {
                     csr: csr.toString("base64url")
                 });
@@ -312,6 +259,9 @@ function processEntry(acmeUrl, entry, clients) {
             }
             libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
             libfs.writeFileSync(entry.cert, certificate);
+            console.log(`Certificate successfully downloaded!`);
+            entry.validity = getValidityFromCertificate(entry.cert);
+            entry.renewAfter = getRenewAfter(entry.validity);
         }
         finally {
             for (let undoable of undoables) {
@@ -343,15 +293,15 @@ function getValidityFromCertificate(path) {
     if (!libfs.existsSync(path)) {
         return;
     }
-    let document = mod_2.pem.parse(libfs.readFileSync(path, "utf-8"));
+    let document = mod_8.pem.parse(libfs.readFileSync(path, "utf-8"));
     let section = document.sections.find((section) => section.label === "CERTIFICATE");
     if (section == null) {
         throw `Expected a CERTIFICATE label!`;
     }
-    let node = mod_4.der.node.parse(new mod_1.parsing.Parser(section.buffer));
-    let datesNode = mod_3.asn1.Sequence.as(mod_3.asn1.Sequence.as(mod_3.asn1.Sequence.as(node).data[0]).data[4]);
-    let notBeforeNode = mod_3.asn1.UTCTime.as(datesNode.data[0]);
-    let notAfterNode = mod_3.asn1.UTCTime.as(datesNode.data[1]);
+    let node = mod_3.der.node.parse(new mod_7.parsing.Parser(section.buffer));
+    let datesNode = mod_2.asn1.Sequence.as(mod_2.asn1.Sequence.as(mod_2.asn1.Sequence.as(node).data[0]).data[4]);
+    let notBeforeNode = mod_2.asn1.UTCTime.as(datesNode.data[0]);
+    let notAfterNode = mod_2.asn1.UTCTime.as(datesNode.data[1]);
     let notBefore = parseUTCTime(notBeforeNode);
     let notAfter = parseUTCTime(notAfterNode);
     return {
@@ -360,38 +310,20 @@ function getValidityFromCertificate(path) {
     };
 }
 ;
-function getDelayFromValidity(validity) {
+function getRenewAfter(validity) {
     if (validity == null) {
         return 0;
     }
     let renewAfter = validity.notBefore + Math.round((validity.notAfter - validity.notBefore) * 0.75);
-    let now = Date.now();
-    return renewAfter - now;
-}
-;
-function compareValidity(one, two) {
-    if (one == null) {
-        if (two != null) {
-            return -1;
-        }
-        else {
-            return 0;
-        }
-    }
-    else {
-        if (two == null) {
-            return 1;
-        }
-    }
-    return one.notAfter - two.notAfter;
+    return renewAfter;
 }
 ;
 function run(options) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        let acme = (_a = options.acme) !== null && _a !== void 0 ? _a : exports.LETS_ENCRYPT_STAGING;
+        let acme = (_a = options.acme) !== null && _a !== void 0 ? _a : LETS_ENCRYPT_STAGING;
         if (acme === "le") {
-            acme = exports.LETS_ENCRYPT;
+            acme = LETS_ENCRYPT;
         }
         let clients = new Array();
         for (let credentials of options.providers) {
@@ -415,43 +347,49 @@ function run(options) {
             let key = libpath.join(root, "certificate_key.pem");
             let cert = libpath.join(root, "full_chain.pem");
             let validity = getValidityFromCertificate(cert);
+            let renewAfter = getRenewAfter(validity);
             return {
                 hostnames,
                 account,
                 key,
                 cert,
-                validity
+                validity,
+                renewAfter
             };
         })
-            .sort((one, two) => compareValidity(one.validity, two.validity));
-        if (queue.length > 0) {
-            do {
+            .sort((one, two) => one.renewAfter - two.renewAfter);
+        if (queue.length === 0) {
+            return;
+        }
+        if (options.monitor) {
+            while (true) {
                 let entry = queue.shift();
                 if (entry != null) {
-                    console.log(`Processing certificate...`);
-                    for (let hostname of entry.hostnames) {
-                        console.log(`\t${hostname}`);
-                    }
-                    let ms = getDelayFromValidity(entry.validity);
-                    yield delay(ms);
+                    let duration = Math.max(entry.renewAfter - Date.now());
+                    yield wait(duration);
                     yield processEntry(acme, entry, clients);
-                    let validity = getValidityFromCertificate(entry.cert);
-                    if (validity == null) {
-                        // Do not retry entry until all other entries have been processed.
+                    if (entry.validity === null) {
+                        // Entry cannot be prioritized without validity.
                         queue.push(entry);
                     }
                     else {
                         let index = 0;
                         for (; index < queue.length; index++) {
-                            let comparison = compareValidity(validity, queue[index].validity);
-                            if (comparison < 0) {
+                            if (entry.renewAfter < queue[index].renewAfter) {
                                 break;
                             }
                         }
                         queue.splice(index, 0, entry);
                     }
                 }
-            } while (options.monitor);
+            }
+        }
+        else {
+            for (let entry of queue) {
+                if (entry.renewAfter < Date.now()) {
+                    yield processEntry(acme, entry, clients);
+                }
+            }
         }
     });
 }
