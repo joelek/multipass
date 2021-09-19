@@ -1,8 +1,8 @@
 import * as asn1 from "../asn1";
 import * as der from "../der";
 import * as jwk from "../jwk";
-import * as pkcs8 from "../pkcs8";
 import * as parsing from "../parsing";
+import * as pkcs8 from "../pkcs8";
 import * as schema from "./schema";
 
 export * from "./schema";
