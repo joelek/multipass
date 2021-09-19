@@ -37,7 +37,7 @@ function getDurationFromMilliseconds(ms: number): string {
 	return `${d} days, ${h} hours, ${m} minutes, ${s} seconds`;
 };
 
-async function delay(ms: number): Promise<void> {
+async function wait(ms: number): Promise<void> {
 	console.log(`Waiting ${getDurationFromMilliseconds(ms)}...`);
 	while (ms > 0) {
 		let current = Math.min(ms, 2147483647);
@@ -106,7 +106,7 @@ function getClientDetails(hostname: string, clients: Array<{ client: dns.Client,
 async function retryWithExponentialBackoff<A>(seconds: number, attempts: number, handler: () => Promise<A>): Promise<A> {
 	let milliseconds = seconds * 1000;
 	for (let i = 0; i < attempts; i++) {
-		await delay(milliseconds);
+		await wait(milliseconds);
 		try {
 			return await handler();
 		} catch (error) {
@@ -345,7 +345,7 @@ export async function run(options: config.Options): Promise<void> {
 					console.log(`\t${hostname}`);
 				}
 				let ms = getDelayFromValidity(entry.validity);
-				await delay(ms);
+				await wait(ms);
 				await processEntry(acme, entry, clients);
 				let validity = getValidityFromCertificate(entry.cert);
 				if (validity == null) {
