@@ -239,10 +239,9 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		entry.renewAfter = getRenewAfter(entry.validity);
 	} catch (error) {
 		console.log(String(error));
-	} finally {
-		for (let undoable of undoables) {
-			await undoable.undo();
-		}
+	}
+	for (let undoable of undoables) {
+		await undoable.undo();
 	}
 };
 

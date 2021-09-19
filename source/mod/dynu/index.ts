@@ -44,7 +44,7 @@ export async function makeStandardClient(config: config.Config, options?: autogu
 			})).payload();
 			return {
 				async undo() {
-					client.deleteDomainRecord({
+					await client.deleteDomainRecord({
 						options: {
 							domainid: domain.id,
 							recordid: record.id
