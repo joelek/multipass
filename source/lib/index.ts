@@ -70,10 +70,10 @@ async function getCanonicalName(hostname: string): Promise<string> {
 		if (hostnames.length !== 1) {
 			throw `Expected exactly one hostname!`;
 		}
-		console.log(`Found CNAME record: ${hostname} => ${hostnames[0]}`);
+		console.log(`Found redirect between ${hostname} and ${hostnames[0]}.`);
 		hostname = hostnames[0];
 	}
-	console.log(`Canonical name: ${hostname}`);
+	console.log(`Canonical name is ${hostname}.`);
 	return hostname;
 };
 
@@ -148,11 +148,11 @@ async function getTextRecords(hostname: string): Promise<Array<string>> {
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
 	console.log(`Processing entry...`);
 	for (let hostname of entry.hostnames) {
-		console.log(`Hostname: ${hostname}`);
+		console.log(`Entry contains ${hostname}.`);
 	}
 	if (entry.validity != null) {
 		let { notBefore, notAfter } = entry.validity;
-		console.log(`Validity: ${new Date(notBefore)} to ${new Date(notAfter)}`);
+		console.log(`Previous certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
 	}
 	let undoables = new Array<dns.Undoable>();
 	try {
@@ -181,28 +181,31 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						throw `Expected a "dns-01" challenge!`;
 					}
 					if (challenge.status === "pending") {
-						let hostnameToAuthorize = authorization.payload.identifier.value;
-						let hostname = await getCanonicalName(makeProvisionHostname(hostnameToAuthorize));
+						let hostnameToAuthorize = makeProvisionHostname(authorization.payload.identifier.value);
+						console.log(`Proving authority over ${hostnameToAuthorize}...`);
+						let hostname = await getCanonicalName(hostnameToAuthorize);
 						let content = acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }) as any);
 						let { client, domain, subdomain } = getClientDetails(hostname, clients);
-						console.log(`Provisioning TXT record for ${hostnameToAuthorize} at ${hostname}...`);
+						console.log(`Provisioning record at ${hostname}...`);
 						let undoable = await client.provisionTextRecord({
 							domain,
 							subdomain,
 							content
 						});
 						undoables.push(undoable);
-						console.log(`Waiting for propagation...`);
+						console.log(`Waiting for record to propagate...`);
 						await retryWithExponentialBackoff(60, 3, async () => {
 							let records = await getTextRecords(hostname);
 							if (!records.includes(content)) {
 								throw ``;
 							}
 						});
+						console.log(`Signaling that authority can be validated...`);
 						await handler.finalizeChallenge(account.url, challenge.url);
 					}
 				}
 			}
+			console.log(`Waiting for authority to be proven...`);
 			order = await retryWithExponentialBackoff(15, 4, async () => {
 				let updated = await handler.getOrder(account.url, order.url);
 				if (updated.payload.status === "pending") {
@@ -213,10 +216,12 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		}
 		if (order.payload.status === "ready") {
 			let csr = pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), certificateKey);
+			console.log(`Requesting certificate to be issued...`);
 			await handler.finalizeOrder(account.url, order.payload.finalize, {
 				csr: csr.toString("base64url")
 			});
 		}
+		console.log(`Waiting for certificate to become ready...`);
 		order = await retryWithExponentialBackoff(15, 4, async () => {
 			let updated = await handler.getOrder(account.url, order.url);
 			if (updated.payload.status === "processing") {
@@ -318,7 +323,7 @@ export async function run(options: config.Options): Promise<void> {
 		let client = await makeClient(credentials);
 		let domains = await client.listDomains();
 		for (let domain of domains) {
-			console.log(`Credentials accepted for ${domain}.`);
+			console.log(`Provisioning configured for ${domain}.`);
 		}
 		clients.push({
 			client,
