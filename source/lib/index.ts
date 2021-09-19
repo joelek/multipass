@@ -284,18 +284,7 @@ type QueueEntry = {
 };
 
 function compareValidity(one: Validity | undefined, two: Validity | undefined): number {
-	if (one == null) {
-		if (two != null) {
-			return -1
-		} else {
-			return 0;
-		}
-	} else {
-		if (two == null) {
-			return 1;
-		}
-	}
-	return one.notAfter - two.notAfter;
+	return getRenewAfter(one) - getRenewAfter(two);
 };
 
 export async function run(options: config.Options): Promise<void> {
