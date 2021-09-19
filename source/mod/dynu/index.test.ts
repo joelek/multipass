@@ -1,15 +1,16 @@
 import * as libfs from "fs";
 import * as dynu from "./";
 
-async function test(): Promise<void> {
+(async () => {
 	let config = dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
-	let client = dynu.makeClient(config);
+	let client = dynu.makeClient(config, {
+		debugMode: true
+	});
 	let domains = await (await client.listDomains({})).payload();
 	let domain = domains.domains.pop();
 	if (domain == null) {
 		throw "Expected a domain!";
 	}
-	console.log(JSON.stringify({ domain }, null, "\t"));
 	let created = await (await client.createDomainRecord({
 		options: {
 			domainid: domain.id
@@ -21,7 +22,6 @@ async function test(): Promise<void> {
 			ttl: 60
 		}
 	})).payload();
-	console.log(JSON.stringify({ created }, null, "\t"));
 	let updated = await (await client.updateDomainRecord({
 		options: {
 			domainid: domain.id,
@@ -34,14 +34,10 @@ async function test(): Promise<void> {
 			ttl: 60
 		}
 	})).payload();
-	console.log(JSON.stringify({ updated }, null, "\t"));
 	let deleted = await (await client.deleteDomainRecord({
 		options: {
 			domainid: domain.id,
 			recordid: created.id
 		}
 	})).payload();
-	console.log(JSON.stringify({ deleted }, null, "\t"));
-}
-
-test().catch((error) => console.log(String(error)));
+})();
