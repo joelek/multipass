@@ -21,11 +21,11 @@ Multipass was created to make certificate management as simple as possible witho
 
 ## Features
 
-### Automatic key generation
+### Automatic key management
 
-Multipass can generate strong assymetric cryptographic keys automatically and supports loading existing keys stored using the commonly used `PKCS1`, `PKCS8` and `SEC1` containers.
+Multipass features support for loading cryptographic keys stored using the common `PKCS1`, `PKCS8` and `SEC1` containers and can generate strong assymetric keys automatically.
 
-By default, Multipass will generate 256-bit elliptic curve keys and store them using the `SEC1` container.
+By default, Multipass will generate 256-bit elliptic curve (EC) keys and store them using the `SEC1` container.
 
 ### Automated certification
 
@@ -53,7 +53,7 @@ The ACME protocol defines a set of challenges that can be used to prove authorit
 
 Multipass implements the `dns-01` challenge which requires proving authority for a hostname through the domain name system (DNS). Implementing this challenge provides great flexibility for what hostnames certificates may be issued. The challenge even allows for wildcard certificates to be issued.
 
-The `dns-01` challenge is notoriously difficult to automate as it requires knowledge about and precise control over the DNS configuration of the domain corresponding to the hostname for which the certificate is to be issued.
+The `dns-01` challenge can be difficult to automate as it requires knowledge about and precise control over the DNS configuration of the domain corresponding to the hostname for which the certificate is to be issued.
 
 Multipass requires credentials for provisioning `TXT` records in order to automate certification. Several DNS providers support the provisioning of DNS records through proprietary APIs. Multipass implements the APIs of the DNS providers listed below.
 
@@ -96,7 +96,7 @@ Credentials for the DNS provider use the following JSON format.
 }
 ```
 
-Please note that GleSYS employs a whitelisting system for access keys to their API. You must explicitly allow the hostname or IP of the machine running Multipass for all keys used by Multipass. You can create access keys and configure access control through their control panel.
+Please note that GleSYS employs a whitelisting system for access keys to their API. You must explicitly allow the hostname or IP of the machine running Multipass for all keys handed to Multipass. You can create access keys and configure access control through their control panel.
 
 ### Multiple hostnames
 
@@ -114,7 +114,7 @@ multipass \
 
 Multipass can be used to obtain multiple TLS certificates. This feature is enabled through the `--root=<string>` argument which specifies the root directory for the files associated with the certificate.
 
-Every time the `--root=<string>` argument is provided, a certificate configuration is created using the previously provided settings.
+Every time the `--root=<string>` argument is provided, a certificate configuration is created using the previously provided hostnames.
 
 ```
 multipass \
@@ -123,6 +123,7 @@ multipass \
 	--hostname=domain2.com \
 	--root=/certs/domain2.com/
 ```
+
 By default, the files associated with the certificate are stored in the current working directory.
 
 ### Certificate monitoring
@@ -157,16 +158,26 @@ The array of providers is an array of API credentials for DNS providers supporte
 
 The APIs of most DNS providers do not allow for fine-grained access control. This poses a great security risk as full control over the associated domains is granted to whomever is in possession of the credentials.
 
-Anyone in possession of the credentials can in theory provision records well beyond the scope of certificate management. This includes redirecting users to external servers through the provisioning of `A` or `AAAA` records, redirecting incoming e-mail to external servers through the provisioning of `MX` records as well complete delegation of all DNS requests to external servers through the provisioning of `NS` records! It is therefore strongly recommended that DNS delegation is used in a way that only grants the necessary provisioning privileges.
+Anyone in possession of the credentials can in theory provision records well beyond the scope of certificate management, including but not limited to:
 
-By not utilizing DNS delegation and a DNS provider without fine-grained access control, you will be granting anyone in possession of the credentials, including Multipass, full control over the domain in question.
+* Redirecting users to external servers through the provisioning of `A` or `AAAA` records.
+* Redirecting incoming e-mail to external servers through the provisioning of `MX` records.
+* Delegating all DNS requests to external servers through the provisioning of `NS` records.
+
+It is strongly recommended that DNS delegation is used in a way that only grants the necessary provisioning privileges. By not utilizing DNS delegation and a DNS provider without fine-grained access control, you will be granting anyone in possession of the credentials, including Multipass, full control over the domain in question.
+
+### Mitigation
 
 Automated certification requires authority over the `_acme-challenge` subdomain of the domain in question. By manually provisioning a `CNAME` record pointing the `_acme-challenge` subdomain to a designated certification domain for which the credentials apply, the risk is mitigated.
+
+```
+CNAME _acme-challenge.domain.com => domain.com.acme.certification.com
+```
 
 This technique can also be used to add support for automated certification of domains controlled through a DNS provider lacking API functionality. Simply provision a `CNAME` record pointing the `_acme-challenge` subdomain to a domain controlled by one of the DNS providers for which Multipass implements API support.
 
 ```
-CNAME _acme-challenge.api-unsupported.com => api-unsupported.com.acme.api-supported.com
+CNAME _acme-challenge.unsupported.com => unsupported.com.acme.supported.com
 ```
 
 ## DNS propagation
@@ -175,7 +186,7 @@ All DNS records have an associated Time To Live (TTL) value which specifies the 
 
 It is important to understand the effects that this caching feature can have on certification automation, especially in conjunction with DNS delegation.
 
-Any domain is likely to have `A` or `AAAA` records with fairly high TTL values since the IP addresses rarely change if not ever. DNS servers that have queried the nameservers for a certain domain will have had cached the records and are likely to consider them valid for some additional time.
+Any domain is likely to have `A` or `AAAA` records with fairly high TTL values since the IP addresses rarely change if not ever. DNS servers that have queried the nameservers for a certain domain will have the records cached and are likely to consider them valid for some additional time.
 
 When Multipass provisions `TXT` records during the certification process, it is dependent on the certificate authority being able to query and receive the records properly. The certificate authority should query the authoritative nameservers directly and not send its queries through an intermediary. This in order to avoid issues associated with caching.
 
@@ -205,6 +216,7 @@ npm install [-g] joelek/multipass#master
 
 ## Roadmap
 
+* Process all certificates in sequence when not using the monitoring mode.
 * Use authoritative nameservers directly when resolving DNS queries.
 * Add support for additional DNS APIs.
 * Stop using promises in the encoding module.
