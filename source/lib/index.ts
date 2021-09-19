@@ -38,9 +38,6 @@ function getDurationFromMilliseconds(ms: number): string {
 };
 
 async function wait(ms: number): Promise<void> {
-	if (ms <= 0) {
-		return;
-	}
 	console.log(`Waiting ${getDurationFromMilliseconds(ms)}...`);
 	while (ms > 0) {
 		let current = Math.min(ms, 2147483647);
@@ -346,11 +343,15 @@ export async function run(options: config.Options): Promise<void> {
 			};
 		})
 		.sort((one, two) => one.renewAfter - two.renewAfter);
-	if (queue.length > 0) {
-		do {
+	if (queue.length === 0) {
+		return;
+	}
+	if (options.monitor) {
+		while (true) {
 			let entry = queue.shift();
 			if (entry != null) {
-				await wait(entry.renewAfter - Date.now());
+				let duration = Math.max(entry.renewAfter - Date.now());
+				await wait(duration);
 				await processEntry(acme, entry, clients);
 				if (entry.validity === null) {
 					// Entry cannot be prioritized without validity.
@@ -365,6 +366,12 @@ export async function run(options: config.Options): Promise<void> {
 					queue.splice(index, 0, entry);
 				}
 			}
-		} while (options.monitor);
+		}
+	} else {
+		for (let entry of queue) {
+			if (entry.renewAfter < Date.now()) {
+				await processEntry(acme, entry, clients);
+			}
+		}
 	}
 };
