@@ -267,13 +267,12 @@ function getValidityFromCertificate(path: string): Validity | undefined {
 	}
 };
 
-function getDelayFromValidity(validity: Validity | undefined): number {
+function getRenewAfter(validity: Validity | undefined): number {
 	if (validity == null) {
 		return 0;
 	}
 	let renewAfter = validity.notBefore + Math.round((validity.notAfter - validity.notBefore)*0.75);
-	let now = Date.now();
-	return renewAfter - now;
+	return renewAfter;
 };
 
 type QueueEntry = {
@@ -345,8 +344,7 @@ export async function run(options: config.Options): Promise<void> {
 				for (let hostname of entry.hostnames) {
 					console.log(`\t${hostname}`);
 				}
-				let ms = getDelayFromValidity(entry.validity);
-				await wait(ms);
+				await wait(getRenewAfter(entry.validity) - Date.now());
 				await processEntry(acme, entry, clients);
 				let validity = getValidityFromCertificate(entry.cert);
 				if (validity == null) {
