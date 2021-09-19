@@ -103,7 +103,7 @@ function getClientDetails(hostname: string, clients: Array<{ client: dns.Client,
 			};
 		}
 	}
-	throw `Expected a client!`;
+	throw `Expected to find a DNS client for "${hostname}"!`;
 };
 
 async function retryWithExponentialBackoff<A>(seconds: number, attempts: number, handler: () => Promise<A>): Promise<A> {
