@@ -16,8 +16,8 @@ import { pkcs10 } from "../mod";
 
 export * as config from "./config";
 
-export const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
-export const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
+const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
+const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
 
 export function loadConfig(value: string): config.Options {
 	let string = libfs.readFileSync(value, "utf-8");
