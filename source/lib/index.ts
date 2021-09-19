@@ -269,25 +269,24 @@ function parseUTCTime(node: asn1.UTCTime): number {
 };
 
 function getValidityFromCertificate(path: string): Validity | undefined {
-	if (libfs.existsSync(path)) {
-		try {
-			let document = pem.parse(libfs.readFileSync(path, "utf-8"));
-			let section = document.sections.find((section) => section.label === "CERTIFICATE");
-			if (section == null) {
-				throw `Expected a CERTIFICATE label!`;
-			}
-			let node = der.node.parse(new parsing.Parser(section.buffer));
-			let datesNode = asn1.Sequence.as(asn1.Sequence.as(asn1.Sequence.as(node).data[0]).data[4]);
-			let notBeforeNode = asn1.UTCTime.as(datesNode.data[0]);
-			let notAfterNode = asn1.UTCTime.as(datesNode.data[1]);
-			let notBefore = parseUTCTime(notBeforeNode);
-			let notAfter = parseUTCTime(notAfterNode);
-			return {
-				notBefore,
-				notAfter
-			};
-		} catch (error) {}
+	if (!libfs.existsSync(path)) {
+		return;
 	}
+	let document = pem.parse(libfs.readFileSync(path, "utf-8"));
+	let section = document.sections.find((section) => section.label === "CERTIFICATE");
+	if (section == null) {
+		throw `Expected a CERTIFICATE label!`;
+	}
+	let node = der.node.parse(new parsing.Parser(section.buffer));
+	let datesNode = asn1.Sequence.as(asn1.Sequence.as(asn1.Sequence.as(node).data[0]).data[4]);
+	let notBeforeNode = asn1.UTCTime.as(datesNode.data[0]);
+	let notAfterNode = asn1.UTCTime.as(datesNode.data[1]);
+	let notBefore = parseUTCTime(notBeforeNode);
+	let notAfter = parseUTCTime(notAfterNode);
+	return {
+		notBefore,
+		notAfter
+	};
 };
 
 function getRenewAfter(validity: Validity | undefined): number {
