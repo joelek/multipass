@@ -1,6 +1,7 @@
 export * as acme from "./acme";
 export * as asn1 from "./asn1";
 export * as der from "./der";
+export * as dns from "./dns";
 export * as dynu from "./dynu";
 export * as ec from "./ec";
 export * as glesys from "./glesys";

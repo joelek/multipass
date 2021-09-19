@@ -3,10 +3,16 @@ import * as libdns from "dns";
 import * as libfs from "fs";
 import * as libpath from "path";
 import * as config from "./config";
-import { acme, ec, dynu, glesys, pkcs10, rsa, parsing } from "../mod";
-import { pem } from "../mod";
+import { acme } from "../mod";
 import { asn1 } from "../mod";
 import { der } from "../mod";
+import { dns } from "../mod";
+import { dynu } from "../mod";
+import { ec } from "../mod";
+import { glesys } from "../mod";
+import { parsing } from "../mod";
+import { pem } from "../mod";
+import { pkcs10 } from "../mod";
 
 export * as config from "./config";
 
@@ -42,84 +48,12 @@ async function delay(ms: number): Promise<void> {
 	}
 };
 
-interface Undoable {
-	undo(): Promise<void>;
-};
-
-interface Client {
-	listDomains(): Promise<Array<string>>;
-	provisionTextRecord(details: { domain: string, subdomain: string, content: string }): Promise<Undoable>;
-};
-
-async function makeClient(credentials: config.Provider): Promise<Client> {
+async function makeClient(credentials: config.Provider): Promise<dns.Client> {
 	if (config.ProviderDynu.is(credentials)) {
-		let client = dynu.makeClient(credentials);
-		let domains = (await (await client.listDomains({})).payload()).domains;
-		return {
-			async listDomains() {
-				return domains.map((domain) => domain.name);
-			},
-			async provisionTextRecord(details) {
-				const domain = domains.find((domain) => domain.name === details.domain);
-				if (domain == null) {
-					throw `Expected a domain!`;
-				}
-				let record = await (await client.createDomainRecord({
-					options: {
-						domainid: domain.id
-					},
-					payload: {
-						nodeName: details.subdomain,
-						recordType: "TXT",
-						textData: details.content,
-						ttl: 60
-					}
-				})).payload();
-				return {
-					async undo() {
-						client.deleteDomainRecord({
-							options: {
-								domainid: domain.id,
-								recordid: record.id
-							}
-						})
-					}
-				};
-			}
-		};
+		return dynu.makeStandardClient(credentials);
 	}
 	if (config.ProviderGlesys.is(credentials)) {
-		let client = glesys.makeClient(credentials);
-		let domains = (await (await client.listDomains({})).payload()).response.domains;
-		return {
-			async listDomains() {
-				return domains.map((domain) => domain.domainname);
-			},
-			async provisionTextRecord(details) {
-				const domain = domains.find((domain) => domain.domainname === details.domain);
-				if (domain == null) {
-					throw `Expected a domain!`;
-				}
-				let record = await (await client.createDomainRecord({
-					payload: {
-						domainname: details.domain,
-						host: details.subdomain || "@",
-						type: "TXT",
-						data: details.content,
-						ttl: 60
-					}
-				})).payload();
-				return {
-					async undo() {
-						client.deleteDomainRecord({
-							payload: {
-								recordid: record.response.record.recordid
-							}
-						})
-					}
-				};
-			}
-		};
+		return glesys.makeStandardClient(credentials);
 	}
 	throw `Expected code to be unreachable!`;
 };
@@ -148,7 +82,7 @@ function makeProvisionHostname(hostname: string): string {
 	}
 };
 
-function getClientDetails(hostname: string, clients: Array<{ client: Client, domains: Array<string> }>): { client: Client, domain: string, subdomain: string } {
+function getClientDetails(hostname: string, clients: Array<{ client: dns.Client, domains: Array<string> }>): { client: dns.Client, domain: string, subdomain: string } {
 	let hostnameParts = hostname.split(".").reverse();
 	provider: for (let { client, domains } of clients) {
 		domain: for (let domain of domains) {
@@ -204,8 +138,8 @@ function getPrivateKey(path: string): libcrypto.KeyObject {
 	throw `Expected a private key!`;
 };
 
-async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: Client, domains: Array<string> }>): Promise<void> {
-	let undoables = new Array<Undoable>();
+async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
+	let undoables = new Array<dns.Undoable>();
 	try {
 		let accountKey = getPrivateKey(entry.account);
 		let certificateKey = getPrivateKey(entry.key);
@@ -370,7 +304,7 @@ export async function run(options: config.Options): Promise<void> {
 		acme = LETS_ENCRYPT;
 	}
 	let clients = new Array<{
-		client: Client,
+		client: dns.Client,
 		domains: Array<string>
 	}>();
 	for (let credentials of options.providers) {
