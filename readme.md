@@ -222,6 +222,5 @@ npm install [-g] joelek/multipass#master
 * Process all certificates in sequence when not using the monitoring mode.
 * Use authoritative nameservers directly when resolving DNS queries.
 * Add support for additional DNS APIs.
-* Stop using promises in the encoding module.
 * Add support for configuring account, key and cert filenames.
 * Add support for keys protected using passphrases.
