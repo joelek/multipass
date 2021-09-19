@@ -44,7 +44,7 @@ export class Handler {
 		if (this.nextReplayNonce == null) {
 			throw `Expected next replay nonce to be set!`;
 		}
-		let key = jwk.getPublicKey(this.key.export({ format: "jwk" }) as any);
+		let key = jwk.PublicKey.as(libcrypto.createPublicKey(this.key).export({ format: "jwk" }));
 		let protectedData: api.ProtectedWithJWK = {
 			jwk: key,
 			nonce: this.nextReplayNonce,
