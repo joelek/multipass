@@ -81,13 +81,13 @@ export class AES192CBCAlgorithm implements CipherAlgorithm {
 	}
 
 	decrypt(ciphertext: Buffer, key: Buffer): Buffer {
-		let decipher = libcrypto.createDecipheriv("aes-256-cbc", key, this.iv);
+		let decipher = libcrypto.createDecipheriv("aes-192-cbc", key, this.iv);
 		let plaintext = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
 		return plaintext;
 	}
 
 	encrypt(plaintext: Buffer, key: Buffer): Buffer {
-		let cipher = libcrypto.createCipheriv("aes-256-cbc", key, this.iv);
+		let cipher = libcrypto.createCipheriv("aes-192-cbc", key, this.iv);
 		let ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
 		return ciphertext;
 	}
