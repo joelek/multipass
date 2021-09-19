@@ -180,6 +180,8 @@ This technique can also be used to add support for automated certification of do
 CNAME _acme-challenge.unsupported.com => unsupported.com.acme.supported.com
 ```
 
+Multipass reads `CNAME` records recursively and is able to select the correct DNS API for each hostname. Just supply credentials that grant `TXT` record provisioning privileges for `domain.com.acme.certification.com` or `unsupported.com.acme.supported.com` and Multipass will figure it out.
+
 ## DNS propagation
 
 All DNS records have an associated Time To Live (TTL) value which specifies the number of seconds after it is received for which the record is considered to be valid.
