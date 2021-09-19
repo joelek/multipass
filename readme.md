@@ -216,6 +216,7 @@ npm install [-g] joelek/multipass#master
 
 ## Roadmap
 
+* Improve schema for PKCS10 module.
 * Write a class-based implementation for ASN1 handling.
 * Process all certificates in sequence when not using the monitoring mode.
 * Use authoritative nameservers directly when resolving DNS queries.
