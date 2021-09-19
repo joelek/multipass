@@ -223,6 +223,8 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		}
 		libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
 		libfs.writeFileSync(entry.cert, certificate);
+		entry.validity = getValidityFromCertificate(entry.cert);
+		entry.renewAfter = getRenewAfter(entry.validity);
 	} finally {
 		for (let undoable of undoables) {
 			await undoable.undo();
@@ -288,10 +290,7 @@ type QueueEntry = {
 	key: string;
 	cert: string;
 	validity?: Validity;
-};
-
-function compareValidity(one: Validity | undefined, two: Validity | undefined): number {
-	return getRenewAfter(one) - getRenewAfter(two);
+	renewAfter: number;
 };
 
 export async function run(options: config.Options): Promise<void> {
@@ -323,15 +322,17 @@ export async function run(options: config.Options): Promise<void> {
 			let key = libpath.join(root, "certificate_key.pem");
 			let cert = libpath.join(root, "full_chain.pem");
 			let validity = getValidityFromCertificate(cert);
+			let renewAfter = getRenewAfter(validity);
 			return {
 				hostnames,
 				account,
 				key,
 				cert,
-				validity
+				validity,
+				renewAfter
 			};
 		})
-		.sort((one, two) => compareValidity(one.validity, two.validity));
+		.sort((one, two) => one.renewAfter - two.renewAfter);
 	if (queue.length > 0) {
 		do {
 			let entry = queue.shift();
@@ -340,17 +341,15 @@ export async function run(options: config.Options): Promise<void> {
 				for (let hostname of entry.hostnames) {
 					console.log(`\t${hostname}`);
 				}
-				await wait(getRenewAfter(entry.validity) - Date.now());
+				await wait(entry.renewAfter - Date.now());
 				await processEntry(acme, entry, clients);
-				let validity = getValidityFromCertificate(entry.cert);
-				if (validity == null) {
-					// Do not retry entry until all other entries have been processed.
+				if (entry.validity === null) {
+					// Entry cannot be prioritized without validity.
 					queue.push(entry);
 				} else {
 					let index = 0;
 					for (; index < queue.length; index++) {
-						let comparison = compareValidity(validity, queue[index].validity);
-						if (comparison < 0) {
+						if (entry.renewAfter < queue[index].renewAfter) {
 							break;
 						}
 					}
