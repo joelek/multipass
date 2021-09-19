@@ -75,3 +75,23 @@ const RSA_PRIVATE_KEY_JWK: jwk.RSAPrivateKey = {
 	let expected = Buffer.of(0x00, 0xFF).toString("base64url");
 	console.assert(observed === expected, "It should convert JWK integers to padded ASN1 integers properly.");
 })();
+
+(async () => {
+	let observed = jwk.getPublicKey(EC_PUBLIC_KEY_JWK);
+	console.assert(!jwk.ECPrivateKey.is(observed) && jwk.ECPublicKey.is(observed), "It should extract EC public keys from EC public keys properly.");
+})();
+
+(async () => {
+	let observed = jwk.getPublicKey(EC_PRIVATE_KEY_JWK);
+	console.assert(!jwk.ECPrivateKey.is(observed) && jwk.ECPublicKey.is(observed), "It should extract EC public keys from EC private keys properly.");
+})();
+
+(async () => {
+	let observed = jwk.getPublicKey(RSA_PUBLIC_KEY_JWK);
+	console.assert(!jwk.RSAPrivateKey.is(observed) && jwk.RSAPublicKey.is(observed), "It should extract RSA public keys from RSA public keys properly.");
+})();
+
+(async () => {
+	let observed = jwk.getPublicKey(RSA_PRIVATE_KEY_JWK);
+	console.assert(!jwk.RSAPrivateKey.is(observed) && jwk.RSAPublicKey.is(observed), "It should extract RSA public keys from RSA private keys properly.");
+})();
