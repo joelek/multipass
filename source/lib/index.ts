@@ -62,6 +62,7 @@ async function makeClient(credentials: config.Provider): Promise<dns.Client> {
 };
 
 async function getCanonicalName(hostname: string): Promise<string> {
+	console.log(`Resolving canonical name for ${hostname}...`);
 	while (true) {
 		let hostnames = new Array<string>();
 		try {
@@ -72,8 +73,10 @@ async function getCanonicalName(hostname: string): Promise<string> {
 		if (hostnames.length !== 1) {
 			throw `Expected exactly one hostname!`;
 		}
+		console.log(`Found CNAME record: ${hostname} => ${hostnames[0]}`);
 		hostname = hostnames[0];
 	}
+	console.log(`Canonical name: ${hostname}`);
 	return hostname;
 };
 
@@ -146,6 +149,14 @@ async function getTextRecords(hostname: string): Promise<Array<string>> {
 };
 
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
+	console.log(`Processing entry...`);
+	for (let hostname of entry.hostnames) {
+		console.log(`Hostname: ${hostname}`);
+	}
+	if (entry.validity != null) {
+		let { notBefore, notAfter } = entry.validity;
+		console.log(`Validity: ${new Date(notBefore)} to ${new Date(notAfter)}`);
+	}
 	let undoables = new Array<dns.Undoable>();
 	try {
 		let accountKey = getPrivateKey(entry.account);
@@ -176,12 +187,14 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						let hostname = await getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
 						let content = acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }) as any);
 						let { client, domain, subdomain } = getClientDetails(hostname, clients);
+						console.log(`Provisioning text record at ${hostname}...`);
 						let undoable = await client.provisionTextRecord({
 							domain,
 							subdomain,
 							content
 						});
 						undoables.push(undoable);
+						console.log(`Waiting for propagation...`);
 						await retryWithExponentialBackoff(60, 3, async () => {
 							let records = await getTextRecords(hostname);
 							if (!records.includes(content)) {
@@ -223,6 +236,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		}
 		libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
 		libfs.writeFileSync(entry.cert, certificate);
+		console.log(`Certificate successfully downloaded!`);
 		entry.validity = getValidityFromCertificate(entry.cert);
 		entry.renewAfter = getRenewAfter(entry.validity);
 	} finally {
@@ -337,10 +351,6 @@ export async function run(options: config.Options): Promise<void> {
 		do {
 			let entry = queue.shift();
 			if (entry != null) {
-				console.log(`Processing certificate...`);
-				for (let hostname of entry.hostnames) {
-					console.log(`\t${hostname}`);
-				}
 				await wait(entry.renewAfter - Date.now());
 				await processEntry(acme, entry, clients);
 				if (entry.validity === null) {
