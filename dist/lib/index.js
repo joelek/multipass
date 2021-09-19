@@ -120,7 +120,7 @@ function getClientDetails(hostname, clients) {
             };
         }
     }
-    throw `Expected a client!`;
+    throw `Expected to find a DNS client for "${hostname}"!`;
 }
 ;
 function retryWithExponentialBackoff(seconds, attempts, handler) {
@@ -207,10 +207,11 @@ function processEntry(acmeUrl, entry, clients) {
                             throw `Expected a "dns-01" challenge!`;
                         }
                         if (challenge.status === "pending") {
-                            let hostname = yield getCanonicalName(makeProvisionHostname(authorization.payload.identifier.value));
+                            let hostnameToAuthorize = authorization.payload.identifier.value;
+                            let hostname = yield getCanonicalName(makeProvisionHostname(hostnameToAuthorize));
                             let content = mod_1.acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }));
                             let { client, domain, subdomain } = getClientDetails(hostname, clients);
-                            console.log(`Provisioning text record at ${hostname}...`);
+                            console.log(`Provisioning TXT record for ${hostnameToAuthorize} at ${hostname}...`);
                             let undoable = yield client.provisionTextRecord({
                                 domain,
                                 subdomain,
@@ -259,14 +260,15 @@ function processEntry(acmeUrl, entry, clients) {
             }
             libfs.mkdirSync(libpath.dirname(entry.cert), { recursive: true });
             libfs.writeFileSync(entry.cert, certificate);
-            console.log(`Certificate successfully downloaded!`);
+            console.log(`Certificate successfully downloaded.`);
             entry.validity = getValidityFromCertificate(entry.cert);
             entry.renewAfter = getRenewAfter(entry.validity);
         }
-        finally {
-            for (let undoable of undoables) {
-                yield undoable.undo();
-            }
+        catch (error) {
+            console.log(String(error));
+        }
+        for (let undoable of undoables) {
+            yield undoable.undo();
         }
     });
 }
@@ -330,7 +332,7 @@ function run(options) {
             let client = yield makeClient(credentials);
             let domains = yield client.listDomains();
             for (let domain of domains) {
-                console.log(`Credentials accepted for "${domain}"`);
+                console.log(`Credentials accepted for ${domain}.`);
             }
             clients.push({
                 client,

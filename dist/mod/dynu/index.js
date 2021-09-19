@@ -52,7 +52,7 @@ function makeStandardClient(config, options) {
                     return {
                         undo() {
                             return __awaiter(this, void 0, void 0, function* () {
-                                client.deleteDomainRecord({
+                                yield client.deleteDomainRecord({
                                     options: {
                                         domainid: domain.id,
                                         recordid: record.id

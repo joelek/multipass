@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import * as libcrypto from "crypto";
+import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
 import * as api from "./api";
 export declare class Handler {
     private key;
@@ -36,5 +37,5 @@ export declare class Handler {
         payload: api.Order;
         url: string;
     }>;
-    static make(url: string, key: libcrypto.KeyObject): Promise<Handler>;
+    static make(url: string, key: libcrypto.KeyObject, clientOptions?: autoguard.api.ClientOptions): Promise<Handler>;
 }

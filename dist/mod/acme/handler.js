@@ -16,11 +16,8 @@ const autoguard = require("@joelek/ts-autoguard/dist/lib-server");
 const apiclient = require("./api/client");
 const jwk = require("../jwk");
 const jws = require("../jws");
-function makeClient(urlPrefix) {
-    let client = apiclient.makeClient({
-        urlPrefix: urlPrefix,
-        requestHandler: autoguard.api.makeNodeRequestHandler()
-    });
+function makeClient(clientOptions) {
+    let client = apiclient.makeClient(Object.assign({ requestHandler: autoguard.api.makeNodeRequestHandler() }, clientOptions));
     return client;
 }
 ;
@@ -308,10 +305,10 @@ class Handler {
             };
         });
     }
-    static make(url, key) {
+    static make(url, key, clientOptions) {
         return __awaiter(this, void 0, void 0, function* () {
             let urlPrefix = new liburl.URL(url).origin;
-            let client = makeClient(urlPrefix);
+            let client = makeClient(Object.assign({ urlPrefix }, clientOptions));
             let response = yield client.getDirectory({
                 options: {
                     path: getUrlPath(url, urlPrefix)

@@ -51,7 +51,7 @@ function makeStandardClient(config, options) {
                     return {
                         undo() {
                             return __awaiter(this, void 0, void 0, function* () {
-                                client.deleteDomainRecord({
+                                yield client.deleteDomainRecord({
                                     payload: {
                                         recordid: record.response.record.recordid
                                     }
