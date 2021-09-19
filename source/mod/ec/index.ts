@@ -1,8 +1,7 @@
 import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
-import * as sec1 from "../sec1";
 
-export function generatePrivateKeyObject(options?: Partial<{
+export function generatePrivateKey(options?: Partial<{
 	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string
 }>): libcrypto.KeyObject {
 	let namedCurve = options?.namedCurve ?? "prime256v1";
@@ -12,29 +11,32 @@ export function generatePrivateKeyObject(options?: Partial<{
 	return pair.privateKey;
 };
 
-export function generatePrivateKeyDER(options?: Partial<{
-	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string,
-	type: "pkcs8" | "sec1"
+export function generatePrivateKeyPKCS8(options?: Partial<{
+	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string
 }>): Buffer {
-	let namedCurve = options?.namedCurve ?? "prime256v1";
-	let type = options?.type ?? "pkcs8";
-	let pair = libcrypto.generateKeyPairSync("ec", {
-		namedCurve: namedCurve,
-		publicKeyEncoding: {
-			type: "spki",
-			format: "der"
-		},
-		privateKeyEncoding: {
-			type: type,
-			format: "der"
-		}
+	let key = generatePrivateKey(options);
+	return key.export({
+		format: "der",
+		type: "pkcs8"
 	});
-	return pair.privateKey;
 };
 
-export function generatePrivateKey(): jwk.ECPrivateKey {
-	let buffer = generatePrivateKeyDER({
+export function generatePrivateKeySEC1(options?: Partial<{
+	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string
+}>): Buffer {
+	let key = generatePrivateKey(options);
+	return key.export({
+		format: "der",
 		type: "sec1"
 	});
-	return sec1.parseECPrivateKey(buffer);
+};
+
+export function generatePrivateKeyJWK(options?: Partial<{
+	namedCurve: "prime256v1" | "secp384r1" | "secp521r1" | string
+}>): jwk.ECPrivateKey {
+	let key = generatePrivateKey(options);
+	let json = key.export({
+		format: "jwk"
+	});
+	return jwk.ECPrivateKey.as(json);
 };

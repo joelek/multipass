@@ -186,7 +186,7 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 function getPrivateKey(path: string): libcrypto.KeyObject {
 	libfs.mkdirSync(libpath.dirname(path), { recursive: true });
 	if (!libfs.existsSync(path)) {
-		let key = ec.generatePrivateKeyObject();
+		let key = ec.generatePrivateKey();
 		let buffer = key.export({ format: "pem", type: "sec1" });
 		libfs.writeFileSync(path, buffer);
 		return key;
