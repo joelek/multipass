@@ -141,6 +141,10 @@ function getPrivateKey(path: string): libcrypto.KeyObject {
 	throw `Expected a private key!`;
 };
 
+async function getTextRecords(hostname: string): Promise<Array<string>> {
+	return (await libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
+};
+
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
 	let undoables = new Array<dns.Undoable>();
 	try {
@@ -179,7 +183,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						});
 						undoables.push(undoable);
 						await retryWithExponentialBackoff(60, 3, async () => {
-							let records = (await libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
+							let records = await getTextRecords(hostname);
 							if (!records.includes(content)) {
 								throw ``;
 							}
