@@ -2,10 +2,10 @@ import * as libcrypto from "crypto";
 import * as asn1 from "../asn1";
 import * as der from "../der";
 import * as jwk from "../jwk";
+import * as parsing from "../parsing";
 import * as pkcs5 from "../pkcs5";
 import * as pkcs8 from "../pkcs8";
 import * as schema from "./schema";
-import * as parsing from "../parsing";
 
 export * as schema from "./schema";
 
@@ -28,10 +28,7 @@ export function getDefaultAlgorithm(key: libcrypto.KeyObject): pkcs5.signature.S
 	throw `Expected code to be unreachable!`;
 };
 
-export function createExtension(hostnames: Array<string>): Buffer {
-	if (hostnames.length === 0) {
-		throw `Expected at least one hostname!`;
-	}
+export function createSANExtension(hostnames: Array<string>): Buffer {
 	let node: asn1.Node = {
 		...asn1.SEQUENCE,
 		data: hostnames.map((hostname) => {
@@ -100,7 +97,7 @@ export function createCertificateRequest(hostnames: Array<string>, key: libcrypt
 									},
 									{
 										...asn1.OCTET_STRING,
-										data: createExtension(hostnames).toString("base64url")
+										data: createSANExtension(hostnames).toString("base64url")
 									}
 								]
 							}
