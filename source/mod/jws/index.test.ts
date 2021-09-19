@@ -25,7 +25,7 @@ const PUBLIC_KEY = libcrypto.createPublicKey({
 });
 
 (async () => {
-	let body = await jws.sign(PRIVATE_KEY, {
+	let body = jws.sign(PRIVATE_KEY, {
 		protected: {
 			food: "räksmörgås"
 		},
@@ -37,7 +37,7 @@ const PUBLIC_KEY = libcrypto.createPublicKey({
 })();
 
 (async () => {
-	let body = await jws.sign(PRIVATE_KEY, {
+	let body = jws.sign(PRIVATE_KEY, {
 		protected: {
 			food: "räksmörgås"
 		},
@@ -49,7 +49,7 @@ const PUBLIC_KEY = libcrypto.createPublicKey({
 })();
 
 (async () => {
-	let body = await jws.sign(PRIVATE_KEY, {
+	let body = jws.sign(PRIVATE_KEY, {
 		protected: {
 			food: "räksmörgås"
 		},
@@ -61,12 +61,12 @@ const PUBLIC_KEY = libcrypto.createPublicKey({
 })();
 
 (async () => {
-	let body = await jws.sign(PRIVATE_KEY, {
+	let body = jws.sign(PRIVATE_KEY, {
 		protected: {
 			food: "räksmörgås"
 		},
 		payload: "räksmörgås"
 	});
-	let verification = await jws.verify(body, PUBLIC_KEY);
+	let verification = jws.verify(body, PUBLIC_KEY);
 	console.assert(verification, "It should verify the signature properly.");
 })();

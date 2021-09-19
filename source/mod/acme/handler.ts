@@ -57,7 +57,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData,
 				payload: payloadData
 			})
@@ -96,7 +96,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData,
 				payload: payloadData
 			})
@@ -126,7 +126,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData
 			})
 		});
@@ -151,7 +151,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData,
 				payload: {}
 			})
@@ -175,7 +175,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData,
 				payload: payloadData
 			})
@@ -199,7 +199,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData
 			})
 		});
@@ -227,7 +227,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData
 			})
 		});
@@ -255,7 +255,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData
 			})
 		});
@@ -283,7 +283,7 @@ export class Handler {
 			headers: {
 				"content-type": CONTENT_TYPE
 			},
-			payload: await jws.sign(this.key, {
+			payload: jws.sign(this.key, {
 				protected: protectedData
 			})
 		});
