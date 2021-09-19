@@ -10,20 +10,20 @@ async function run(): Promise<number> {
 		providers: [],
 		certificates: []
 	};
-	let found_unrecognized_argument = false;
+	let foundUnrecognizedArgument = false;
 	for (let argv of process.argv.slice(2)) {
 		let parts: RegExpExecArray | null = null;
 		if ((parts = /^--acme=(.*)$/.exec(argv)) != null) {
-			options.acme = parts[1];
-		} else if ((parts = /^--config=(.*)$/.exec(argv)) !== null) {
+			options.acme = parts[1] || undefined;
+		} else if ((parts = /^--config=(.*)$/.exec(argv)) != null) {
 			options = lib.loadConfig(parts[1]);
 			break;
-		} else if ((parts = /^--dns=dynu[:](.*)$/.exec(argv)) != null) {
+		} else if ((parts = /^--dns=dynu[:]([^:]*)$/.exec(argv)) != null) {
 			options.providers.push({
 				type: "dynu",
 				key: parts[1]
 			});
-		} else if ((parts = /^--dns=glesys[:](.*)[:](.*)$/.exec(argv)) != null) {
+		} else if ((parts = /^--dns=glesys[:]([^:]*)[:]([^:]*)$/.exec(argv)) != null) {
 			options.providers.push({
 				type: "glesys",
 				account: parts[1],
@@ -34,17 +34,17 @@ async function run(): Promise<number> {
 		} else if ((parts = /^--monitor=(true|false)$/.exec(argv)) != null) {
 			options.monitor = parts[1] === "true";
 		} else if ((parts = /^--root=(.*)$/.exec(argv)) != null) {
-			certificate.root = parts[1];
+			certificate.root = parts[1] || undefined;
 			options.certificates.push(certificate);
 			certificate = {
 				hostnames: []
 			};
 		} else {
-			found_unrecognized_argument = true;
+			foundUnrecognizedArgument = true;
 			console.log(`Unrecognized argument "${argv}"!`);
 		}
 	}
-	if (found_unrecognized_argument) {
+	if (foundUnrecognizedArgument) {
 		console.log(`Arguments:`);
 		console.log(`	--acme=string`);
 		console.log(`		Set ACME directory URL.`);
