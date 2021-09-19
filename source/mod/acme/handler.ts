@@ -6,10 +6,10 @@ import * as apiclient from "./api/client";
 import * as jwk from "../jwk";
 import * as jws from "../jws";
 
-function makeClient(urlPrefix: string): apiclient.Client {
+function makeClient(clientOptions?: autoguard.api.ClientOptions): apiclient.Client {
 	let client = apiclient.makeClient({
-		urlPrefix: urlPrefix,
-		requestHandler: autoguard.api.makeNodeRequestHandler()
+		requestHandler: autoguard.api.makeNodeRequestHandler(),
+		...clientOptions
 	});
 	return client;
 };
@@ -295,9 +295,12 @@ export class Handler {
 		};
 	}
 
-	static async make(url: string, key: libcrypto.KeyObject): Promise<Handler> {
+	static async make(url: string, key: libcrypto.KeyObject, clientOptions?: autoguard.api.ClientOptions): Promise<Handler> {
 		let urlPrefix = new liburl.URL(url).origin;
-		let client = makeClient(urlPrefix);
+		let client = makeClient({
+			urlPrefix,
+			...clientOptions
+		});
 		let response = await client.getDirectory({
 			options: {
 				path: getUrlPath(url, urlPrefix)
