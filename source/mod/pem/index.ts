@@ -1,5 +1,4 @@
 import * as libcrypto from "crypto";
-import * as encoding from "../encoding";
 
 export type Header = {
 	key: string;
@@ -22,7 +21,7 @@ export function deriveKey(data: Buffer, salt: Buffer, keyLength: number): Buffer
 	let last = Buffer.alloc(0);
 	let key = Buffer.alloc(0);
 	while (key.length < keyLength) {
-		let hash = libcrypto.createHash(`MD5`);
+		let hash = libcrypto.createHash("MD5");
 		hash.update(last);
 		hash.update(data);
 		hash.update(salt);
@@ -33,22 +32,22 @@ export function deriveKey(data: Buffer, salt: Buffer, keyLength: number): Buffer
 };
 
 export function decrypt(section: Section, passphrase: string): Section {
-	let procTypes = section.headers?.filter((header) => header.key.toLowerCase() === `proc-type`) ?? [];
+	let procTypes = section.headers?.filter((header) => header.key.toLowerCase() === "proc-type") ?? [];
 	if (procTypes.length !== 1) {
 		throw `Expected exactly one "Proc-Type" header!`;
 	}
-	let procType = procTypes[0].value.trim().split(`,`);
+	let procType = procTypes[0].value.trim().split(",");
 	if (procType.length < 2) {
 		throw `Expected "Proc-Type" to contain at least 2 values!`;
 	}
-	if (procType[0] !== `4` || procType[1] !== `ENCRYPTED`) {
+	if (procType[0] !== "4" || procType[1] !== "ENCRYPTED") {
 		throw `Expected an encrypted section!`;
 	}
-	let dekInfos = section.headers?.filter((header) => header.key.toLowerCase() === `dek-info`) ?? [];
+	let dekInfos = section.headers?.filter((header) => header.key.toLowerCase() === "dek-info") ?? [];
 	if (dekInfos.length !== 1) {
 		throw `Expected exactly one "DEK-Info" header!`;
 	}
-	let dekInfo = dekInfos[0].value.trim().split(`,`);
+	let dekInfo = dekInfos[0].value.trim().split(",");
 	if (dekInfo.length < 2) {
 		throw `Expected "DEK-Info" to contain at least 2 values!`;
 	}
@@ -57,7 +56,7 @@ export function decrypt(section: Section, passphrase: string): Section {
 	if (ivLength == null || keyLength == null) {
 		throw `Expected "${algorithm}" to be a supported cipher!`;
 	}
-	let iv = Buffer.from(dekInfo[1], `hex`);
+	let iv = Buffer.from(dekInfo[1], "hex");
 	let key = deriveKey(Buffer.from(passphrase), iv.slice(0, 8), keyLength);
 	let decipher = libcrypto.createDecipheriv(algorithm, key, iv);
 	let buffer = Buffer.concat([decipher.update(section.buffer), decipher.final()]);
@@ -66,7 +65,7 @@ export function decrypt(section: Section, passphrase: string): Section {
 		headers: [
 			...(section.headers ?? []).filter((header) => {
 				let key = header.key.toLowerCase();
-				return key !== `proc-type` && key !== `dek-info`;
+				return key !== "proc-type" && key !== "dek-info";
 			}),
 		],
 		buffer
@@ -77,7 +76,7 @@ export function encrypt(section: Section, passphrase: string, options?: Partial<
 	algorithm: string,
 	iv: Buffer
 }>): Section {
-	let algorithm = options?.algorithm ?? `AES-128-CBC`;
+	let algorithm = options?.algorithm ?? "AES-128-CBC";
 	let { ivLength, keyLength } = { ...libcrypto.getCipherInfo(algorithm) };
 	if (ivLength == null || keyLength == null) {
 		throw `Expected "${algorithm}" to be a supported cipher!`;
@@ -91,12 +90,12 @@ export function encrypt(section: Section, passphrase: string, options?: Partial<
 		headers: [
 			...(section.headers ?? []),
 			{
-				key: `Proc-TYPE`,
-				value: [`4`, `ENCRYPTED`].join(`,`)
+				key: "Proc-TYPE",
+				value: ["4", "ENCRYPTED"].join(",")
 			},
 			{
-				key: `DEK-Info`,
-				value: [algorithm, iv.toString(`hex`).toUpperCase()].join(`,`)
+				key: "DEK-Info",
+				value: [algorithm, iv.toString("hex").toUpperCase()].join(",")
 			}
 		],
 		buffer
@@ -155,7 +154,7 @@ export function parse(string: string): Document {
 				preamble: preamble.splice(0, preamble.length),
 				label: label,
 				headers: headers,
-				buffer: Buffer.from(body.join(``), "base64")
+				buffer: Buffer.from(body.join(""), "base64")
 			});
 			continue outer;
 		}
@@ -186,14 +185,14 @@ export function serialize(document: Document): string {
 				}
 				let parts = value.match(/.{1,64}/g) ?? [];
 				if (key.length + 1 + parts[0].length > 64) {
-					parts.unshift(``);
+					parts.unshift("");
 				}
 				lines.push(`${key}:${parts[0]}`);
 				for (let part of parts.slice(1)) {
 					lines.push(`\t${part}`);
 				}
 			}
-			lines.push(``);
+			lines.push("");
 		}
 		let base64 = section.buffer.toString("base64")
 		for (let i = 0; i < base64.length; i += 64) {
@@ -203,5 +202,5 @@ export function serialize(document: Document): string {
 		lines.push(`-----END ${section.label}-----`);
 	}
 	lines.push(...(document.postamble ?? []));
-	return lines.join(`\r\n`);
+	return lines.join("\r\n");
 };
