@@ -23,7 +23,7 @@ export function parse(parser: parsing.Parser): asn1.Node {
 			kind,
 			form,
 			type,
-			data: form === `CONSTRUCTED` ? parseArray(new parsing.Parser(buffer)) : buffer.toString(`base64url`)
+			data: form === "CONSTRUCTED" ? parseArray(new parsing.Parser(buffer)) : buffer.toString("base64url")
 		};
 		if (asn1.ObjectIdentifier.is(node)) {
 			let parser = new parsing.Parser(buffer);
@@ -48,13 +48,13 @@ export function serialize(node: asn1.Node): Buffer {
 	if (extended) {
 		buffers.push(utils.encodeVarlen(type));
 	}
-	if (typeof data === `string`) {
+	if (typeof data === "string") {
 		let buffer = Buffer.alloc(0);
 		if (asn1.ObjectIdentifier.is(node)) {
 			let numbers = node.data.split(".").map((part) => Number.parseInt(part));
 			buffer = oid.serialize(numbers);
 		} else {
-			buffer = Buffer.from(data, `base64url`);
+			buffer = Buffer.from(data, "base64url");
 		}
 		buffers.push(utils.encodeLength(buffer.length));
 		buffers.push(buffer);
