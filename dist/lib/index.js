@@ -370,7 +370,7 @@ function getRenewAfter(validity) {
     if (validity == null) {
         return 0;
     }
-    let renewAfter = validity.notBefore + Math.round((validity.notAfter - validity.notBefore) * 0.75);
+    let renewAfter = validity.notBefore + Math.round((validity.notAfter - validity.notBefore) * 2 / 3);
     return renewAfter;
 }
 ;
