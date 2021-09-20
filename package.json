@@ -25,5 +25,5 @@
 		"preversion": "npm run build && git add ./",
 		"postversion": "git push && git push --tags"
 	},
-	"version": "0.1.0"
+	"version": "0.1.1"
 }
