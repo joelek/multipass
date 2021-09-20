@@ -137,7 +137,8 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 		try {
 			return await handler();
 		} catch (error) {
-			let factor = 1.5 + Math.random();
+			let randomness = (2.0 * Math.random() - 1.0);
+			let factor = 2.0 + (0.5 * randomness);
 			milliseconds = Math.round(milliseconds * factor);
 		}
 	}
