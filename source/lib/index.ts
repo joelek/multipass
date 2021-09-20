@@ -181,10 +181,10 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 	}
 	if (entry.validity != null) {
 		let { notBefore, notAfter } = entry.validity;
-		console.log(`Current certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
+		console.log(`Current certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
 	}
 	if (entry.renewAfter > Date.now()) {
-		console.log(`Process should start no sooner than ${new Date(entry.renewAfter)}.`);
+		console.log(`Process should start no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
 		return;
 	}
 	console.log(`Starting certification process...`);
@@ -278,7 +278,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		entry.validity = getValidityFromCertificate(entry.cert);
 		if (entry.validity != null) {
 			let { notBefore, notAfter } = entry.validity;
-			console.log(`Certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
+			console.log(`Certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
 		}
 		entry.renewAfter = getRenewAfter(entry.validity);
 		console.log(`Certification process succeeded!`);
@@ -289,7 +289,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		let factor = 1.0 + (0.5 * randomness);
 		let msPerDay = 24 * 60 * 60 * 1000;
 		entry.renewAfter = Date.now() + Math.round(msPerDay * factor);
-		console.log(`Retry may be attempted no sooner than ${new Date(entry.renewAfter)}.`);
+		console.log(`Retry may be attempted no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
 	}
 	for (let undoable of undoables) {
 		await undoable.undo();
