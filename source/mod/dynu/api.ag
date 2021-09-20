@@ -16,7 +16,8 @@ route listDomains(): GET:/dns
 guard DomainRecordStubGeneric: {
 	"nodeName": string,
 	"recordType": string,
-	"ttl"?: number
+	"ttl"?: number,
+	"state"?: boolean
 };
 
 guard DomainRecordStubTXT: DomainRecordStubGeneric & {

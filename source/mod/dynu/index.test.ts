@@ -19,7 +19,8 @@ import * as dynu from "./";
 			nodeName: "_acme-challenge",
 			recordType: "TXT",
 			textData: "TBD1",
-			ttl: 60
+			ttl: 60,
+			state: false
 		}
 	})).payload();
 	let updated = await (await client.updateDomainRecord({
@@ -31,7 +32,8 @@ import * as dynu from "./";
 			nodeName: "_acme-challenge",
 			recordType: "TXT",
 			textData: "TBD2",
-			ttl: 60
+			ttl: 60,
+			state: true
 		}
 	})).payload();
 	let deleted = await (await client.deleteDomainRecord({

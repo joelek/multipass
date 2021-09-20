@@ -16,14 +16,16 @@ export const DomainRecordStubGeneric: autoguard.serialization.MessageGuard<Domai
 	"nodeName": autoguard.guards.String,
 	"recordType": autoguard.guards.String
 }, {
-	"ttl": autoguard.guards.Number
+	"ttl": autoguard.guards.Number,
+	"state": autoguard.guards.Boolean
 });
 
 export type DomainRecordStubGeneric = autoguard.guards.Object<{
 	"nodeName": autoguard.guards.String,
 	"recordType": autoguard.guards.String
 }, {
-	"ttl": autoguard.guards.Number
+	"ttl": autoguard.guards.Number,
+	"state": autoguard.guards.Boolean
 }>;
 
 export const DomainRecordStubTXT: autoguard.serialization.MessageGuard<DomainRecordStubTXT> = autoguard.guards.Intersection.of(
