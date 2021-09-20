@@ -74,6 +74,7 @@ function makeClient(credentials) {
 function getCanonicalName(hostname) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`Resolving canonical name for ${hostname}...`);
+        let path = new Array(hostname);
         while (true) {
             let hostnames = new Array();
             try {
@@ -85,11 +86,47 @@ function getCanonicalName(hostname) {
             if (hostnames.length !== 1) {
                 throw `Expected exactly one hostname!`;
             }
-            console.log(`Found CNAME record: ${hostname} => ${hostnames[0]}`);
+            console.log(`Found redirect between ${hostname} and ${hostnames[0]}.`);
             hostname = hostnames[0];
+            if (path.includes(hostname)) {
+                throw `Expected canonical name to resolve properly!`;
+            }
+            path.push(hostname);
         }
-        console.log(`Canonical name: ${hostname}`);
+        console.log(`Canonical name is ${hostname}.`);
         return hostname;
+    });
+}
+;
+function makeResolver(hostname) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(`Creating resolver for ${hostname}...`);
+        let parts = hostname.split(".");
+        for (let i = 0; i <= parts.length - 2; i++) {
+            try {
+                let hostname = parts.slice(i).join(".");
+                console.log(`Attempting to locate nameserver for ${hostname}.`);
+                let response = yield libdns.promises.resolveSoa(hostname);
+                console.log(`Primary nameserver is ${response.nsname}.`);
+                let addresses = yield libdns.promises.resolve4(response.nsname);
+                for (let address of addresses) {
+                    console.log(`Primary nameserver can be reached through ${address}.`);
+                }
+                let resolver = new libdns.promises.Resolver();
+                resolver.setServers(addresses);
+                return resolver;
+            }
+            catch (error) { }
+        }
+        throw `Expected a primary nameserver!`;
+    });
+}
+;
+function getTextRecords(hostname, resolver) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let response = yield resolver.resolveTxt(hostname);
+        let records = response.map((parts) => parts.join(""));
+        return records;
     });
 }
 ;
@@ -132,7 +169,8 @@ function retryWithExponentialBackoff(seconds, attempts, handler) {
                 return yield handler();
             }
             catch (error) {
-                let factor = 1.5 + Math.random();
+                let randomness = 2.0 * Math.random() - 1.0;
+                let factor = 2.0 + (0.5 * randomness);
                 milliseconds = Math.round(milliseconds * factor);
             }
         }
@@ -164,22 +202,21 @@ function getPrivateKey(path) {
     throw `Expected a private key!`;
 }
 ;
-function getTextRecords(hostname) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return (yield libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
-    });
-}
-;
 function processEntry(acmeUrl, entry, clients) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`Processing entry...`);
         for (let hostname of entry.hostnames) {
-            console.log(`Hostname: ${hostname}`);
+            console.log(`Entry contains ${hostname}.`);
         }
         if (entry.validity != null) {
             let { notBefore, notAfter } = entry.validity;
-            console.log(`Validity: ${new Date(notBefore)} to ${new Date(notAfter)}`);
+            console.log(`Current certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
         }
+        if (entry.renewAfter > Date.now()) {
+            console.log(`Process should start no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
+            return;
+        }
+        console.log(`Starting certification process...`);
         let undoables = new Array();
         try {
             let accountKey = getPrivateKey(entry.account);
@@ -207,28 +244,32 @@ function processEntry(acmeUrl, entry, clients) {
                             throw `Expected a "dns-01" challenge!`;
                         }
                         if (challenge.status === "pending") {
-                            let hostnameToAuthorize = authorization.payload.identifier.value;
-                            let hostname = yield getCanonicalName(makeProvisionHostname(hostnameToAuthorize));
+                            let hostnameToAuthorize = makeProvisionHostname(authorization.payload.identifier.value);
+                            console.log(`Proving authority over ${hostnameToAuthorize}...`);
+                            let hostname = yield getCanonicalName(hostnameToAuthorize);
                             let content = mod_1.acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }));
                             let { client, domain, subdomain } = getClientDetails(hostname, clients);
-                            console.log(`Provisioning TXT record for ${hostnameToAuthorize} at ${hostname}...`);
+                            let resolver = yield makeResolver(hostname);
+                            console.log(`Provisioning record at ${hostname}...`);
                             let undoable = yield client.provisionTextRecord({
                                 domain,
                                 subdomain,
                                 content
                             });
                             undoables.push(undoable);
-                            console.log(`Waiting for propagation...`);
-                            yield retryWithExponentialBackoff(60, 3, () => __awaiter(this, void 0, void 0, function* () {
-                                let records = yield getTextRecords(hostname);
+                            console.log(`Waiting for record to propagate...`);
+                            yield retryWithExponentialBackoff(60, 4, () => __awaiter(this, void 0, void 0, function* () {
+                                let records = yield getTextRecords(hostname, resolver);
                                 if (!records.includes(content)) {
                                     throw ``;
                                 }
                             }));
+                            console.log(`Signaling that authority can be validated...`);
                             yield handler.finalizeChallenge(account.url, challenge.url);
                         }
                     }
                 }
+                console.log(`Waiting for authority to be proven...`);
                 order = yield retryWithExponentialBackoff(15, 4, () => __awaiter(this, void 0, void 0, function* () {
                     let updated = yield handler.getOrder(account.url, order.url);
                     if (updated.payload.status === "pending") {
@@ -239,10 +280,12 @@ function processEntry(acmeUrl, entry, clients) {
             }
             if (order.payload.status === "ready") {
                 let csr = mod_9.pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), certificateKey);
+                console.log(`Requesting certificate to be issued...`);
                 yield handler.finalizeOrder(account.url, order.payload.finalize, {
                     csr: csr.toString("base64url")
                 });
             }
+            console.log(`Waiting for certificate to become ready...`);
             order = yield retryWithExponentialBackoff(15, 4, () => __awaiter(this, void 0, void 0, function* () {
                 let updated = yield handler.getOrder(account.url, order.url);
                 if (updated.payload.status === "processing") {
@@ -262,10 +305,21 @@ function processEntry(acmeUrl, entry, clients) {
             libfs.writeFileSync(entry.cert, certificate);
             console.log(`Certificate successfully downloaded.`);
             entry.validity = getValidityFromCertificate(entry.cert);
+            if (entry.validity != null) {
+                let { notBefore, notAfter } = entry.validity;
+                console.log(`Certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
+            }
             entry.renewAfter = getRenewAfter(entry.validity);
+            console.log(`Certification process succeeded!`);
         }
         catch (error) {
             console.log(String(error));
+            console.log(`Certification process failed!`);
+            let randomness = 2.0 * Math.random() - 1.0;
+            let factor = 1.0 + (0.5 * randomness);
+            let msPerDay = 24 * 60 * 60 * 1000;
+            entry.renewAfter = Date.now() + Math.round(msPerDay * factor);
+            console.log(`Retry may be attempted no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
         }
         for (let undoable of undoables) {
             yield undoable.undo();
@@ -332,7 +386,7 @@ function run(options) {
             let client = yield makeClient(credentials);
             let domains = yield client.listDomains();
             for (let domain of domains) {
-                console.log(`Credentials accepted for ${domain}.`);
+                console.log(`Provisioning configured for ${domain}.`);
             }
             clients.push({
                 client,
@@ -367,30 +421,22 @@ function run(options) {
             while (true) {
                 let entry = queue.shift();
                 if (entry != null) {
-                    let duration = Math.max(entry.renewAfter - Date.now());
+                    let duration = Math.max(0, entry.renewAfter - Date.now());
                     yield wait(duration);
                     yield processEntry(acme, entry, clients);
-                    if (entry.validity === null) {
-                        // Entry cannot be prioritized without validity.
-                        queue.push(entry);
-                    }
-                    else {
-                        let index = 0;
-                        for (; index < queue.length; index++) {
-                            if (entry.renewAfter < queue[index].renewAfter) {
-                                break;
-                            }
+                    let index = 0;
+                    for (; index < queue.length; index++) {
+                        if (entry.renewAfter < queue[index].renewAfter) {
+                            break;
                         }
-                        queue.splice(index, 0, entry);
                     }
+                    queue.splice(index, 0, entry);
                 }
             }
         }
         else {
             for (let entry of queue) {
-                if (entry.renewAfter < Date.now()) {
-                    yield processEntry(acme, entry, clients);
-                }
+                yield processEntry(acme, entry, clients);
             }
         }
     });

@@ -29,7 +29,8 @@ const dynu = require("./");
             nodeName: "_acme-challenge",
             recordType: "TXT",
             textData: "TBD1",
-            ttl: 60
+            ttl: 60,
+            state: false
         }
     })).payload();
     let updated = yield (yield client.updateDomainRecord({
@@ -41,7 +42,8 @@ const dynu = require("./");
             nodeName: "_acme-challenge",
             recordType: "TXT",
             textData: "TBD2",
-            ttl: 60
+            ttl: 60,
+            state: true
         }
     })).payload();
     let deleted = yield (yield client.deleteDomainRecord({

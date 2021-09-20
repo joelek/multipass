@@ -11,7 +11,8 @@ exports.DomainRecordStubGeneric = autoguard.guards.Object.of({
     "nodeName": autoguard.guards.String,
     "recordType": autoguard.guards.String
 }, {
-    "ttl": autoguard.guards.Number
+    "ttl": autoguard.guards.Number,
+    "state": autoguard.guards.Boolean
 });
 exports.DomainRecordStubTXT = autoguard.guards.Intersection.of(autoguard.guards.Reference.of(() => exports.DomainRecordStubGeneric), autoguard.guards.Object.of({
     "recordType": autoguard.guards.StringLiteral.of("TXT"),

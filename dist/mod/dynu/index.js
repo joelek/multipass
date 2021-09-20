@@ -46,7 +46,8 @@ function makeStandardClient(config, options) {
                             nodeName: details.subdomain,
                             recordType: "TXT",
                             textData: details.content,
-                            ttl: 60
+                            ttl: 60,
+                            state: true
                         }
                     })).payload();
                     return {

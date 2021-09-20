@@ -10,6 +10,7 @@ export declare type DomainRecordStubGeneric = autoguard.guards.Object<{
     "recordType": autoguard.guards.String;
 }, {
     "ttl": autoguard.guards.Number;
+    "state": autoguard.guards.Boolean;
 }>;
 export declare const DomainRecordStubTXT: autoguard.serialization.MessageGuard<DomainRecordStubTXT>;
 export declare type DomainRecordStubTXT = autoguard.guards.Intersection<[
@@ -54,21 +55,25 @@ export declare namespace Autoguard {
             nodeName: string;
             recordType: string;
             ttl?: number | undefined;
+            state?: boolean | undefined;
         }>;
         DomainRecordStubTXT: autoguard.serialization.MessageGuard<{
             nodeName: string;
             recordType: "TXT";
             ttl?: number | undefined;
+            state?: boolean | undefined;
             textData: string;
         }>;
         DomainRecordStub: autoguard.serialization.MessageGuard<{
             nodeName: string;
             recordType: string;
             ttl?: number | undefined;
+            state?: boolean | undefined;
         } | {
             nodeName: string;
             recordType: "TXT";
             ttl?: number | undefined;
+            state?: boolean | undefined;
             textData: string;
         }>;
         DomainRecordBase: autoguard.serialization.MessageGuard<{
@@ -81,6 +86,7 @@ export declare namespace Autoguard {
             nodeName: string;
             recordType: string;
             ttl?: number | undefined;
+            state?: boolean | undefined;
         }>;
         DomainRecordTXT: autoguard.serialization.MessageGuard<{
             id: number;
@@ -88,6 +94,7 @@ export declare namespace Autoguard {
             nodeName: string;
             recordType: "TXT";
             ttl?: number | undefined;
+            state?: boolean | undefined;
             textData: string;
         }>;
         DomainRecord: autoguard.serialization.MessageGuard<{
@@ -96,12 +103,14 @@ export declare namespace Autoguard {
             nodeName: string;
             recordType: string;
             ttl?: number | undefined;
+            state?: boolean | undefined;
         } | {
             id: number;
             domainId: number;
             nodeName: string;
             recordType: "TXT";
             ttl?: number | undefined;
+            state?: boolean | undefined;
             textData: string;
         }>;
     };
@@ -137,10 +146,12 @@ export declare namespace Autoguard {
                 nodeName: string;
                 recordType: string;
                 ttl?: number | undefined;
+                state?: boolean | undefined;
             } | {
                 nodeName: string;
                 recordType: "TXT";
                 ttl?: number | undefined;
+                state?: boolean | undefined;
                 textData: string;
             };
             headers?: {
@@ -157,10 +168,12 @@ export declare namespace Autoguard {
                 nodeName: string;
                 recordType: string;
                 ttl?: number | undefined;
+                state?: boolean | undefined;
             } | {
                 nodeName: string;
                 recordType: "TXT";
                 ttl?: number | undefined;
+                state?: boolean | undefined;
                 textData: string;
             };
             headers?: {
@@ -203,12 +216,14 @@ export declare namespace Autoguard {
                     nodeName: string;
                     recordType: string;
                     ttl?: number | undefined;
+                    state?: boolean | undefined;
                 } | {
                     id: number;
                     domainId: number;
                     nodeName: string;
                     recordType: "TXT";
                     ttl?: number | undefined;
+                    state?: boolean | undefined;
                     textData: string;
                 }>;
             };
@@ -224,12 +239,14 @@ export declare namespace Autoguard {
                 nodeName: string;
                 recordType: string;
                 ttl?: number | undefined;
+                state?: boolean | undefined;
             } | {
                 id: number;
                 domainId: number;
                 nodeName: string;
                 recordType: "TXT";
                 ttl?: number | undefined;
+                state?: boolean | undefined;
                 textData: string;
             };
             status?: number | undefined;
@@ -244,12 +261,14 @@ export declare namespace Autoguard {
                 nodeName: string;
                 recordType: string;
                 ttl?: number | undefined;
+                state?: boolean | undefined;
             } | {
                 id: number;
                 domainId: number;
                 nodeName: string;
                 recordType: "TXT";
                 ttl?: number | undefined;
+                state?: boolean | undefined;
                 textData: string;
             };
             status?: number | undefined;
