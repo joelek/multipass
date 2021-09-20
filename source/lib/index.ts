@@ -60,6 +60,7 @@ async function makeClient(credentials: config.Provider): Promise<dns.Client> {
 
 async function getCanonicalName(hostname: string): Promise<string> {
 	console.log(`Resolving canonical name for ${hostname}...`);
+	let path = new Array<string>(hostname);
 	while (true) {
 		let hostnames = new Array<string>();
 		try {
@@ -72,6 +73,10 @@ async function getCanonicalName(hostname: string): Promise<string> {
 		}
 		console.log(`Found redirect between ${hostname} and ${hostnames[0]}.`);
 		hostname = hostnames[0];
+		if (path.includes(hostname)) {
+			throw `Expected canonical name to resolve properly!`;
+		}
+		path.push(hostname);
 	}
 	console.log(`Canonical name is ${hostname}.`);
 	return hostname;
