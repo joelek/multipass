@@ -2,7 +2,7 @@ import * as libfs from "fs";
 import * as glesys from "./";
 
 (async () => {
-	let config = glesys.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/glesys.json", "utf-8")));
+	let config = glesys.Config.as(JSON.parse(libfs.readFileSync("./private/config/glesys.json", "utf-8")));
 	let client = glesys.makeClient(config, {
 		debugMode: true
 	});

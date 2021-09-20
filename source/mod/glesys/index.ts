@@ -3,7 +3,7 @@ import * as api from "./api/client";
 import * as config from "./config";
 import * as dns from "../dns";
 
-export * as config from "./config";
+export * from "./config";
 
 const URL_PREFIX = "https://api.glesys.com";
 

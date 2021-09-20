@@ -7,7 +7,7 @@ import * as pkcs5 from "../pkcs5";
 import * as pkcs8 from "../pkcs8";
 import * as schema from "./schema";
 
-export * as schema from "./schema";
+export * from "./schema";
 
 export function getDefaultAlgorithm(key: libcrypto.KeyObject): pkcs5.signature.SignatureAlgorithm {
 	let keyJwk = key.export({ format: "jwk" });

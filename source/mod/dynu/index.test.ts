@@ -2,7 +2,7 @@ import * as libfs from "fs";
 import * as dynu from "./";
 
 (async () => {
-	let config = dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
+	let config = dynu.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
 	let client = dynu.makeClient(config, {
 		debugMode: true
 	});

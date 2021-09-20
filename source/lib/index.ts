@@ -14,7 +14,7 @@ import { parsing } from "../mod";
 import { pem } from "../mod";
 import { pkcs10 } from "../mod";
 
-export * as config from "./config";
+export * from "./config";
 
 const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
 const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";

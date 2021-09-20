@@ -3,10 +3,10 @@
 import * as lib from "../lib";
 
 async function run(): Promise<number> {
-	let certificate: lib.config.Certificate = {
+	let certificate: lib.Certificate = {
 		hostnames: [],
 	};
-	let options: lib.config.Options = {
+	let options: lib.Options = {
 		providers: [],
 		certificates: []
 	};
