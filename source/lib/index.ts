@@ -216,7 +216,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						});
 						undoables.push(undoable);
 						console.log(`Waiting for record to propagate...`);
-						await retryWithExponentialBackoff(60, 3, async () => {
+						await retryWithExponentialBackoff(60, 4, async () => {
 							let records = await getTextRecords(hostname, resolver);
 							if (!records.includes(content)) {
 								throw ``;
