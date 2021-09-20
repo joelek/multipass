@@ -181,12 +181,13 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 	}
 	if (entry.validity != null) {
 		let { notBefore, notAfter } = entry.validity;
-		console.log(`Previous certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
+		console.log(`Current certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
 	}
 	if (entry.renewAfter > Date.now()) {
 		console.log(`Process should start no sooner than ${new Date(entry.renewAfter)}.`);
 		return;
 	}
+	console.log(`Starting certification process...`);
 	let undoables = new Array<dns.Undoable>();
 	try {
 		let accountKey = getPrivateKey(entry.account);
@@ -275,9 +276,15 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		libfs.writeFileSync(entry.cert, certificate);
 		console.log(`Certificate successfully downloaded.`);
 		entry.validity = getValidityFromCertificate(entry.cert);
+		if (entry.validity != null) {
+			let { notBefore, notAfter } = entry.validity;
+			console.log(`Certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
+		}
 		entry.renewAfter = getRenewAfter(entry.validity);
+		console.log(`Certification process succeeded!`);
 	} catch (error) {
 		console.log(String(error));
+		console.log(`Certification process failed!`);
 	}
 	for (let undoable of undoables) {
 		await undoable.undo();
