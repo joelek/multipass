@@ -218,7 +218,7 @@ npm install [-g] joelek/multipass#master
 
 ## Roadmap
 
-* Undo all actions on caught interrupt signal.
+* Undo all actions on caught interrupt signals.
 * Implement RSA-PSS signatures.
 * Improve schema for PKCS10 module.
 * Write a class-based implementation for ASN1 handling.
