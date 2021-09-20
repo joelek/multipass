@@ -77,6 +77,25 @@ async function getCanonicalName(hostname: string): Promise<string> {
 	return hostname;
 };
 
+async function makeResolver(domain: string): Promise<libdns.promises.Resolver> {
+	console.log(`Creating resolver for ${domain}...`);
+	let response = await libdns.promises.resolveSoa(domain);
+	console.log(`Primary nameserver is ${response.nsname}.`);
+	let addresses = await libdns.promises.resolve4(response.nsname);
+	for (let address of addresses) {
+		console.log(`Primary nameserver can be reached through ${address}.`);
+	}
+	let resolver = new libdns.promises.Resolver();
+	resolver.setServers(addresses);
+	return resolver;
+};
+
+async function getTextRecords(hostname: string, resolver: libdns.promises.Resolver): Promise<Array<string>> {
+	let response = await resolver.resolveTxt(hostname);
+	let records = response.map((parts) => parts.join(""));
+	return records;
+};
+
 function makeProvisionHostname(hostname: string): string {
 	if (hostname.startsWith("*.")) {
 		return `_acme-challenge.${hostname.slice(2)}`;
@@ -141,10 +160,6 @@ function getPrivateKey(path: string): libcrypto.KeyObject {
 	throw `Expected a private key!`;
 };
 
-async function getTextRecords(hostname: string): Promise<Array<string>> {
-	return (await libdns.promises.resolveTxt(hostname)).map((hostname) => hostname.join(""));
-};
-
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
 	console.log(`Processing entry...`);
 	for (let hostname of entry.hostnames) {
@@ -186,6 +201,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						let hostname = await getCanonicalName(hostnameToAuthorize);
 						let content = acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }) as any);
 						let { client, domain, subdomain } = getClientDetails(hostname, clients);
+						let resolver = await makeResolver(domain);
 						console.log(`Provisioning record at ${hostname}...`);
 						let undoable = await client.provisionTextRecord({
 							domain,
@@ -195,7 +211,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						undoables.push(undoable);
 						console.log(`Waiting for record to propagate...`);
 						await retryWithExponentialBackoff(60, 3, async () => {
-							let records = await getTextRecords(hostname);
+							let records = await getTextRecords(hostname, resolver);
 							if (!records.includes(content)) {
 								throw ``;
 							}

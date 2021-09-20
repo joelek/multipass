@@ -221,7 +221,6 @@ npm install [-g] joelek/multipass#master
 * Implement RSA-PSS signatures.
 * Improve schema for PKCS10 module.
 * Write a class-based implementation for ASN1 handling.
-* Use authoritative nameservers directly when resolving DNS queries.
 * Add support for additional DNS APIs.
 * Add support for configuring account, key and cert filenames.
 * Add support for keys protected using passphrases.
