@@ -1,6 +1,16 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCertificateRequest = exports.createSANExtension = exports.getDefaultAlgorithm = exports.schema = void 0;
+exports.createCertificateRequest = exports.createSANExtension = exports.getDefaultAlgorithm = void 0;
 const libcrypto = require("crypto");
 const asn1 = require("../asn1");
 const der = require("../der");
@@ -8,7 +18,7 @@ const jwk = require("../jwk");
 const parsing = require("../parsing");
 const pkcs5 = require("../pkcs5");
 const pkcs8 = require("../pkcs8");
-exports.schema = require("./schema");
+__exportStar(require("./schema"), exports);
 function getDefaultAlgorithm(key) {
     let keyJwk = key.export({ format: "jwk" });
     if (jwk.RSAPublicKey.is(keyJwk)) {

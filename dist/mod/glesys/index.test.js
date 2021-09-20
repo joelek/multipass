@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const libfs = require("fs");
 const glesys = require("./");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    let config = glesys.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/glesys.json", "utf-8")));
+    let config = glesys.Config.as(JSON.parse(libfs.readFileSync("./private/config/glesys.json", "utf-8")));
     let client = glesys.makeClient(config, {
         debugMode: true
     });

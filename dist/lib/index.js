@@ -1,4 +1,14 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,7 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.run = exports.loadConfig = exports.config = void 0;
+exports.run = exports.loadConfig = void 0;
 const libcrypto = require("crypto");
 const libdns = require("dns");
 const libfs = require("fs");
@@ -24,7 +34,7 @@ const mod_6 = require("../mod");
 const mod_7 = require("../mod");
 const mod_8 = require("../mod");
 const mod_9 = require("../mod");
-exports.config = require("./config");
+__exportStar(require("./config"), exports);
 const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
 const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
 function loadConfig(value) {

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const libfs = require("fs");
 const dynu = require("./");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    let config = dynu.config.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
+    let config = dynu.Config.as(JSON.parse(libfs.readFileSync("./private/config/dynu.json", "utf-8")));
     let client = dynu.makeClient(config, {
         debugMode: true
     });
