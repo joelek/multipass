@@ -183,6 +183,10 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 		let { notBefore, notAfter } = entry.validity;
 		console.log(`Previous certificate is valid between ${new Date(notBefore)} and ${new Date(notAfter)}.`);
 	}
+	if (entry.renewAfter > Date.now()) {
+		console.log(`Process should start no sooner than ${new Date(entry.renewAfter)}.`);
+		return;
+	}
 	let undoables = new Array<dns.Undoable>();
 	try {
 		let accountKey = getPrivateKey(entry.account);
@@ -406,9 +410,7 @@ export async function run(options: config.Options): Promise<void> {
 		}
 	} else {
 		for (let entry of queue) {
-			if (entry.renewAfter < Date.now()) {
-				await processEntry(acme, entry, clients);
-			}
+			await processEntry(acme, entry, clients);
 		}
 	}
 };
