@@ -145,7 +145,7 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 		try {
 			return await handler();
 		} catch (error) {
-			let randomness = (2.0 * Math.random() - 1.0);
+			let randomness = 2.0 * Math.random() - 1.0;
 			let factor = 2.0 + (0.5 * randomness);
 			milliseconds = Math.round(milliseconds * factor);
 		}
@@ -285,6 +285,11 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 	} catch (error) {
 		console.log(String(error));
 		console.log(`Certification process failed!`);
+		let randomness = 2.0 * Math.random() - 1.0;
+		let factor = 1.0 + (0.5 * randomness);
+		let msPerDay = 24 * 60 * 60 * 1000;
+		entry.renewAfter = Date.now() + Math.round(msPerDay * factor);
+		console.log(`Retry may be attempted no sooner than ${new Date(entry.renewAfter)}.`);
 	}
 	for (let undoable of undoables) {
 		await undoable.undo();
@@ -401,18 +406,13 @@ export async function run(options: config.Options): Promise<void> {
 				let duration = Math.max(0, entry.renewAfter - Date.now());
 				await wait(duration);
 				await processEntry(acme, entry, clients);
-				if (entry.validity === null) {
-					// Entry cannot be prioritized without validity.
-					queue.push(entry);
-				} else {
-					let index = 0;
-					for (; index < queue.length; index++) {
-						if (entry.renewAfter < queue[index].renewAfter) {
-							break;
-						}
+				let index = 0;
+				for (; index < queue.length; index++) {
+					if (entry.renewAfter < queue[index].renewAfter) {
+						break;
 					}
-					queue.splice(index, 0, entry);
 				}
+				queue.splice(index, 0, entry);
 			}
 		}
 	} else {
