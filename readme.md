@@ -218,6 +218,9 @@ npm install [-g] joelek/multipass#master
 
 ## Roadmap
 
+* Undo all actions on caught interrupt signal.
+* Limit the number of recursions for DNS lookups.
+* Set retryAfter to T+1day on failure and get rid of validity.
 * Implement RSA-PSS signatures.
 * Improve schema for PKCS10 module.
 * Write a class-based implementation for ASN1 handling.
