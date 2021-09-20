@@ -357,7 +357,7 @@ export async function run(options: config.Options): Promise<void> {
 		while (true) {
 			let entry = queue.shift();
 			if (entry != null) {
-				let duration = Math.max(entry.renewAfter - Date.now());
+				let duration = Math.max(0, entry.renewAfter - Date.now());
 				await wait(duration);
 				await processEntry(acme, entry, clients);
 				if (entry.validity === null) {
