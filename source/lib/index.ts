@@ -82,17 +82,25 @@ async function getCanonicalName(hostname: string): Promise<string> {
 	return hostname;
 };
 
-async function makeResolver(domain: string): Promise<libdns.promises.Resolver> {
-	console.log(`Creating resolver for ${domain}...`);
-	let response = await libdns.promises.resolveSoa(domain);
-	console.log(`Primary nameserver is ${response.nsname}.`);
-	let addresses = await libdns.promises.resolve4(response.nsname);
-	for (let address of addresses) {
-		console.log(`Primary nameserver can be reached through ${address}.`);
+async function makeResolver(hostname: string): Promise<libdns.promises.Resolver> {
+	console.log(`Creating resolver for ${hostname}...`);
+	let parts = hostname.split(".");
+	for (let i = 0; i <= parts.length - 2; i++) {
+		try {
+			let hostname = parts.slice(i).join(".");
+			console.log(`Attempting to locate nameserver for ${hostname}.`);
+			let response = await libdns.promises.resolveSoa(hostname);
+			console.log(`Primary nameserver is ${response.nsname}.`);
+			let addresses = await libdns.promises.resolve4(response.nsname);
+			for (let address of addresses) {
+				console.log(`Primary nameserver can be reached through ${address}.`);
+			}
+			let resolver = new libdns.promises.Resolver();
+			resolver.setServers(addresses);
+			return resolver;
+		} catch (error) {}
 	}
-	let resolver = new libdns.promises.Resolver();
-	resolver.setServers(addresses);
-	return resolver;
+	throw `Expected a primary nameserver!`;
 };
 
 async function getTextRecords(hostname: string, resolver: libdns.promises.Resolver): Promise<Array<string>> {
@@ -207,7 +215,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 						let hostname = await getCanonicalName(hostnameToAuthorize);
 						let content = acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }) as any);
 						let { client, domain, subdomain } = getClientDetails(hostname, clients);
-						let resolver = await makeResolver(domain);
+						let resolver = await makeResolver(hostname);
 						console.log(`Provisioning record at ${hostname}...`);
 						let undoable = await client.provisionTextRecord({
 							domain,
