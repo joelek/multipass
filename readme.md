@@ -207,7 +207,7 @@ Thank you for your support!
 Releases follow semantic versioning and release packages are published using the GitHub platform. Use the following command to install the latest release.
 
 ```
-npm install [-g] joelek/multipass#semver:^0.1
+npm install [-g] joelek/multipass#semver:^1.0
 ```
 
 Use the following command to install the very latest build. The very latest build may include breaking changes and should not be used in production environments.
