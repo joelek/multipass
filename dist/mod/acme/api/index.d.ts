@@ -1,5 +1,6 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 import { AssymetricKey } from "../../jwk";
+import { Body } from "../../jws";
 export declare const Account: autoguard.serialization.MessageGuard<Account>;
 export declare type Account = autoguard.guards.Object<{
     "status": autoguard.guards.Union<[
@@ -146,469 +147,295 @@ export declare type FinalizeOrderPayload = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        Account: autoguard.serialization.MessageGuard<{
-            status: "valid" | "deactivated" | "revoked";
-            contact?: autoguard.guards.Array<string> | undefined;
-            externalAccountBinding?: {} | undefined;
-            orders?: string | undefined;
-            termsOfServiceAgreed?: boolean | undefined;
-        }>;
-        Authorization: autoguard.serialization.MessageGuard<{
-            identifier: {
-                type: "dns";
-                value: string;
-            };
-            status: "valid" | "deactivated" | "revoked" | "pending" | "invalid" | "expired";
-            challenges: autoguard.guards.Array<{
-                status: "valid" | "pending" | "invalid" | "processing";
-                type: string;
-                url: string;
-                error?: {} | undefined;
-                validated?: string | undefined;
-            }>;
-            expires?: string | undefined;
-            wildcard?: boolean | undefined;
-        }>;
-        Challenge: autoguard.serialization.MessageGuard<{
-            status: "valid" | "pending" | "invalid" | "processing";
-            type: string;
-            url: string;
-            error?: {} | undefined;
-            validated?: string | undefined;
-        }>;
-        ChallengeHTTP01: autoguard.serialization.MessageGuard<{
+        Account: autoguard.guards.ReferenceGuard<Account>;
+        Authorization: autoguard.guards.ReferenceGuard<Authorization>;
+        Challenge: autoguard.guards.ReferenceGuard<Challenge>;
+        ChallengeHTTP01: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             status: "valid" | "pending" | "invalid" | "processing";
             type: "http-01";
             url: string;
-            error?: {} | undefined;
+            error?: autoguard.guards.Object<{}, {}> | undefined;
             validated?: string | undefined;
             token: string;
         }>;
-        ChallengeDNS01: autoguard.serialization.MessageGuard<{
+        ChallengeDNS01: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             status: "valid" | "pending" | "invalid" | "processing";
             type: "dns-01";
             url: string;
-            error?: {} | undefined;
+            error?: autoguard.guards.Object<{}, {}> | undefined;
             validated?: string | undefined;
             token: string;
         }>;
-        ChallengeTLSALPN01: autoguard.serialization.MessageGuard<{
+        ChallengeTLSALPN01: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             status: "valid" | "pending" | "invalid" | "processing";
             type: "tls-alpn-01";
             url: string;
-            error?: {} | undefined;
+            error?: autoguard.guards.Object<{}, {}> | undefined;
             validated?: string | undefined;
             token: string;
         }>;
-        Directory: autoguard.serialization.MessageGuard<{
-            keyChange: string;
-            newAccount: string;
-            newNonce: string;
-            newOrder: string;
-            revokeCert: string;
-            meta?: {
-                caaIdentities?: autoguard.guards.Array<string> | undefined;
-                externalAccountRequired?: boolean | undefined;
-                termsOfService?: string | undefined;
-                website?: string | undefined;
-            } | undefined;
-            newAuthz?: string | undefined;
-        }>;
-        Identifier: autoguard.serialization.MessageGuard<{
-            type: "dns";
-            value: string;
-        }>;
-        Order: autoguard.serialization.MessageGuard<{
-            authorizations: autoguard.guards.Array<string>;
-            finalize: string;
-            identifiers: autoguard.guards.Array<{
-                type: "dns";
-                value: string;
-            }>;
-            status: "valid" | "pending" | "invalid" | "processing" | "ready";
-            certificate?: string | undefined;
-            error?: {} | undefined;
-            expires?: string | undefined;
-            notBefore?: string | undefined;
-            notAfter?: string | undefined;
-        }>;
-        Protected: autoguard.serialization.MessageGuard<{
-            nonce: string;
-            url: string;
-        }>;
-        ProtectedWithJWK: autoguard.serialization.MessageGuard<{
+        Directory: autoguard.guards.ReferenceGuard<Directory>;
+        Identifier: autoguard.guards.ReferenceGuard<Identifier>;
+        Order: autoguard.guards.ReferenceGuard<Order>;
+        Protected: autoguard.guards.ReferenceGuard<Protected>;
+        ProtectedWithJWK: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             nonce: string;
             url: string;
             jwk: {
+                [x: string]: any;
                 kty: "EC" | "RSA";
             };
         }>;
-        ProtectedWithKID: autoguard.serialization.MessageGuard<{
+        ProtectedWithKID: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             nonce: string;
             url: string;
             kid: string;
         }>;
-        CreateAccountPayload: autoguard.serialization.MessageGuard<{
-            contact?: autoguard.guards.Array<string> | undefined;
-            termsOfServiceAgreed?: boolean | undefined;
-            onlyReturnExisting?: boolean | undefined;
-            externalAccountBinding?: {} | undefined;
-        }>;
-        CreateOrderPayload: autoguard.serialization.MessageGuard<{
-            identifiers: autoguard.guards.Array<{
-                type: "dns";
-                value: string;
-            }>;
-            notBefore?: string | undefined;
-            notAfter?: string | undefined;
-        }>;
-        FinalizeOrderPayload: autoguard.serialization.MessageGuard<{
-            csr: string;
-        }>;
+        CreateAccountPayload: autoguard.guards.ReferenceGuard<CreateAccountPayload>;
+        CreateOrderPayload: autoguard.guards.ReferenceGuard<CreateOrderPayload>;
+        FinalizeOrderPayload: autoguard.guards.ReferenceGuard<FinalizeOrderPayload>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;
     };
     const Requests: {
-        downloadCertificate: autoguard.serialization.MessageGuard<{
+        downloadCertificate: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
-        finalizeChallenge: autoguard.serialization.MessageGuard<{
+        finalizeChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
-        finalizeOrder: autoguard.serialization.MessageGuard<{
+        finalizeOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
-        getAccount: autoguard.serialization.MessageGuard<{
+        getAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
-        getAuthorization: autoguard.serialization.MessageGuard<{
+        getAuthorization: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
-        getChallenge: autoguard.serialization.MessageGuard<{
+        getChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
+                path?: autoguard.guards.Array<string> | undefined;
             };
-            options?: {
-                [x: string]: autoguard.api.JSON;
-                path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
         }>;
-        getDirectory: autoguard.serialization.MessageGuard<{
-            options?: {
-                [x: string]: autoguard.api.JSON;
+        getDirectory: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            payload?: autoguard.api.AsyncBinary | autoguard.api.SyncBinary | undefined;
-        }>;
-        getOrder: autoguard.serialization.MessageGuard<{
+            };
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
+            };
+            payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
+        }>;
+        getOrder: autoguard.guards.ObjectGuard<{
+            headers: {
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
-        newAccount: autoguard.serialization.MessageGuard<{
+        newAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
+                path?: autoguard.guards.Array<string> | undefined;
             };
-            options?: {
-                [x: string]: autoguard.api.JSON;
-                path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
         }>;
-        newNonce: autoguard.serialization.MessageGuard<{
-            options?: {
-                [x: string]: autoguard.api.JSON;
+        newNonce: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            payload?: autoguard.api.AsyncBinary | autoguard.api.SyncBinary | undefined;
-        }>;
-        newOrder: autoguard.serialization.MessageGuard<{
+            };
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
+            };
+            payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
+        }>;
+        newOrder: autoguard.guards.ObjectGuard<{
+            headers: {
+                [x: string]: any;
                 "content-type": string;
             };
-            payload: {
-                protected: string;
-                payload: string;
-                signature: string;
-            };
-            options?: {
-                [x: string]: autoguard.api.JSON;
+            payload: Body;
+        }, {
+            options: {
+                [x: string]: any;
                 path?: autoguard.guards.Array<string> | undefined;
-            } | undefined;
+            };
         }>;
     };
     type Requests = {
         [A in keyof typeof Requests]: ReturnType<typeof Requests[A]["as"]>;
     };
     const Responses: {
-        downloadCertificate: autoguard.serialization.MessageGuard<{
+        downloadCertificate: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            status?: number | undefined;
-            payload?: autoguard.api.AsyncBinary | autoguard.api.SyncBinary | undefined;
+        }, {
+            status: number;
+            payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
-        finalizeChallenge: autoguard.serialization.MessageGuard<{
+        finalizeChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            payload: {
-                status: "valid" | "pending" | "invalid" | "processing";
-                type: string;
-                url: string;
-                error?: {} | undefined;
-                validated?: string | undefined;
-            };
-            status?: number | undefined;
+            payload: Challenge;
+        }, {
+            status: number;
         }>;
-        finalizeOrder: autoguard.serialization.MessageGuard<{
+        finalizeOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            payload: {
-                authorizations: autoguard.guards.Array<string>;
-                finalize: string;
-                identifiers: autoguard.guards.Array<{
-                    type: "dns";
-                    value: string;
-                }>;
-                status: "valid" | "pending" | "invalid" | "processing" | "ready";
-                certificate?: string | undefined;
-                error?: {} | undefined;
-                expires?: string | undefined;
-                notBefore?: string | undefined;
-                notAfter?: string | undefined;
-            };
-            status?: number | undefined;
+            payload: Order;
+        }, {
+            status: number;
         }>;
-        getAccount: autoguard.serialization.MessageGuard<{
+        getAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            payload: {
-                status: "valid" | "deactivated" | "revoked";
-                contact?: autoguard.guards.Array<string> | undefined;
-                externalAccountBinding?: {} | undefined;
-                orders?: string | undefined;
-                termsOfServiceAgreed?: boolean | undefined;
-            };
-            status?: number | undefined;
+            payload: Account;
+        }, {
+            status: number;
         }>;
-        getAuthorization: autoguard.serialization.MessageGuard<{
+        getAuthorization: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            payload: {
-                identifier: {
-                    type: "dns";
-                    value: string;
-                };
-                status: "valid" | "deactivated" | "revoked" | "pending" | "invalid" | "expired";
-                challenges: autoguard.guards.Array<{
-                    status: "valid" | "pending" | "invalid" | "processing";
-                    type: string;
-                    url: string;
-                    error?: {} | undefined;
-                    validated?: string | undefined;
-                }>;
-                expires?: string | undefined;
-                wildcard?: boolean | undefined;
-            };
-            status?: number | undefined;
+            payload: Authorization;
+        }, {
+            status: number;
         }>;
-        getChallenge: autoguard.serialization.MessageGuard<{
+        getChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            payload: {
-                status: "valid" | "pending" | "invalid" | "processing";
-                type: string;
-                url: string;
-                error?: {} | undefined;
-                validated?: string | undefined;
-            };
-            status?: number | undefined;
+            payload: Challenge;
+        }, {
+            status: number;
         }>;
-        getDirectory: autoguard.serialization.MessageGuard<{
-            payload: {
-                keyChange: string;
-                newAccount: string;
-                newNonce: string;
-                newOrder: string;
-                revokeCert: string;
-                meta?: {
-                    caaIdentities?: autoguard.guards.Array<string> | undefined;
-                    externalAccountRequired?: boolean | undefined;
-                    termsOfService?: string | undefined;
-                    website?: string | undefined;
-                } | undefined;
-                newAuthz?: string | undefined;
-            };
-            status?: number | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-        }>;
-        getOrder: autoguard.serialization.MessageGuard<{
+        getDirectory: autoguard.guards.ObjectGuard<{
+            payload: Directory;
+        }, {
+            status: number;
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
+            };
+        }>;
+        getOrder: autoguard.guards.ObjectGuard<{
+            headers: {
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            payload: {
-                authorizations: autoguard.guards.Array<string>;
-                finalize: string;
-                identifiers: autoguard.guards.Array<{
-                    type: "dns";
-                    value: string;
-                }>;
-                status: "valid" | "pending" | "invalid" | "processing" | "ready";
-                certificate?: string | undefined;
-                error?: {} | undefined;
-                expires?: string | undefined;
-                notBefore?: string | undefined;
-                notAfter?: string | undefined;
-            };
-            status?: number | undefined;
+            payload: Order;
+        }, {
+            status: number;
         }>;
-        newAccount: autoguard.serialization.MessageGuard<{
+        newAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
                 location: string;
             };
-            payload: {
-                status: "valid" | "deactivated" | "revoked";
-                contact?: autoguard.guards.Array<string> | undefined;
-                externalAccountBinding?: {} | undefined;
-                orders?: string | undefined;
-                termsOfServiceAgreed?: boolean | undefined;
-            };
-            status?: number | undefined;
+            payload: Account;
+        }, {
+            status: number;
         }>;
-        newNonce: autoguard.serialization.MessageGuard<{
+        newNonce: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
             };
-            status?: number | undefined;
-            payload?: autoguard.api.AsyncBinary | autoguard.api.SyncBinary | undefined;
+        }, {
+            status: number;
+            payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
-        newOrder: autoguard.serialization.MessageGuard<{
+        newOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: autoguard.api.JSON;
+                [x: string]: any;
                 "replay-nonce": string;
                 location: string;
             };
-            payload: {
-                authorizations: autoguard.guards.Array<string>;
-                finalize: string;
-                identifiers: autoguard.guards.Array<{
-                    type: "dns";
-                    value: string;
-                }>;
-                status: "valid" | "pending" | "invalid" | "processing" | "ready";
-                certificate?: string | undefined;
-                error?: {} | undefined;
-                expires?: string | undefined;
-                notBefore?: string | undefined;
-                notAfter?: string | undefined;
-            };
-            status?: number | undefined;
+            payload: Order;
+        }, {
+            status: number;
         }>;
     };
     type Responses = {

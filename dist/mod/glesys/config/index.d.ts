@@ -6,10 +6,7 @@ export declare type Config = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        Config: autoguard.serialization.MessageGuard<{
-            account: string;
-            key: string;
-        }>;
+        Config: autoguard.guards.ReferenceGuard<Config>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;

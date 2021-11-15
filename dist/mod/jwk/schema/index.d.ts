@@ -120,69 +120,39 @@ export declare type PrivateKey = autoguard.guards.Union<[
 ]>;
 export declare namespace Autoguard {
     const Guards: {
-        Key: autoguard.serialization.MessageGuard<{
-            kty: "EC" | "RSA" | "oct";
-        }>;
-        AssymetricKey: autoguard.serialization.MessageGuard<{
+        Key: autoguard.guards.ReferenceGuard<Key>;
+        AssymetricKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             kty: "EC" | "RSA";
         }>;
-        ECKey: autoguard.serialization.MessageGuard<{
-            kty: "EC";
-        }>;
-        ECPublicKey: autoguard.serialization.MessageGuard<{
-            kty: "EC";
-            crv: "P-256" | "P-384" | "P-521";
-            x: string;
-            y: string;
-        }>;
-        ECPrivateKey: autoguard.serialization.MessageGuard<{
+        ECKey: autoguard.guards.ReferenceGuard<ECKey>;
+        ECPublicKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             kty: "EC";
             crv: "P-256" | "P-384" | "P-521";
             x: string;
             y: string;
-            d: string;
         }>;
-        RSAKey: autoguard.serialization.MessageGuard<{
-            kty: "RSA";
-        }>;
-        RSAPublicKey: autoguard.serialization.MessageGuard<{
-            kty: "RSA";
-            n: string;
-            e: string;
-        }>;
-        RSAPrivateKey: autoguard.serialization.MessageGuard<{
-            kty: "RSA";
-            n: string;
-            e: string;
-            d: string;
-            p?: string | undefined;
-            q?: string | undefined;
-            dp?: string | undefined;
-            dq?: string | undefined;
-            qi?: string | undefined;
-            oth?: autoguard.guards.Array<{
-                r: string;
-                d: string;
-                t: string;
-            }> | undefined;
-        }>;
-        PublicKey: autoguard.serialization.MessageGuard<{
-            kty: "EC";
-            crv: "P-256" | "P-384" | "P-521";
-            x: string;
-            y: string;
-        } | {
-            kty: "RSA";
-            n: string;
-            e: string;
-        }>;
-        PrivateKey: autoguard.serialization.MessageGuard<{
+        ECPrivateKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             kty: "EC";
             crv: "P-256" | "P-384" | "P-521";
             x: string;
             y: string;
             d: string;
-        } | {
+        }>;
+        RSAKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
+            kty: "RSA";
+        }>;
+        RSAPublicKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
+            kty: "RSA";
+            n: string;
+            e: string;
+        }>;
+        RSAPrivateKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
             kty: "RSA";
             n: string;
             e: string;
@@ -192,11 +162,47 @@ export declare namespace Autoguard {
             dp?: string | undefined;
             dq?: string | undefined;
             qi?: string | undefined;
-            oth?: autoguard.guards.Array<{
+            oth?: autoguard.guards.Array<autoguard.guards.Object<{
                 r: string;
                 d: string;
                 t: string;
-            }> | undefined;
+            }, {}>> | undefined;
+        }>;
+        PublicKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
+            kty: "EC";
+            crv: "P-256" | "P-384" | "P-521";
+            x: string;
+            y: string;
+        } | {
+            [x: string]: any;
+            kty: "RSA";
+            n: string;
+            e: string;
+        }>;
+        PrivateKey: autoguard.guards.ReferenceGuard<{
+            [x: string]: any;
+            kty: "EC";
+            crv: "P-256" | "P-384" | "P-521";
+            x: string;
+            y: string;
+            d: string;
+        } | {
+            [x: string]: any;
+            kty: "RSA";
+            n: string;
+            e: string;
+            d: string;
+            p?: string | undefined;
+            q?: string | undefined;
+            dp?: string | undefined;
+            dq?: string | undefined;
+            qi?: string | undefined;
+            oth?: autoguard.guards.Array<autoguard.guards.Object<{
+                r: string;
+                d: string;
+                t: string;
+            }, {}>> | undefined;
         }>;
     };
     type Guards = {

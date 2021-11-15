@@ -58,228 +58,138 @@ export declare type DomainRecord = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        DomainPrice: autoguard.serialization.MessageGuard<{
-            amount: number;
-            currency: string;
-            years: number;
-        }>;
-        RegistrarInfo: autoguard.serialization.MessageGuard<{
-            autorenew: string;
-            state: string;
-            statedescription?: string | undefined;
-            expire?: string | undefined;
-            tld?: string | undefined;
-            invoicenumber?: string | undefined;
-        }>;
-        Domain: autoguard.serialization.MessageGuard<{
-            domainname: string;
-            available?: boolean | undefined;
-            createtime?: string | undefined;
-            displayname?: string | undefined;
-            expire?: number | undefined;
-            minimum?: number | undefined;
-            prices?: autoguard.guards.Array<{
-                amount: number;
-                currency: string;
-                years: number;
-            }> | undefined;
-            primarynameserver?: string | undefined;
-            recordcount?: number | undefined;
-            refresh?: number | undefined;
-            registrarinfo?: {
-                autorenew: string;
-                state: string;
-                statedescription?: string | undefined;
-                expire?: string | undefined;
-                tld?: string | undefined;
-                invoicenumber?: string | undefined;
-            } | undefined;
-            responsibleperson?: string | undefined;
-            retry?: number | undefined;
-            ttl?: number | undefined;
-            usingglesysnameserver?: string | undefined;
-        }>;
-        DomainRecordHost: autoguard.serialization.MessageGuard<string>;
-        DomainRecordType: autoguard.serialization.MessageGuard<string>;
-        DomainRecord: autoguard.serialization.MessageGuard<{
-            domainname: string;
-            data: string;
-            host: string;
-            recordid: number;
-            ttl: number;
-            type: string;
-        }>;
+        DomainPrice: autoguard.guards.ReferenceGuard<DomainPrice>;
+        RegistrarInfo: autoguard.guards.ReferenceGuard<RegistrarInfo>;
+        Domain: autoguard.guards.ReferenceGuard<Domain>;
+        DomainRecordHost: autoguard.guards.ReferenceGuard<string>;
+        DomainRecordType: autoguard.guards.ReferenceGuard<string>;
+        DomainRecord: autoguard.guards.ReferenceGuard<DomainRecord>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;
     };
     const Requests: {
-        listDomains: autoguard.serialization.MessageGuard<{
-            options?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            payload?: autoguard.api.AsyncBinary | autoguard.api.SyncBinary | undefined;
-        }>;
-        listDomainRecords: autoguard.serialization.MessageGuard<{
-            payload: {
-                domainname: string;
+        listDomains: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
+            options: {
+                [x: string]: any;
             };
-            options?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-        }>;
-        createDomainRecord: autoguard.serialization.MessageGuard<{
-            payload: {
-                domainname: string;
-                data: string;
-                host: string;
-                type: string;
-                ttl?: number | undefined;
+            headers: {
+                [x: string]: any;
             };
-            options?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
+            payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
-        updateDomainRecord: autoguard.serialization.MessageGuard<{
-            payload: {
-                recordid: number;
-                data?: string | undefined;
-                host?: string | undefined;
-                type?: string | undefined;
-                ttl?: number | undefined;
+        listDomainRecords: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                domainname: any;
+            }, {}>;
+        }, {
+            options: {
+                [x: string]: any;
             };
-            options?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
+            headers: {
+                [x: string]: any;
+            };
         }>;
-        deleteDomainRecord: autoguard.serialization.MessageGuard<{
-            payload: {
-                recordid: number;
+        createDomainRecord: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                domainname: any;
+                data: any;
+                host: any;
+                type: any;
+            }, {
+                ttl: any;
+            }>;
+        }, {
+            options: {
+                [x: string]: any;
             };
-            options?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
+            headers: {
+                [x: string]: any;
+            };
+        }>;
+        updateDomainRecord: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                recordid: any;
+            }, {
+                data: any;
+                host: any;
+                type: any;
+                ttl: any;
+            }>;
+        }, {
+            options: {
+                [x: string]: any;
+            };
+            headers: {
+                [x: string]: any;
+            };
+        }>;
+        deleteDomainRecord: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                recordid: any;
+            }, {}>;
+        }, {
+            options: {
+                [x: string]: any;
+            };
+            headers: {
+                [x: string]: any;
+            };
         }>;
     };
     type Requests = {
         [A in keyof typeof Requests]: ReturnType<typeof Requests[A]["as"]>;
     };
     const Responses: {
-        listDomains: autoguard.serialization.MessageGuard<{
-            payload: {
-                response: {
-                    domains: autoguard.guards.Array<{
-                        domainname: string;
-                        available?: boolean | undefined;
-                        createtime?: string | undefined;
-                        displayname?: string | undefined;
-                        expire?: number | undefined;
-                        minimum?: number | undefined;
-                        prices?: autoguard.guards.Array<{
-                            amount: number;
-                            currency: string;
-                            years: number;
-                        }> | undefined;
-                        primarynameserver?: string | undefined;
-                        recordcount?: number | undefined;
-                        refresh?: number | undefined;
-                        registrarinfo?: {
-                            autorenew: string;
-                            state: string;
-                            statedescription?: string | undefined;
-                            expire?: string | undefined;
-                            tld?: string | undefined;
-                            invoicenumber?: string | undefined;
-                        } | undefined;
-                        responsibleperson?: string | undefined;
-                        retry?: number | undefined;
-                        ttl?: number | undefined;
-                        usingglesysnameserver?: string | undefined;
-                    }>;
-                };
+        listDomains: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                response: any;
+            }, {}>;
+        }, {
+            status: number;
+            headers: {
+                [x: string]: any;
             };
-            status?: number | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
         }>;
-        listDomainRecords: autoguard.serialization.MessageGuard<{
-            payload: {
-                response: {
-                    records: autoguard.guards.Array<{
-                        domainname: string;
-                        data: string;
-                        host: string;
-                        recordid: number;
-                        ttl: number;
-                        type: string;
-                    }>;
-                };
+        listDomainRecords: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                response: any;
+            }, {}>;
+        }, {
+            status: number;
+            headers: {
+                [x: string]: any;
             };
-            status?: number | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
         }>;
-        createDomainRecord: autoguard.serialization.MessageGuard<{
-            payload: {
-                response: {
-                    record: {
-                        domainname: string;
-                        data: string;
-                        host: string;
-                        recordid: number;
-                        ttl: number;
-                        type: string;
-                    };
-                };
+        createDomainRecord: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                response: any;
+            }, {}>;
+        }, {
+            status: number;
+            headers: {
+                [x: string]: any;
             };
-            status?: number | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
         }>;
-        updateDomainRecord: autoguard.serialization.MessageGuard<{
-            payload: {
-                response: {
-                    record: {
-                        domainname: string;
-                        data: string;
-                        host: string;
-                        recordid: number;
-                        ttl: number;
-                        type: string;
-                    };
-                };
+        updateDomainRecord: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                response: any;
+            }, {}>;
+        }, {
+            status: number;
+            headers: {
+                [x: string]: any;
             };
-            status?: number | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
         }>;
-        deleteDomainRecord: autoguard.serialization.MessageGuard<{
-            payload: {
-                response: {};
+        deleteDomainRecord: autoguard.guards.ObjectGuard<{
+            payload: autoguard.guards.Object<{
+                response: any;
+            }, {}>;
+        }, {
+            status: number;
+            headers: {
+                [x: string]: any;
             };
-            status?: number | undefined;
-            headers?: {
-                [x: string]: autoguard.api.JSON;
-            } | undefined;
         }>;
     };
     type Responses = {

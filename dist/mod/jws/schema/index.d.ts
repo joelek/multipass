@@ -59,14 +59,8 @@ export declare type Body = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        Protected: autoguard.serialization.MessageGuard<{
-            alg: "ES256" | "ES384" | "ES512" | "RS256" | "RS384" | "RS512" | "HS256" | "HS384" | "HS512" | "PS256" | "PS384" | "PS512";
-        }>;
-        Body: autoguard.serialization.MessageGuard<{
-            protected: string;
-            payload: string;
-            signature: string;
-        }>;
+        Protected: autoguard.guards.ReferenceGuard<Protected>;
+        Body: autoguard.guards.ReferenceGuard<Body>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;
