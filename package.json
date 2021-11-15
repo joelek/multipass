@@ -1,9 +1,10 @@
 {
 	"bin": {
-		"multipass": "./dist/cli/index.js"
+		"multipass": "./dist/cli/index.bundle.js"
 	},
 	"dependencies": {
-		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.11"
+		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.11",
+		"@joelek/ts-bundle": "github:joelek/ts-bundle#semver:^1.1"
 	},
 	"devDependencies": {
 		"@types/node": "^16.7",
@@ -21,7 +22,9 @@
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"codegen": "npx autoguard",
 		"compile": "rm -rf ./build/* && npx tsc --build",
-		"package": "rm -rf ./dist/* && cp -r ./build/* ./dist/",
+		"package:all": "rm -rf ./dist/* && cp -r ./build/* ./dist/",
+		"package:cli": "npx tsb --dependencies=true --entry=./build/cli/index.js --bundle=./dist/cli/index.bundle.js",
+		"package": "npm run package:all && npm run package:cli",
 		"preversion": "npm run build && git add ./",
 		"postversion": "git push && git push --tags"
 	},
