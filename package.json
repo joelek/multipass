@@ -3,7 +3,7 @@
 		"multipass": "./dist/cli/index.js"
 	},
 	"dependencies": {
-		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.9"
+		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.11"
 	},
 	"devDependencies": {
 		"@types/node": "^16.7",
