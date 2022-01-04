@@ -362,393 +362,1028 @@ export declare type EncryptedPrivateKeyInfo = autoguard.guards.Intersection<[
 ]>;
 export declare namespace Autoguard {
     const Guards: {
-        ASN1Integer: autoguard.guards.ReferenceGuard<Integer>;
-        ASN1Node: autoguard.guards.ReferenceGuard<Node>;
-        ASN1Null: autoguard.guards.ReferenceGuard<Null>;
-        ASN1ObjectIdentifier: autoguard.guards.ReferenceGuard<ObjectIdentifier>;
-        ASN1OctetString: autoguard.guards.ReferenceGuard<OctetString>;
-        ASN1Sequence: autoguard.guards.ReferenceGuard<Sequence>;
-        AlgorithmIdentifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
+        ASN1Integer: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "INTEGER";
+            data: string;
+        }>;
+        ASN1Node: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+            form: "PRIMITIVE" | "CONSTRUCTED";
+            type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+            data: string | autoguard.guards.Array<any>;
+        }>;
+        ASN1Null: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "NULL";
+            data: string;
+        }>;
+        ASN1ObjectIdentifier: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "OBJECT_IDENTIFIER";
+            data: string;
+        }>;
+        ASN1OctetString: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "OCTET_STRING";
+            data: string;
+        }>;
+        ASN1Sequence: autoguard.guards.ReferenceGuard<{
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }>;
+        }>;
+        AlgorithmIdentifier: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "CONSTRUCTED";
+            type: "SEQUENCE";
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }];
         }>;
         ECDSAWithSHA256: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.10045.4.3.2";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         ECDSAWithSHA384: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.10045.4.3.3";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         ECDSAWithSHA512: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.10045.4.3.4";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         SHA256WithRSAEncryption: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.1.11";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         SHA384WithRSAEncryption: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.1.12";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         SHA512WithRSAEncryption: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.1.13";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         AES128CBCIdentifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "2.16.840.1.101.3.4.1.2";
-            }, OctetString, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OCTET_STRING";
+                data: string;
+            }];
         }>;
         AES192CBCIdentifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "2.16.840.1.101.3.4.1.22";
-            }, OctetString, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OCTET_STRING";
+                data: string;
+            }];
         }>;
         AES256CBCIdentifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "2.16.840.1.101.3.4.1.42";
-            }, OctetString, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OCTET_STRING";
+                data: string;
+            }];
         }>;
         HMACSHA1Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.7";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         HMACSHA224Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.8";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         HMACSHA256Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.9";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         HMACSHA384Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.10";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         HMACSHA512Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.11";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         HMACSHA512224Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.12";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         HMACSHA512256Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.2.13";
-            }, Null, ...any[]];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "NULL";
+                data: string;
+            }];
         }>;
         PBKDF2Identifier1: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.5.12";
             }, {
-                [x: string]: any;
                 kind: "UNIVERSAL";
                 form: "CONSTRUCTED";
                 type: "SEQUENCE";
-                data: autoguard.guards.Array<Node> & [OctetString | {
-                    [x: string]: any;
+                data: autoguard.guards.Array<{
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }> & [{
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "OCTET_STRING";
+                    data: string;
+                } | {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, Integer, Integer, {
-                    [x: string]: any;
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }, {
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "INTEGER";
+                    data: string;
+                }, {
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "INTEGER";
+                    data: string;
+                }, {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, ...any[]];
-            }, ...any[]];
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }];
+            }];
         }>;
         PBKDF2Identifier2: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.5.12";
             }, {
-                [x: string]: any;
                 kind: "UNIVERSAL";
                 form: "CONSTRUCTED";
                 type: "SEQUENCE";
-                data: autoguard.guards.Array<Node> & [OctetString | {
-                    [x: string]: any;
+                data: autoguard.guards.Array<{
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }> & [{
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "OCTET_STRING";
+                    data: string;
+                } | {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, Integer, {
-                    [x: string]: any;
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }, {
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "INTEGER";
+                    data: string;
+                }, {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, ...any[]];
-            }, ...any[]];
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }];
+            }];
         }>;
         PBKDF2Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.5.12";
             }, {
-                [x: string]: any;
                 kind: "UNIVERSAL";
                 form: "CONSTRUCTED";
                 type: "SEQUENCE";
-                data: autoguard.guards.Array<Node> & [OctetString | {
-                    [x: string]: any;
+                data: autoguard.guards.Array<{
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }> & [{
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "OCTET_STRING";
+                    data: string;
+                } | {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, Integer, Integer, {
-                    [x: string]: any;
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }, {
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "INTEGER";
+                    data: string;
+                }, {
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "INTEGER";
+                    data: string;
+                }, {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, ...any[]];
-            }, ...any[]];
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }];
+            }];
         } | {
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.5.12";
             }, {
-                [x: string]: any;
                 kind: "UNIVERSAL";
                 form: "CONSTRUCTED";
                 type: "SEQUENCE";
-                data: autoguard.guards.Array<Node> & [OctetString | {
-                    [x: string]: any;
+                data: autoguard.guards.Array<{
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }> & [{
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "OCTET_STRING";
+                    data: string;
+                } | {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, Integer, {
-                    [x: string]: any;
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }, {
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "INTEGER";
+                    data: string;
+                }, {
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, ...any[]];
-            }, ...any[]];
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }];
+            }];
         }>;
         PBES2Identifier: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]] & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OBJECT_IDENTIFIER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }] & [{
                 kind: "UNIVERSAL";
                 form: "PRIMITIVE";
                 type: "OBJECT_IDENTIFIER";
                 data: "1.2.840.113549.1.5.13";
             }, {
-                [x: string]: any;
                 kind: "UNIVERSAL";
                 form: "CONSTRUCTED";
                 type: "SEQUENCE";
-                data: autoguard.guards.Array<Node> & [{
-                    [x: string]: any;
+                data: autoguard.guards.Array<{
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }> & [{
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
                 }, {
-                    [x: string]: any;
                     kind: "UNIVERSAL";
                     form: "CONSTRUCTED";
                     type: "SEQUENCE";
-                    data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-                }, ...any[]];
-            }, ...any[]];
+                    data: autoguard.guards.Array<{
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }> & [{
+                        kind: "UNIVERSAL";
+                        form: "PRIMITIVE";
+                        type: "OBJECT_IDENTIFIER";
+                        data: string;
+                    }, {
+                        kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                        form: "PRIMITIVE" | "CONSTRUCTED";
+                        type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                        data: string | autoguard.guards.Array<any>;
+                    }];
+                }];
+            }];
         }>;
         EncryptedPrivateKeyInfo: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<Node> & [{
-                [x: string]: any;
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
                 kind: "UNIVERSAL";
                 form: "CONSTRUCTED";
                 type: "SEQUENCE";
-                data: autoguard.guards.Array<Node> & [ObjectIdentifier, Node, ...any[]];
-            }, OctetString, ...any[]];
+                data: autoguard.guards.Array<{
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }> & [{
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "OBJECT_IDENTIFIER";
+                    data: string;
+                }, {
+                    kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                    form: "PRIMITIVE" | "CONSTRUCTED";
+                    type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                    data: string | autoguard.guards.Array<any>;
+                }];
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OCTET_STRING";
+                data: string;
+            }];
         }>;
     };
     type Guards = {

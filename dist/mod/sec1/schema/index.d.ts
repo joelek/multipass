@@ -40,44 +40,85 @@ export declare type ECPrivateKey = autoguard.guards.Intersection<[
 ]>;
 export declare namespace Autoguard {
     const Guards: {
-        ASN1BitString: autoguard.guards.ReferenceGuard<BitString>;
-        ASN1Integer: autoguard.guards.ReferenceGuard<Integer>;
-        ASN1OctetString: autoguard.guards.ReferenceGuard<OctetString>;
-        ASN1Sequence: autoguard.guards.ReferenceGuard<Sequence>;
-        ECPrivateKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
+        ASN1BitString: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "BIT_STRING";
+            data: string;
+        }>;
+        ASN1Integer: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "INTEGER";
+            data: string;
+        }>;
+        ASN1OctetString: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "OCTET_STRING";
+            data: string;
+        }>;
+        ASN1Sequence: autoguard.guards.ReferenceGuard<{
             kind: "UNIVERSAL";
             form: "CONSTRUCTED";
             type: "SEQUENCE";
-            data: autoguard.guards.Array<import("../../asn1").Node> & [Integer, OctetString, autoguard.guards.Object<{
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }>;
+        }>;
+        ECPrivateKey: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "CONSTRUCTED";
+            type: "SEQUENCE";
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }> & [{
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "INTEGER";
+                data: string;
+            }, {
+                kind: "UNIVERSAL";
+                form: "PRIMITIVE";
+                type: "OCTET_STRING";
+                data: string;
+            }, {
                 kind: "CONTEXT";
                 form: "CONSTRUCTED";
                 type: "END_OF_CONTENT";
                 data: [{
-                    [x: string]: any;
                     kind: "UNIVERSAL";
                     form: "PRIMITIVE";
                     type: "OBJECT_IDENTIFIER";
                     data: "1.2.840.10045.3.1.7";
                 } | {
-                    [x: string]: any;
                     kind: "UNIVERSAL";
                     form: "PRIMITIVE";
                     type: "OBJECT_IDENTIFIER";
                     data: "1.3.132.0.34";
                 } | {
-                    [x: string]: any;
                     kind: "UNIVERSAL";
                     form: "PRIMITIVE";
                     type: "OBJECT_IDENTIFIER";
                     data: "1.3.132.0.35";
-                }, ...any[]];
-            }, {}>, autoguard.guards.Object<{
+                }];
+            }, {
                 kind: "CONTEXT";
                 form: "CONSTRUCTED";
                 type: "BOOLEAN";
-                data: [BitString, ...any[]];
-            }, {}>, ...any[]];
+                data: [{
+                    kind: "UNIVERSAL";
+                    form: "PRIMITIVE";
+                    type: "BIT_STRING";
+                    data: string;
+                }];
+            }];
         }>;
     };
     type Guards = {

@@ -58,12 +58,57 @@ export declare type DomainRecord = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        DomainPrice: autoguard.guards.ReferenceGuard<DomainPrice>;
-        RegistrarInfo: autoguard.guards.ReferenceGuard<RegistrarInfo>;
-        Domain: autoguard.guards.ReferenceGuard<Domain>;
+        DomainPrice: autoguard.guards.ReferenceGuard<{
+            amount: number;
+            currency: string;
+            years: number;
+        }>;
+        RegistrarInfo: autoguard.guards.ReferenceGuard<{
+            autorenew: string;
+            state: string;
+            statedescription?: string | undefined;
+            expire?: string | undefined;
+            tld?: string | undefined;
+            invoicenumber?: string | undefined;
+        }>;
+        Domain: autoguard.guards.ReferenceGuard<{
+            domainname: string;
+            available?: boolean | undefined;
+            createtime?: string | undefined;
+            displayname?: string | undefined;
+            expire?: number | undefined;
+            minimum?: number | undefined;
+            prices?: autoguard.guards.Array<{
+                amount: number;
+                currency: string;
+                years: number;
+            }> | undefined;
+            primarynameserver?: string | undefined;
+            recordcount?: number | undefined;
+            refresh?: number | undefined;
+            registrarinfo?: {
+                autorenew: string;
+                state: string;
+                statedescription?: string | undefined;
+                expire?: string | undefined;
+                tld?: string | undefined;
+                invoicenumber?: string | undefined;
+            } | undefined;
+            responsibleperson?: string | undefined;
+            retry?: number | undefined;
+            ttl?: number | undefined;
+            usingglesysnameserver?: string | undefined;
+        }>;
         DomainRecordHost: autoguard.guards.ReferenceGuard<string>;
         DomainRecordType: autoguard.guards.ReferenceGuard<string>;
-        DomainRecord: autoguard.guards.ReferenceGuard<DomainRecord>;
+        DomainRecord: autoguard.guards.ReferenceGuard<{
+            domainname: string;
+            data: string;
+            host: string;
+            recordid: number;
+            ttl: number;
+            type: string;
+        }>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;
@@ -71,69 +116,67 @@ export declare namespace Autoguard {
     const Requests: {
         listDomains: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
         listDomainRecords: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                domainname: any;
-            }, {}>;
+            payload: {
+                domainname: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         createDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                domainname: any;
-                data: any;
-                host: any;
-                type: any;
-            }, {
-                ttl: any;
-            }>;
+            payload: {
+                domainname: string;
+                data: string;
+                host: string;
+                type: string;
+                ttl?: number | undefined;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         updateDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                recordid: any;
-            }, {
-                data: any;
-                host: any;
-                type: any;
-                ttl: any;
-            }>;
+            payload: {
+                recordid: number;
+                data?: string | undefined;
+                host?: string | undefined;
+                type?: string | undefined;
+                ttl?: number | undefined;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         deleteDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                recordid: any;
-            }, {}>;
+            payload: {
+                recordid: number;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
     };
@@ -142,53 +185,109 @@ export declare namespace Autoguard {
     };
     const Responses: {
         listDomains: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                response: any;
-            }, {}>;
+            payload: {
+                response: {
+                    domains: autoguard.guards.Array<{
+                        domainname: string;
+                        available?: boolean | undefined;
+                        createtime?: string | undefined;
+                        displayname?: string | undefined;
+                        expire?: number | undefined;
+                        minimum?: number | undefined;
+                        prices?: autoguard.guards.Array<{
+                            amount: number;
+                            currency: string;
+                            years: number;
+                        }> | undefined;
+                        primarynameserver?: string | undefined;
+                        recordcount?: number | undefined;
+                        refresh?: number | undefined;
+                        registrarinfo?: {
+                            autorenew: string;
+                            state: string;
+                            statedescription?: string | undefined;
+                            expire?: string | undefined;
+                            tld?: string | undefined;
+                            invoicenumber?: string | undefined;
+                        } | undefined;
+                        responsibleperson?: string | undefined;
+                        retry?: number | undefined;
+                        ttl?: number | undefined;
+                        usingglesysnameserver?: string | undefined;
+                    }>;
+                };
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         listDomainRecords: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                response: any;
-            }, {}>;
+            payload: {
+                response: {
+                    records: autoguard.guards.Array<{
+                        domainname: string;
+                        data: string;
+                        host: string;
+                        recordid: number;
+                        ttl: number;
+                        type: string;
+                    }>;
+                };
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         createDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                response: any;
-            }, {}>;
+            payload: {
+                response: {
+                    record: {
+                        domainname: string;
+                        data: string;
+                        host: string;
+                        recordid: number;
+                        ttl: number;
+                        type: string;
+                    };
+                };
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         updateDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                response: any;
-            }, {}>;
+            payload: {
+                response: {
+                    record: {
+                        domainname: string;
+                        data: string;
+                        host: string;
+                        recordid: number;
+                        ttl: number;
+                        type: string;
+                    };
+                };
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         deleteDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                response: any;
-            }, {}>;
+            payload: {
+                response: {};
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
     };

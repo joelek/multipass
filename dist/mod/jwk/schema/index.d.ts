@@ -120,21 +120,22 @@ export declare type PrivateKey = autoguard.guards.Union<[
 ]>;
 export declare namespace Autoguard {
     const Guards: {
-        Key: autoguard.guards.ReferenceGuard<Key>;
+        Key: autoguard.guards.ReferenceGuard<{
+            kty: "EC" | "RSA" | "oct";
+        }>;
         AssymetricKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "EC" | "RSA";
         }>;
-        ECKey: autoguard.guards.ReferenceGuard<ECKey>;
+        ECKey: autoguard.guards.ReferenceGuard<{
+            kty: "EC";
+        }>;
         ECPublicKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "EC";
             crv: "P-256" | "P-384" | "P-521";
             x: string;
             y: string;
         }>;
         ECPrivateKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "EC";
             crv: "P-256" | "P-384" | "P-521";
             x: string;
@@ -142,17 +143,14 @@ export declare namespace Autoguard {
             d: string;
         }>;
         RSAKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "RSA";
         }>;
         RSAPublicKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "RSA";
             n: string;
             e: string;
         }>;
         RSAPrivateKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "RSA";
             n: string;
             e: string;
@@ -162,33 +160,29 @@ export declare namespace Autoguard {
             dp?: string | undefined;
             dq?: string | undefined;
             qi?: string | undefined;
-            oth?: autoguard.guards.Array<autoguard.guards.Object<{
+            oth?: autoguard.guards.Array<{
                 r: string;
                 d: string;
                 t: string;
-            }, {}>> | undefined;
+            }> | undefined;
         }>;
         PublicKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "EC";
             crv: "P-256" | "P-384" | "P-521";
             x: string;
             y: string;
         } | {
-            [x: string]: any;
             kty: "RSA";
             n: string;
             e: string;
         }>;
         PrivateKey: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             kty: "EC";
             crv: "P-256" | "P-384" | "P-521";
             x: string;
             y: string;
             d: string;
         } | {
-            [x: string]: any;
             kty: "RSA";
             n: string;
             e: string;
@@ -198,11 +192,11 @@ export declare namespace Autoguard {
             dp?: string | undefined;
             dq?: string | undefined;
             qi?: string | undefined;
-            oth?: autoguard.guards.Array<autoguard.guards.Object<{
+            oth?: autoguard.guards.Array<{
                 r: string;
                 d: string;
                 t: string;
-            }, {}>> | undefined;
+            }> | undefined;
         }>;
     };
     type Guards = {

@@ -47,27 +47,40 @@ export declare type DomainRecord = autoguard.guards.Union<[
 ]>;
 export declare namespace Autoguard {
     const Guards: {
-        Domain: autoguard.guards.ReferenceGuard<Domain>;
-        DomainRecordStubGeneric: autoguard.guards.ReferenceGuard<DomainRecordStubGeneric>;
+        Domain: autoguard.guards.ReferenceGuard<{
+            id: number;
+            name: string;
+        }>;
+        DomainRecordStubGeneric: autoguard.guards.ReferenceGuard<{
+            nodeName: string;
+            recordType: string;
+            ttl?: number | undefined;
+            state?: boolean | undefined;
+        }>;
         DomainRecordStubTXT: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             nodeName: string;
             recordType: "TXT";
             ttl?: number | undefined;
             state?: boolean | undefined;
             textData: string;
         }>;
-        DomainRecordStub: autoguard.guards.ReferenceGuard<DomainRecordStubGeneric | {
-            [x: string]: any;
+        DomainRecordStub: autoguard.guards.ReferenceGuard<{
+            nodeName: string;
+            recordType: string;
+            ttl?: number | undefined;
+            state?: boolean | undefined;
+        } | {
             nodeName: string;
             recordType: "TXT";
             ttl?: number | undefined;
             state?: boolean | undefined;
             textData: string;
         }>;
-        DomainRecordBase: autoguard.guards.ReferenceGuard<DomainRecordBase>;
+        DomainRecordBase: autoguard.guards.ReferenceGuard<{
+            id: number;
+            domainId: number;
+        }>;
         DomainRecordGeneric: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             id: number;
             domainId: number;
             nodeName: string;
@@ -76,7 +89,6 @@ export declare namespace Autoguard {
             state?: boolean | undefined;
         }>;
         DomainRecordTXT: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             id: number;
             domainId: number;
             nodeName: string;
@@ -86,7 +98,6 @@ export declare namespace Autoguard {
             textData: string;
         }>;
         DomainRecord: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             id: number;
             domainId: number;
             nodeName: string;
@@ -94,7 +105,6 @@ export declare namespace Autoguard {
             ttl?: number | undefined;
             state?: boolean | undefined;
         } | {
-            [x: string]: any;
             id: number;
             domainId: number;
             nodeName: string;
@@ -110,31 +120,35 @@ export declare namespace Autoguard {
     const Requests: {
         listDomains: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
         listDomainRecords: autoguard.guards.ObjectGuard<{
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 domainid: number;
             };
         }, {
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
         createDomainRecord: autoguard.guards.ObjectGuard<{
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 domainid: number;
             };
-            payload: DomainRecordStubGeneric | {
-                [x: string]: any;
+            payload: {
+                nodeName: string;
+                recordType: string;
+                ttl?: number | undefined;
+                state?: boolean | undefined;
+            } | {
                 nodeName: string;
                 recordType: "TXT";
                 ttl?: number | undefined;
@@ -143,17 +157,21 @@ export declare namespace Autoguard {
             };
         }, {
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         updateDomainRecord: autoguard.guards.ObjectGuard<{
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 domainid: number;
                 recordid: number;
             };
-            payload: DomainRecordStubGeneric | {
-                [x: string]: any;
+            payload: {
+                nodeName: string;
+                recordType: string;
+                ttl?: number | undefined;
+                state?: boolean | undefined;
+            } | {
                 nodeName: string;
                 recordType: "TXT";
                 ttl?: number | undefined;
@@ -162,18 +180,18 @@ export declare namespace Autoguard {
             };
         }, {
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         deleteDomainRecord: autoguard.guards.ObjectGuard<{
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 domainid: number;
                 recordid: number;
             };
         }, {
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
@@ -183,28 +201,45 @@ export declare namespace Autoguard {
     };
     const Responses: {
         listDomains: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                domains: any;
-            }, {}>;
+            payload: {
+                domains: autoguard.guards.Array<{
+                    id: number;
+                    name: string;
+                }>;
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         listDomainRecords: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<{
-                dnsRecords: any;
-            }, {}>;
+            payload: {
+                dnsRecords: autoguard.guards.Array<{
+                    id: number;
+                    domainId: number;
+                    nodeName: string;
+                    recordType: string;
+                    ttl?: number | undefined;
+                    state?: boolean | undefined;
+                } | {
+                    id: number;
+                    domainId: number;
+                    nodeName: string;
+                    recordType: "TXT";
+                    ttl?: number | undefined;
+                    state?: boolean | undefined;
+                    textData: string;
+                }>;
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         createDomainRecord: autoguard.guards.ObjectGuard<{
             payload: {
-                [x: string]: any;
                 id: number;
                 domainId: number;
                 nodeName: string;
@@ -212,7 +247,6 @@ export declare namespace Autoguard {
                 ttl?: number | undefined;
                 state?: boolean | undefined;
             } | {
-                [x: string]: any;
                 id: number;
                 domainId: number;
                 nodeName: string;
@@ -224,12 +258,11 @@ export declare namespace Autoguard {
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         updateDomainRecord: autoguard.guards.ObjectGuard<{
             payload: {
-                [x: string]: any;
                 id: number;
                 domainId: number;
                 nodeName: string;
@@ -237,7 +270,6 @@ export declare namespace Autoguard {
                 ttl?: number | undefined;
                 state?: boolean | undefined;
             } | {
-                [x: string]: any;
                 id: number;
                 domainId: number;
                 nodeName: string;
@@ -249,15 +281,15 @@ export declare namespace Autoguard {
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         deleteDomainRecord: autoguard.guards.ObjectGuard<{
-            payload: autoguard.guards.Object<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {}>;
+            payload: {};
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
     };

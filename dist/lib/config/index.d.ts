@@ -31,11 +31,43 @@ export declare type Options = autoguard.guards.Object<{
 }>;
 export declare namespace Autoguard {
     const Guards: {
-        ProviderDynu: autoguard.guards.ReferenceGuard<ProviderDynu>;
-        ProviderGlesys: autoguard.guards.ReferenceGuard<ProviderGlesys>;
-        Provider: autoguard.guards.ReferenceGuard<ProviderDynu | ProviderGlesys>;
-        Certificate: autoguard.guards.ReferenceGuard<Certificate>;
-        Options: autoguard.guards.ReferenceGuard<Options>;
+        ProviderDynu: autoguard.guards.ReferenceGuard<{
+            type: "dynu";
+            key: string;
+        }>;
+        ProviderGlesys: autoguard.guards.ReferenceGuard<{
+            type: "glesys";
+            account: string;
+            key: string;
+        }>;
+        Provider: autoguard.guards.ReferenceGuard<{
+            type: "dynu";
+            key: string;
+        } | {
+            type: "glesys";
+            account: string;
+            key: string;
+        }>;
+        Certificate: autoguard.guards.ReferenceGuard<{
+            hostnames: autoguard.guards.Array<string>;
+            root?: string | undefined;
+        }>;
+        Options: autoguard.guards.ReferenceGuard<{
+            providers: autoguard.guards.Array<{
+                type: "dynu";
+                key: string;
+            } | {
+                type: "glesys";
+                account: string;
+                key: string;
+            }>;
+            certificates: autoguard.guards.Array<{
+                hostnames: autoguard.guards.Array<string>;
+                root?: string | undefined;
+            }>;
+            acme?: string | undefined;
+            monitor?: boolean | undefined;
+        }>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;

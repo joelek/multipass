@@ -246,17 +246,82 @@ export declare type UTCTime = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        Node: autoguard.guards.ReferenceGuard<Node>;
-        BitString: autoguard.guards.ReferenceGuard<BitString>;
-        Integer: autoguard.guards.ReferenceGuard<Integer>;
-        Null: autoguard.guards.ReferenceGuard<Null>;
-        ObjectIdentifier: autoguard.guards.ReferenceGuard<ObjectIdentifier>;
-        OctetString: autoguard.guards.ReferenceGuard<OctetString>;
-        Sequence: autoguard.guards.ReferenceGuard<Sequence>;
-        Set: autoguard.guards.ReferenceGuard<Set>;
-        UTF8String: autoguard.guards.ReferenceGuard<UTF8String>;
-        Date: autoguard.guards.ReferenceGuard<Date>;
-        UTCTime: autoguard.guards.ReferenceGuard<UTCTime>;
+        Node: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+            form: "PRIMITIVE" | "CONSTRUCTED";
+            type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+            data: string | autoguard.guards.Array<any>;
+        }>;
+        BitString: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "BIT_STRING";
+            data: string;
+        }>;
+        Integer: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "INTEGER";
+            data: string;
+        }>;
+        Null: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "NULL";
+            data: string;
+        }>;
+        ObjectIdentifier: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "OBJECT_IDENTIFIER";
+            data: string;
+        }>;
+        OctetString: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "OCTET_STRING";
+            data: string;
+        }>;
+        Sequence: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "CONSTRUCTED";
+            type: "SEQUENCE";
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }>;
+        }>;
+        Set: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "CONSTRUCTED";
+            type: "SET";
+            data: autoguard.guards.Array<{
+                kind: "UNIVERSAL" | "APPLICATION" | "CONTEXT" | "PRIVATE";
+                form: "PRIMITIVE" | "CONSTRUCTED";
+                type: "END_OF_CONTENT" | "BOOLEAN" | "INTEGER" | "BIT_STRING" | "OCTET_STRING" | "NULL" | "OBJECT_IDENTIFIER" | "OBJECT_DESCRIPTOR" | "EXTERNAL" | "REAL" | "ENUMERATED" | "EMBEDDED_PDV" | "UTF8_STRING" | "RELATIVE_OID" | "TIME" | "0F_RESERVED" | "SEQUENCE" | "SET" | "NUMERIC_STRING" | "PRINTABLE_STRING" | "T61_STRING" | "VIDEOTEX_STRING" | "IA5_STRING" | "UTC_TIME" | "GENERALIZED_TIME" | "GRAPHIC_STRING" | "VISIBLE_STRING" | "GENERAL_STRING" | "UNIVERSAL_STRING" | "CHARACTER_STRING" | "BMP_STRING" | "DATE" | "TIME_OF_DAY" | "DATE_TIME" | "DURATION" | "OID_IRI" | "RELATIVE_OID_IRI";
+                data: string | autoguard.guards.Array<any>;
+            }>;
+        }>;
+        UTF8String: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "UTF8_STRING";
+            data: string;
+        }>;
+        Date: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "DATE";
+            data: string;
+        }>;
+        UTCTime: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "UTC_TIME";
+            data: string;
+        }>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;

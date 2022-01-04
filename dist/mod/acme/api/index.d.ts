@@ -1,6 +1,5 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 import { AssymetricKey } from "../../jwk";
-import { Body } from "../../jws";
 export declare const Account: autoguard.serialization.MessageGuard<Account>;
 export declare type Account = autoguard.guards.Object<{
     "status": autoguard.guards.Union<[
@@ -147,58 +146,125 @@ export declare type FinalizeOrderPayload = autoguard.guards.Object<{
 }, {}>;
 export declare namespace Autoguard {
     const Guards: {
-        Account: autoguard.guards.ReferenceGuard<Account>;
-        Authorization: autoguard.guards.ReferenceGuard<Authorization>;
-        Challenge: autoguard.guards.ReferenceGuard<Challenge>;
+        Account: autoguard.guards.ReferenceGuard<{
+            status: "valid" | "deactivated" | "revoked";
+            contact?: autoguard.guards.Array<string> | undefined;
+            externalAccountBinding?: {} | undefined;
+            orders?: string | undefined;
+            termsOfServiceAgreed?: boolean | undefined;
+        }>;
+        Authorization: autoguard.guards.ReferenceGuard<{
+            identifier: {
+                type: "dns";
+                value: string;
+            };
+            status: "valid" | "deactivated" | "revoked" | "pending" | "invalid" | "expired";
+            challenges: autoguard.guards.Array<{
+                status: "valid" | "pending" | "invalid" | "processing";
+                type: string;
+                url: string;
+                error?: {} | undefined;
+                validated?: string | undefined;
+            }>;
+            expires?: string | undefined;
+            wildcard?: boolean | undefined;
+        }>;
+        Challenge: autoguard.guards.ReferenceGuard<{
+            status: "valid" | "pending" | "invalid" | "processing";
+            type: string;
+            url: string;
+            error?: {} | undefined;
+            validated?: string | undefined;
+        }>;
         ChallengeHTTP01: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             status: "valid" | "pending" | "invalid" | "processing";
             type: "http-01";
             url: string;
-            error?: autoguard.guards.Object<{}, {}> | undefined;
+            error?: {} | undefined;
             validated?: string | undefined;
             token: string;
         }>;
         ChallengeDNS01: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             status: "valid" | "pending" | "invalid" | "processing";
             type: "dns-01";
             url: string;
-            error?: autoguard.guards.Object<{}, {}> | undefined;
+            error?: {} | undefined;
             validated?: string | undefined;
             token: string;
         }>;
         ChallengeTLSALPN01: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             status: "valid" | "pending" | "invalid" | "processing";
             type: "tls-alpn-01";
             url: string;
-            error?: autoguard.guards.Object<{}, {}> | undefined;
+            error?: {} | undefined;
             validated?: string | undefined;
             token: string;
         }>;
-        Directory: autoguard.guards.ReferenceGuard<Directory>;
-        Identifier: autoguard.guards.ReferenceGuard<Identifier>;
-        Order: autoguard.guards.ReferenceGuard<Order>;
-        Protected: autoguard.guards.ReferenceGuard<Protected>;
+        Directory: autoguard.guards.ReferenceGuard<{
+            keyChange: string;
+            newAccount: string;
+            newNonce: string;
+            newOrder: string;
+            revokeCert: string;
+            meta?: {
+                caaIdentities?: autoguard.guards.Array<string> | undefined;
+                externalAccountRequired?: boolean | undefined;
+                termsOfService?: string | undefined;
+                website?: string | undefined;
+            } | undefined;
+            newAuthz?: string | undefined;
+        }>;
+        Identifier: autoguard.guards.ReferenceGuard<{
+            type: "dns";
+            value: string;
+        }>;
+        Order: autoguard.guards.ReferenceGuard<{
+            authorizations: autoguard.guards.Array<string>;
+            finalize: string;
+            identifiers: autoguard.guards.Array<{
+                type: "dns";
+                value: string;
+            }>;
+            status: "valid" | "pending" | "invalid" | "processing" | "ready";
+            certificate?: string | undefined;
+            error?: {} | undefined;
+            expires?: string | undefined;
+            notBefore?: string | undefined;
+            notAfter?: string | undefined;
+        }>;
+        Protected: autoguard.guards.ReferenceGuard<{
+            nonce: string;
+            url: string;
+        }>;
         ProtectedWithJWK: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             nonce: string;
             url: string;
             jwk: {
-                [x: string]: any;
                 kty: "EC" | "RSA";
             };
         }>;
         ProtectedWithKID: autoguard.guards.ReferenceGuard<{
-            [x: string]: any;
             nonce: string;
             url: string;
             kid: string;
         }>;
-        CreateAccountPayload: autoguard.guards.ReferenceGuard<CreateAccountPayload>;
-        CreateOrderPayload: autoguard.guards.ReferenceGuard<CreateOrderPayload>;
-        FinalizeOrderPayload: autoguard.guards.ReferenceGuard<FinalizeOrderPayload>;
+        CreateAccountPayload: autoguard.guards.ReferenceGuard<{
+            contact?: autoguard.guards.Array<string> | undefined;
+            termsOfServiceAgreed?: boolean | undefined;
+            onlyReturnExisting?: boolean | undefined;
+            externalAccountBinding?: {} | undefined;
+        }>;
+        CreateOrderPayload: autoguard.guards.ReferenceGuard<{
+            identifiers: autoguard.guards.Array<{
+                type: "dns";
+                value: string;
+            }>;
+            notBefore?: string | undefined;
+            notAfter?: string | undefined;
+        }>;
+        FinalizeOrderPayload: autoguard.guards.ReferenceGuard<{
+            csr: string;
+        }>;
     };
     type Guards = {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;
@@ -206,129 +272,165 @@ export declare namespace Autoguard {
     const Requests: {
         downloadCertificate: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         finalizeChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         finalizeOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         getAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         getAuthorization: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         getChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         getDirectory: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
         getOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         newAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
         newNonce: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
             payload: autoguard.api.AsyncBinary | autoguard.api.SyncBinary;
         }>;
         newOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "content-type": string;
             };
-            payload: Body;
+            payload: {
+                protected: string;
+                payload: string;
+                signature: string;
+            };
         }, {
             options: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
@@ -339,7 +441,7 @@ export declare namespace Autoguard {
     const Responses: {
         downloadCertificate: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
         }, {
@@ -348,79 +450,157 @@ export declare namespace Autoguard {
         }>;
         finalizeChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
-            payload: Challenge;
+            payload: {
+                status: "valid" | "pending" | "invalid" | "processing";
+                type: string;
+                url: string;
+                error?: {} | undefined;
+                validated?: string | undefined;
+            };
         }, {
             status: number;
         }>;
         finalizeOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
-            payload: Order;
+            payload: {
+                authorizations: autoguard.guards.Array<string>;
+                finalize: string;
+                identifiers: autoguard.guards.Array<{
+                    type: "dns";
+                    value: string;
+                }>;
+                status: "valid" | "pending" | "invalid" | "processing" | "ready";
+                certificate?: string | undefined;
+                error?: {} | undefined;
+                expires?: string | undefined;
+                notBefore?: string | undefined;
+                notAfter?: string | undefined;
+            };
         }, {
             status: number;
         }>;
         getAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
-            payload: Account;
+            payload: {
+                status: "valid" | "deactivated" | "revoked";
+                contact?: autoguard.guards.Array<string> | undefined;
+                externalAccountBinding?: {} | undefined;
+                orders?: string | undefined;
+                termsOfServiceAgreed?: boolean | undefined;
+            };
         }, {
             status: number;
         }>;
         getAuthorization: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
-            payload: Authorization;
+            payload: {
+                identifier: {
+                    type: "dns";
+                    value: string;
+                };
+                status: "valid" | "deactivated" | "revoked" | "pending" | "invalid" | "expired";
+                challenges: autoguard.guards.Array<{
+                    status: "valid" | "pending" | "invalid" | "processing";
+                    type: string;
+                    url: string;
+                    error?: {} | undefined;
+                    validated?: string | undefined;
+                }>;
+                expires?: string | undefined;
+                wildcard?: boolean | undefined;
+            };
         }, {
             status: number;
         }>;
         getChallenge: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
-            payload: Challenge;
+            payload: {
+                status: "valid" | "pending" | "invalid" | "processing";
+                type: string;
+                url: string;
+                error?: {} | undefined;
+                validated?: string | undefined;
+            };
         }, {
             status: number;
         }>;
         getDirectory: autoguard.guards.ObjectGuard<{
-            payload: Directory;
+            payload: {
+                keyChange: string;
+                newAccount: string;
+                newNonce: string;
+                newOrder: string;
+                revokeCert: string;
+                meta?: {
+                    caaIdentities?: autoguard.guards.Array<string> | undefined;
+                    externalAccountRequired?: boolean | undefined;
+                    termsOfService?: string | undefined;
+                    website?: string | undefined;
+                } | undefined;
+                newAuthz?: string | undefined;
+            };
         }, {
             status: number;
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
             };
         }>;
         getOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
-            payload: Order;
+            payload: {
+                authorizations: autoguard.guards.Array<string>;
+                finalize: string;
+                identifiers: autoguard.guards.Array<{
+                    type: "dns";
+                    value: string;
+                }>;
+                status: "valid" | "pending" | "invalid" | "processing" | "ready";
+                certificate?: string | undefined;
+                error?: {} | undefined;
+                expires?: string | undefined;
+                notBefore?: string | undefined;
+                notAfter?: string | undefined;
+            };
         }, {
             status: number;
         }>;
         newAccount: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
                 location: string;
             };
-            payload: Account;
+            payload: {
+                status: "valid" | "deactivated" | "revoked";
+                contact?: autoguard.guards.Array<string> | undefined;
+                externalAccountBinding?: {} | undefined;
+                orders?: string | undefined;
+                termsOfServiceAgreed?: boolean | undefined;
+            };
         }, {
             status: number;
         }>;
         newNonce: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
             };
         }, {
@@ -429,11 +609,24 @@ export declare namespace Autoguard {
         }>;
         newOrder: autoguard.guards.ObjectGuard<{
             headers: {
-                [x: string]: any;
+                [x: string]: autoguard.api.JSON;
                 "replay-nonce": string;
                 location: string;
             };
-            payload: Order;
+            payload: {
+                authorizations: autoguard.guards.Array<string>;
+                finalize: string;
+                identifiers: autoguard.guards.Array<{
+                    type: "dns";
+                    value: string;
+                }>;
+                status: "valid" | "pending" | "invalid" | "processing" | "ready";
+                certificate?: string | undefined;
+                error?: {} | undefined;
+                expires?: string | undefined;
+                notBefore?: string | undefined;
+                notAfter?: string | undefined;
+            };
         }, {
             status: number;
         }>;
