@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as libcrypto from "crypto";
 import * as jwk from "../jwk";
 export declare function generatePrivateKey(options?: Partial<{

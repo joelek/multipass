@@ -71,7 +71,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/serialization", ["requ
                     let data = json.data;
                     let guard = this.guards[type];
                     if (guard === undefined) {
-                        throw "Unknown message type \"" + type + "\"!";
+                        throw "Unknown message type \"" + String(type) + "\"!";
                     }
                     cb(type, guard.as(data));
                     return;
@@ -1097,21 +1097,25 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
         }
         unsigned(length, endian) {
             IntegerAssert.between(1, length, 6);
-            let chunk = this.chunk(length);
+            if (this.offset + length > this.buffer.length) {
+                throw `Expected to read at least ${length} bytes!`;
+            }
             if (endian === "little") {
                 let value = 0;
                 for (let i = length - 1; i >= 0; i--) {
                     value *= 256;
-                    value += chunk[i];
+                    value += this.buffer[this.offset + i];
                 }
+                this.offset += length;
                 return value;
             }
             else {
                 let value = 0;
                 for (let i = 0; i < length; i++) {
                     value *= 256;
-                    value += chunk[i];
+                    value += this.buffer[this.offset + i];
                 }
+                this.offset += length;
                 return value;
             }
         }
@@ -2059,19 +2063,24 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
     };
     class ObjectCodec extends Codec {
-        codecs;
-        constructor(codecs) {
+        required;
+        optional;
+        constructor(required, optional) {
             super();
-            this.codecs = codecs;
+            this.required = required;
+            this.optional = optional ?? {};
         }
         decodePayload(parser, path = "") {
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
-                let keys = new Set(globalThis.Object.keys(this.codecs));
+                let keys = new Set(globalThis.Object.keys(this.required));
                 let subject = exports.Map.decodePayload(parser, path, (key, path, parser) => {
                     keys.delete(key);
-                    if (key in this.codecs) {
-                        return this.codecs[key].decode(parser, path);
+                    if (key in this.required) {
+                        return this.required[key].decode(parser, path);
+                    }
+                    else if (key in this.optional) {
+                        return this.optional[key].decode(parser, path);
                     }
                     else {
                         return exports.Any.decode(parser, path);
@@ -2084,11 +2093,14 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             });
         }
         encodePayload(subject, path = "") {
-            let keys = new Set(globalThis.Object.keys(this.codecs));
+            let keys = new Set(globalThis.Object.keys(this.required));
             let payload = exports.Map.encodePayload(subject, path, (key, path, subject) => {
                 keys.delete(key);
-                if (key in this.codecs) {
-                    return this.codecs[key].encode(subject, path);
+                if (key in this.required) {
+                    return this.required[key].encode(subject, path);
+                }
+                else if (key in this.optional) {
+                    return this.optional[key].encode(subject, path);
                 }
                 else {
                     return exports.Any.encode(subject, path);
@@ -2103,8 +2115,8 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
     exports.ObjectCodec = ObjectCodec;
     ;
     exports.Object = {
-        of(codecs) {
-            return new ObjectCodec(codecs);
+        of(required, optional) {
+            return new ObjectCodec(required, optional);
         }
     };
     class UnionCodec extends Codec {

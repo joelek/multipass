@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as libcrypto from "crypto";
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
 import * as api from "./api";
