@@ -4978,14 +4978,22 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
     exports.acceptsMethod = acceptsMethod;
     ;
     function finalizeResponse(raw, defaultHeaders) {
-        let headersToAppend = defaultHeaders.filter((defaultHeader) => {
-            let found = raw.headers.find((header) => header[0].toLowerCase() === defaultHeader[0].toLowerCase());
-            return found === undefined;
+        return __awaiter(this, void 0, void 0, function* () {
+            let payload = raw.payload;
+            if (shared.api.SyncBinary.is(payload)) {
+                let collectedPayload = yield shared.api.collectPayload(payload);
+                defaultHeaders.push(["Content-Length", `${collectedPayload.length}`]);
+                payload = [collectedPayload];
+            }
+            let headersToAppend = defaultHeaders.filter((defaultHeader) => {
+                let found = raw.headers.find((header) => header[0].toLowerCase() === defaultHeader[0].toLowerCase());
+                return found === undefined;
+            });
+            return Object.assign(Object.assign({}, raw), { headers: [
+                    ...raw.headers,
+                    ...headersToAppend
+                ], payload });
         });
-        return Object.assign(Object.assign({}, raw), { headers: [
-                ...raw.headers,
-                ...headersToAppend
-            ] });
     }
     exports.finalizeResponse = finalizeResponse;
     ;
