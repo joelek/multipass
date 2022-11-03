@@ -80,3 +80,13 @@ const asn1 = require("./");
     let observed = asn1.encodeInteger(BigInt(255), { paddedUnsigned: false });
     console.assert(observed.equals(expected), `It should encode 255 as 0xFF without padded unsigned.`);
 }))();
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    let expected = "010203040506Z";
+    let observed = asn1.encodeUTCTime(new Date("2001-02-03T04:05:06Z"));
+    console.assert(observed === expected, `It should encode UTCTime.`);
+}))();
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    let expected = new Date("2001-02-03T04:05:06Z").getTime();
+    let observed = asn1.decodeUTCTime("010203040506Z").getTime();
+    console.assert(observed === expected, `It should decode UTCTime.`);
+}))();

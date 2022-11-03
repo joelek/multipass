@@ -244,6 +244,13 @@ export declare type UTCTime = autoguard.guards.Object<{
     "type": autoguard.guards.StringLiteral<"UTC_TIME">;
     "data": autoguard.guards.String;
 }, {}>;
+export declare const Boolean: autoguard.serialization.MessageGuard<Boolean>;
+export declare type Boolean = autoguard.guards.Object<{
+    "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
+    "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
+    "type": autoguard.guards.StringLiteral<"BOOLEAN">;
+    "data": autoguard.guards.String;
+}, {}>;
 export declare namespace Autoguard {
     const Guards: {
         Node: autoguard.guards.ReferenceGuard<{
@@ -320,6 +327,12 @@ export declare namespace Autoguard {
             kind: "UNIVERSAL";
             form: "PRIMITIVE";
             type: "UTC_TIME";
+            data: string;
+        }>;
+        Boolean: autoguard.guards.ReferenceGuard<{
+            kind: "UNIVERSAL";
+            form: "PRIMITIVE";
+            type: "BOOLEAN";
             data: string;
         }>;
     };

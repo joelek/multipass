@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.encodeInteger = exports.decodeInteger = exports.UTC_TIME = exports.DATE = exports.UTF8_STRING = exports.BIT_STRING = exports.OCTET_STRING = exports.NULL = exports.OBJECT_IDENTIFER = exports.INTEGER = exports.SET = exports.SEQUENCE = void 0;
+exports.decodeUTCTime = exports.encodeUTCTime = exports.encodeInteger = exports.decodeInteger = exports.BOOLEAN = exports.UTC_TIME = exports.DATE = exports.UTF8_STRING = exports.BIT_STRING = exports.OCTET_STRING = exports.NULL = exports.OBJECT_IDENTIFER = exports.INTEGER = exports.SET = exports.SEQUENCE = void 0;
 __exportStar(require("./schema"), exports);
 exports.SEQUENCE = {
     kind: "UNIVERSAL",
@@ -76,6 +76,12 @@ exports.UTC_TIME = {
     type: "UTC_TIME",
     data: ""
 };
+exports.BOOLEAN = {
+    kind: "UNIVERSAL",
+    form: "PRIMITIVE",
+    type: "BOOLEAN",
+    data: ""
+};
 function decodeInteger(buffer, options) {
     var _a;
     let paddedUnsigned = (_a = options === null || options === void 0 ? void 0 : options.paddedUnsigned) !== null && _a !== void 0 ? _a : true;
@@ -121,4 +127,33 @@ function encodeInteger(number, options) {
     }
 }
 exports.encodeInteger = encodeInteger;
+;
+function encodeUTCTime(date) {
+    let year = (date.getUTCFullYear() % 100).toString().padStart(2, "0");
+    let month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+    let day = (date.getUTCDate()).toString().padStart(2, "0");
+    let hour = (date.getUTCHours()).toString().padStart(2, "0");
+    let minute = (date.getUTCMinutes()).toString().padStart(2, "0");
+    let second = (date.getUTCSeconds()).toString().padStart(2, "0");
+    return `${year}${month}${day}${hour}${minute}${second}Z`;
+}
+exports.encodeUTCTime = encodeUTCTime;
+;
+function decodeUTCTime(string) {
+    var _a;
+    let parts = /^([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})?Z$/.exec(string);
+    if (parts == null) {
+        throw `Expected a valid UTC time!`;
+    }
+    let century = (Number.parseInt(string[0]) < 5) ? "20" : "19";
+    let year = parts[1];
+    let month = parts[2];
+    let day = parts[3];
+    let hour = parts[4];
+    let minute = parts[5];
+    let second = (_a = parts[6]) !== null && _a !== void 0 ? _a : "00";
+    let iso = `${century}${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
+    return new Date(iso);
+}
+exports.decodeUTCTime = decodeUTCTime;
 ;

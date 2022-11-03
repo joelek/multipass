@@ -72,7 +72,7 @@ function createCertificateRequest(hostnames, key, options) {
                 ] })
         ] });
     let spki = pkcs8.PublicKeyInfo.as(der.node.parse(new parsing.Parser(libcrypto.createPublicKey(key).export({ format: "der", type: "spki" }))));
-    let extensions = new Array(Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
+    let extensionRequests = Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
             Object.assign(Object.assign({}, asn1.OBJECT_IDENTIFER), { data: "1.2.840.113549.1.9.14" }),
             Object.assign(Object.assign({}, asn1.SET), { data: [
                     Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
@@ -82,7 +82,7 @@ function createCertificateRequest(hostnames, key, options) {
                                 ] })
                         ] })
                 ] })
-        ] }));
+        ] });
     let cri = Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
             Object.assign(Object.assign({}, asn1.INTEGER), { data: asn1.encodeInteger(BigInt(0)).toString("base64url") }),
             Object.assign({}, subject),
@@ -91,7 +91,9 @@ function createCertificateRequest(hostnames, key, options) {
                 kind: "CONTEXT",
                 form: "CONSTRUCTED",
                 type: "END_OF_CONTENT",
-                data: extensions
+                data: [
+                    extensionRequests
+                ]
             }
         ] });
     let signature = Buffer.concat([Buffer.alloc(1), signatureAlgorithm.sign(der.node.serialize(cri), key)]);
