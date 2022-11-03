@@ -51,7 +51,7 @@ export function createCertificateRequest(hostnames: Array<string>, key: libcrypt
 		throw `Expected at least one hostname!`;
 	}
 	let signatureAlgorithm = options?.signatureAlgorithm ?? getDefaultAlgorithm(key);
-	let subject: asn1.Node = {
+	let subject: schema.Name = {
 		...asn1.SEQUENCE,
 		data: [
 			{
@@ -75,7 +75,7 @@ export function createCertificateRequest(hostnames: Array<string>, key: libcrypt
 		]
 	};
 	let spki = pkcs8.PublicKeyInfo.as(der.node.parse(new parsing.Parser(libcrypto.createPublicKey(key).export({ format: "der", type: "spki" }))));
-	let extensions = new Array<asn1.Node>({
+	let extensionRequests: schema.ExtensionRequests = {
 		...asn1.SEQUENCE,
 		data: [
 			{
@@ -106,7 +106,7 @@ export function createCertificateRequest(hostnames: Array<string>, key: libcrypt
 				]
 			}
 		]
-	});
+	};
 	let cri: schema.CertificationRequestInfo = {
 		...asn1.SEQUENCE,
 		data: [
@@ -124,7 +124,9 @@ export function createCertificateRequest(hostnames: Array<string>, key: libcrypt
 				kind: "CONTEXT",
 				form: "CONSTRUCTED",
 				type: "END_OF_CONTENT", // Context-specific type.
-				data: extensions
+				data: [
+					extensionRequests
+				]
 			}
 		]
 	};

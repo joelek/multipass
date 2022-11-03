@@ -2,19 +2,93 @@ guard ASN1BitString: ../asn1/BitString;
 guard ASN1Integer: ../asn1/Integer;
 guard ASN1Null: ../asn1/Null;
 guard ASN1Node: ../asn1/Node;
+guard ASN1Set: ../asn1/Set;
 guard ASN1ObjectIdentifier: ../asn1/ObjectIdentifier;
 guard ASN1OctetString: ../asn1/OctetString;
 guard ASN1Sequence: ../asn1/Sequence;
+guard ASN1UTF8String: ../asn1/UTF8String;
+guard ASN1Boolean: ../asn1/Boolean;
+
+guard AttributeTypeAndValue: ASN1Sequence & {
+	data: [
+		ASN1ObjectIdentifier,
+		ASN1Node
+	]
+};
+
+guard CommonName: AttributeTypeAndValue & {
+	data: [
+		ASN1ObjectIdentifier & { data: "2.5.4.3" },
+		ASN1UTF8String
+	]
+};
+
+guard RelativeDistinguishedName: ASN1Set & {
+	data: AttributeTypeAndValue[]
+};
+
+guard RDNSequence: ASN1Sequence & {
+	data: RelativeDistinguishedName[]
+};
+
+guard Name: RDNSequence;
+
+guard CRIAttribute: ASN1Sequence & {
+	data: [
+		ASN1ObjectIdentifier,
+		ASN1Set
+	]
+};
+
+guard Extension1: ASN1Sequence & {
+	data: [
+		ASN1ObjectIdentifier,
+		ASN1Boolean,
+		ASN1OctetString
+	]
+};
+
+guard Extension2: ASN1Sequence & {
+	data: [
+		ASN1ObjectIdentifier,
+		ASN1OctetString
+	]
+};
+
+guard SubjectAlternativeNameExtension: ASN1Sequence & {
+	data: [
+		ASN1ObjectIdentifier & { data: "2.5.29.17" },
+		ASN1OctetString
+	]
+};
+
+guard Extension: Extension1 | Extension2;
+
+guard Extensions: ASN1Sequence & {
+	data: Extension[]
+};
+
+guard ExtensionRequests: CRIAttribute & {
+	data: [
+		ASN1ObjectIdentifier & { data: "1.2.840.113549.1.9.14" },
+		ASN1Set & {
+			data: [
+				Extensions
+			]
+		}
+	]
+};
 
 guard CertificationRequestInfo: ASN1Sequence & {
 	data: [
 		ASN1Integer,
-		ASN1Node,
+		Name,
 		../pkcs8/PublicKeyInfo,
 		{
 			kind: "CONTEXT",
 			form: "CONSTRUCTED",
-			type: "END_OF_CONTENT" # Context-specific type.
+			type: "END_OF_CONTENT", # Context-specific type 0.
+			data: CRIAttribute[]
 		}
 	]
 };
