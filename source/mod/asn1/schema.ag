@@ -126,3 +126,10 @@ guard UTCTime: {
 	type: "UTC_TIME",
 	data: string
 };
+
+guard Boolean: {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "BOOLEAN",
+	data: string
+};

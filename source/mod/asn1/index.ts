@@ -72,6 +72,13 @@ export const UTC_TIME: schema.UTCTime = {
 	data: ""
 };
 
+export const BOOLEAN: schema.Boolean = {
+	kind: "UNIVERSAL",
+	form: "PRIMITIVE",
+	type: "BOOLEAN",
+	data: ""
+};
+
 export function decodeInteger(buffer: Buffer, options?: Partial<{ paddedUnsigned: boolean }>): bigint {
 	let paddedUnsigned = options?.paddedUnsigned ?? true;
 	let hex = buffer.toString("hex");

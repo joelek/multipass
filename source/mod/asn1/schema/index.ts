@@ -452,6 +452,20 @@ export type UTCTime = autoguard.guards.Object<{
 	"data": autoguard.guards.String
 }, {}>;
 
+export const Boolean: autoguard.serialization.MessageGuard<Boolean> = autoguard.guards.Object.of({
+	"kind": autoguard.guards.StringLiteral.of("UNIVERSAL"),
+	"form": autoguard.guards.StringLiteral.of("PRIMITIVE"),
+	"type": autoguard.guards.StringLiteral.of("BOOLEAN"),
+	"data": autoguard.guards.String
+}, {});
+
+export type Boolean = autoguard.guards.Object<{
+	"kind": autoguard.guards.StringLiteral<"UNIVERSAL">,
+	"form": autoguard.guards.StringLiteral<"PRIMITIVE">,
+	"type": autoguard.guards.StringLiteral<"BOOLEAN">,
+	"data": autoguard.guards.String
+}, {}>;
+
 export namespace Autoguard {
 	export const Guards = {
 		"Node": autoguard.guards.Reference.of(() => Node),
@@ -464,7 +478,8 @@ export namespace Autoguard {
 		"Set": autoguard.guards.Reference.of(() => Set),
 		"UTF8String": autoguard.guards.Reference.of(() => UTF8String),
 		"Date": autoguard.guards.Reference.of(() => Date),
-		"UTCTime": autoguard.guards.Reference.of(() => UTCTime)
+		"UTCTime": autoguard.guards.Reference.of(() => UTCTime),
+		"Boolean": autoguard.guards.Reference.of(() => Boolean)
 	};
 
 	export type Guards = { [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>; };
