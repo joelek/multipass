@@ -117,3 +117,29 @@ export function encodeInteger(number: bigint, options?: Partial<{ paddedUnsigned
 		return Buffer.from(hex, "hex");
 	}
 };
+
+export function encodeUTCTime(date: Date): string {
+	let year = (date.getUTCFullYear() % 100).toString().padStart(2, "0");
+	let month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+	let day = (date.getUTCDate()).toString().padStart(2, "0");
+	let hour = (date.getUTCHours()).toString().padStart(2, "0");
+	let minute = (date.getUTCMinutes()).toString().padStart(2, "0");
+	let second = (date.getUTCSeconds()).toString().padStart(2, "0");
+	return `${year}${month}${day}${hour}${minute}${second}Z`;
+};
+
+export function decodeUTCTime(string: string): Date {
+	let parts = /^([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})?Z$/.exec(string);
+	if (parts == null) {
+		throw `Expected a valid UTC time!`;
+	}
+	let century = (Number.parseInt(string[0]) < 5) ? "20" : "19";
+	let year = parts[1];
+	let month = parts[2];
+	let day = parts[3];
+	let hour = parts[4];
+	let minute = parts[5];
+	let second = parts[6] ?? "00";
+	let iso = `${century}${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
+	return new Date(iso);
+};
