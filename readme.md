@@ -226,7 +226,6 @@ npm install [-g] joelek/multipass#master
 
 * Undo all actions on caught interrupt signals.
 * Implement RSA-PSS signatures.
-* Improve schema for PKCS10 module.
 * Write a class-based implementation for ASN1 handling.
 * Add support for additional DNS APIs.
 * Add support for configuring account, key and cert filenames.
