@@ -16,3 +16,4 @@ export * as pkcs8 from "./pkcs8";
 export * as pkcs10 from "./pkcs10";
 export * as rsa from "./rsa";
 export * as sec1 from "./sec1";
+export * as x509 from "./x509";
