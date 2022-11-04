@@ -13,21 +13,29 @@ export * from "./schema";
 export function signCertificationRequest(buffer: Buffer, issuer: pkcs10.Name, key: libcrypto.KeyObject, options?: Partial<{
 	serialNumber: bigint,
 	signatureAlgorithm: pkcs5.signature.SignatureAlgorithm,
-	notBefore: Date,
-	notAfter: Date
+	validityPeriod: {
+		notBefore: Date,
+		notAfter: Date
+	} | {
+		days: number
+	}
 }>): Buffer {
 	let serialNumber = options?.serialNumber ?? BigInt(1);
 	let signatureAlgorithm = options?.signatureAlgorithm ?? pkcs10.getDefaultAlgorithm(key);
 	let now = new Date();
 	now.setUTCSeconds(0);
 	now.setUTCMilliseconds(0);
-	let notBefore = options?.notBefore;
-	if (notBefore == null) {
-		notBefore = new Date(now);
-	}
-	let notAfter = options?.notAfter;
-	if (notAfter == null) {
-		notAfter = new Date(now);
+	let notBefore = new Date(now);
+	let notAfter = new Date(now);
+	let validityPeriod = options?.validityPeriod;
+	if (validityPeriod != null) {
+		if ("days" in validityPeriod) {
+			notAfter.setDate(notAfter.getDate() + validityPeriod.days);
+		} else {
+			notBefore = validityPeriod.notBefore;
+			notAfter = validityPeriod.notAfter;
+		}
+	} else {
 		notAfter.setDate(notAfter.getDate() + DEFAULT_VALIDITY_PERIOD_DAYS);
 	}
 	let cr = pkcs10.CertificationRequest.as(der.node.parse(new parsing.Parser(buffer)));
@@ -130,21 +138,21 @@ export function signCertificationRequest(buffer: Buffer, issuer: pkcs10.Name, ke
 	return der.node.serialize(certficate);
 };
 
-export function generateSignedCertificate(
+export function generateSelfSignedCertificate(
 	hostnames: Array<string>,
-	subjectKey: libcrypto.KeyObject,
-	issuerKey: libcrypto.KeyObject,
-	csrOptions?: Partial<{
-		signatureAlgorithm: pkcs5.signature.SignatureAlgorithm
-	}>,
+	key: libcrypto.KeyObject,
 	options?: Partial<{
 		serialNumber: bigint,
 		signatureAlgorithm: pkcs5.signature.SignatureAlgorithm,
-		notBefore: Date,
-		notAfter: Date
+		validityPeriod: {
+			notBefore: Date,
+			notAfter: Date
+		} | {
+			days: number
+		}
 	}>
 ): Buffer {
-	let buffer = pkcs10.createCertificateRequest(hostnames, subjectKey, csrOptions);
+	let buffer = pkcs10.createCertificateRequest(hostnames, key, options);
 	let commonName: pkcs10.CommonName = {
 		...asn1.SEQUENCE,
 		data: [
@@ -169,5 +177,5 @@ export function generateSignedCertificate(
 			}
 		]
 	};
-	return signCertificationRequest(buffer, issuer, issuerKey, options);
+	return signCertificationRequest(buffer, issuer, key, options);
 };

@@ -27,9 +27,11 @@ const KEY = libcrypto.createPrivateKey({
 
 (async () => {
 	let expected = CERT;
-	let observed = x509.generateSignedCertificate(["localhost"], KEY, KEY, {}, {
-		notBefore: new Date("2000-01-01T00:00:00Z"),
-		notAfter: new Date("2000-12-31T23:59:59Z")
+	let observed = x509.generateSelfSignedCertificate(["localhost"], KEY, {
+		validityPeriod: {
+			notBefore: new Date("2000-01-01T00:00:00Z"),
+			notAfter: new Date("2000-12-31T23:59:59Z")
+		}
 	});
 	console.assert(observed.equals(expected), `It should generate self-signed certificates.`);
 })();
