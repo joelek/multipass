@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateSignedCertificate = exports.signCertificationRequest = void 0;
+exports.generateSelfSignedCertificate = exports.signCertificationRequest = void 0;
 const libcrypto = require("crypto");
 const asn1 = require("../asn1");
 const der = require("../der");
@@ -30,13 +30,19 @@ function signCertificationRequest(buffer, issuer, key, options) {
     let now = new Date();
     now.setUTCSeconds(0);
     now.setUTCMilliseconds(0);
-    let notBefore = options === null || options === void 0 ? void 0 : options.notBefore;
-    if (notBefore == null) {
-        notBefore = new Date(now);
+    let notBefore = new Date(now);
+    let notAfter = new Date(now);
+    let validityPeriod = options === null || options === void 0 ? void 0 : options.validityPeriod;
+    if (validityPeriod != null) {
+        if ("days" in validityPeriod) {
+            notAfter.setDate(notAfter.getDate() + validityPeriod.days);
+        }
+        else {
+            notBefore = validityPeriod.notBefore;
+            notAfter = validityPeriod.notAfter;
+        }
     }
-    let notAfter = options === null || options === void 0 ? void 0 : options.notAfter;
-    if (notAfter == null) {
-        notAfter = new Date(now);
+    else {
         notAfter.setDate(notAfter.getDate() + DEFAULT_VALIDITY_PERIOD_DAYS);
     }
     let cr = pkcs10.CertificationRequest.as(der.node.parse(new parsing.Parser(buffer)));
@@ -99,8 +105,8 @@ function signCertificationRequest(buffer, issuer, key, options) {
 }
 exports.signCertificationRequest = signCertificationRequest;
 ;
-function generateSignedCertificate(hostnames, subjectKey, issuerKey, csrOptions, options) {
-    let buffer = pkcs10.createCertificateRequest(hostnames, subjectKey, csrOptions);
+function generateSelfSignedCertificate(hostnames, key, options) {
+    let buffer = pkcs10.createCertificateRequest(hostnames, key, options);
     let commonName = Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
             Object.assign(Object.assign({}, asn1.OBJECT_IDENTIFER), { data: "2.5.4.3" }),
             Object.assign(Object.assign({}, asn1.UTF8_STRING), { data: Buffer.from("multipass").toString("base64url") })
@@ -110,7 +116,7 @@ function generateSignedCertificate(hostnames, subjectKey, issuerKey, csrOptions,
                     commonName
                 ] })
         ] });
-    return signCertificationRequest(buffer, issuer, issuerKey, options);
+    return signCertificationRequest(buffer, issuer, key, options);
 }
-exports.generateSignedCertificate = generateSignedCertificate;
+exports.generateSelfSignedCertificate = generateSelfSignedCertificate;
 ;

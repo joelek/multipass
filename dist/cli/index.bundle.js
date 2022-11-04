@@ -8198,7 +8198,7 @@ define("build/mod/x509/index", ["require", "exports", "crypto", "build/mod/asn1/
                 __createBinding(exports, m, p);
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.generateSignedCertificate = exports.signCertificationRequest = void 0;
+    exports.generateSelfSignedCertificate = exports.signCertificationRequest = void 0;
     const DEFAULT_VALIDITY_PERIOD_DAYS = 90;
     __exportStar(schema_9, exports);
     function signCertificationRequest(buffer, issuer, key, options) {
@@ -8208,13 +8208,19 @@ define("build/mod/x509/index", ["require", "exports", "crypto", "build/mod/asn1/
         let now = new Date();
         now.setUTCSeconds(0);
         now.setUTCMilliseconds(0);
-        let notBefore = options === null || options === void 0 ? void 0 : options.notBefore;
-        if (notBefore == null) {
-            notBefore = new Date(now);
+        let notBefore = new Date(now);
+        let notAfter = new Date(now);
+        let validityPeriod = options === null || options === void 0 ? void 0 : options.validityPeriod;
+        if (validityPeriod != null) {
+            if ("days" in validityPeriod) {
+                notAfter.setDate(notAfter.getDate() + validityPeriod.days);
+            }
+            else {
+                notBefore = validityPeriod.notBefore;
+                notAfter = validityPeriod.notAfter;
+            }
         }
-        let notAfter = options === null || options === void 0 ? void 0 : options.notAfter;
-        if (notAfter == null) {
-            notAfter = new Date(now);
+        else {
             notAfter.setDate(notAfter.getDate() + DEFAULT_VALIDITY_PERIOD_DAYS);
         }
         let cr = pkcs10.CertificationRequest.as(der.node.parse(new parsing.Parser(buffer)));
@@ -8277,8 +8283,8 @@ define("build/mod/x509/index", ["require", "exports", "crypto", "build/mod/asn1/
     }
     exports.signCertificationRequest = signCertificationRequest;
     ;
-    function generateSignedCertificate(hostnames, subjectKey, issuerKey, csrOptions, options) {
-        let buffer = pkcs10.createCertificateRequest(hostnames, subjectKey, csrOptions);
+    function generateSelfSignedCertificate(hostnames, key, options) {
+        let buffer = pkcs10.createCertificateRequest(hostnames, key, options);
         let commonName = Object.assign(Object.assign({}, asn1.SEQUENCE), { data: [
                 Object.assign(Object.assign({}, asn1.OBJECT_IDENTIFER), { data: "2.5.4.3" }),
                 Object.assign(Object.assign({}, asn1.UTF8_STRING), { data: Buffer.from("multipass").toString("base64url") })
@@ -8288,9 +8294,9 @@ define("build/mod/x509/index", ["require", "exports", "crypto", "build/mod/asn1/
                         commonName
                     ] })
             ] });
-        return signCertificationRequest(buffer, issuer, issuerKey, options);
+        return signCertificationRequest(buffer, issuer, key, options);
     }
-    exports.generateSignedCertificate = generateSignedCertificate;
+    exports.generateSelfSignedCertificate = generateSelfSignedCertificate;
     ;
 });
 define("build/mod/index", ["require", "exports", "build/mod/acme/index", "build/mod/asn1/index", "build/mod/der/index", "build/mod/dns/index", "build/mod/dynu/index", "build/mod/ec/index", "build/mod/glesys/index", "build/mod/json/index", "build/mod/jwk/index", "build/mod/jws/index", "build/mod/parsing/index", "build/mod/pem/index", "build/mod/pkcs1/index", "build/mod/pkcs5/index", "build/mod/pkcs8/index", "build/mod/pkcs10/index", "build/mod/rsa/index", "build/mod/sec1/index", "build/mod/x509/index"], function (require, exports, acme, asn1, der, dns, dynu, ec, glesys, json, jwk, jws, parsing, pem, pkcs1, pkcs5, pkcs8, pkcs10, rsa, sec1, x509) {
