@@ -87,7 +87,7 @@ function makeClient(credentials) {
 ;
 function getCanonicalName(hostname) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(`Resolving canonical name for ${hostname}...`);
+        console.log(`Resolving canonical name for "${hostname}"...`);
         let path = new Array(hostname);
         while (true) {
             let hostnames = new Array();
@@ -100,14 +100,14 @@ function getCanonicalName(hostname) {
             if (hostnames.length !== 1) {
                 throw `Expected exactly one hostname!`;
             }
-            console.log(`Found redirect between ${hostname} and ${hostnames[0]}.`);
+            console.log(`Found redirect between "${hostname}" and "${hostnames[0]}".`);
             hostname = hostnames[0];
             if (path.includes(hostname)) {
                 throw `Expected canonical name to resolve properly!`;
             }
             path.push(hostname);
         }
-        console.log(`Canonical name is ${hostname}.`);
+        console.log(`Canonical name is "${hostname}".`);
         return hostname;
     });
 }
@@ -119,9 +119,9 @@ function makeResolver(hostname) {
         for (let i = 0; i <= parts.length - 2; i++) {
             try {
                 let hostname = parts.slice(i).join(".");
-                console.log(`Attempting to locate nameserver for ${hostname}.`);
+                console.log(`Attempting to locate nameserver for "${hostname}".`);
                 let response = yield libdns.promises.resolveSoa(hostname);
-                console.log(`Primary nameserver is ${response.nsname}.`);
+                console.log(`Primary nameserver is "${response.nsname}".`);
                 let addresses = yield libdns.promises.resolve4(response.nsname);
                 for (let address of addresses) {
                     console.log(`Primary nameserver can be reached through ${address}.`);
@@ -220,7 +220,7 @@ function processEntry(acmeUrl, entry, clients) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`Processing entry...`);
         for (let hostname of entry.hostnames) {
-            console.log(`Entry contains ${hostname}.`);
+            console.log(`Entry contains hostname "${hostname}".`);
         }
         if (entry.validity != null) {
             let { notBefore, notAfter } = entry.validity;
@@ -259,12 +259,12 @@ function processEntry(acmeUrl, entry, clients) {
                         }
                         if (challenge.status === "pending") {
                             let hostnameToAuthorize = makeProvisionHostname(authorization.payload.identifier.value);
-                            console.log(`Proving authority over ${hostnameToAuthorize}...`);
+                            console.log(`Proving authority over "${authorization.payload.identifier.value}" through "${hostnameToAuthorize}"...`);
                             let hostname = yield getCanonicalName(hostnameToAuthorize);
                             let content = mod_1.acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }));
                             let { client, domain, subdomain } = getClientDetails(hostname, clients);
                             let resolver = yield makeResolver(hostname);
-                            console.log(`Provisioning record at ${hostname}...`);
+                            console.log(`Provisioning record at "${hostname}"...`);
                             let undoable = yield client.provisionTextRecord({
                                 domain,
                                 subdomain,
@@ -283,7 +283,7 @@ function processEntry(acmeUrl, entry, clients) {
                         }
                     }
                 }
-                console.log(`Waiting for authority to be proven...`);
+                console.log(`Waiting for authority to be validated...`);
                 order = yield retryWithExponentialBackoff(15, 4, () => __awaiter(this, void 0, void 0, function* () {
                     let updated = yield handler.getOrder(account.url, order.url);
                     if (updated.payload.status === "pending") {
@@ -324,7 +324,7 @@ function processEntry(acmeUrl, entry, clients) {
                 console.log(`Certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
             }
             entry.renewAfter = getRenewAfter(entry.validity);
-            console.log(`Certification process succeeded!`);
+            console.log(`Certification process successful!`);
         }
         catch (error) {
             console.log(String(error));
@@ -400,7 +400,7 @@ function run(options) {
             let client = yield makeClient(credentials);
             let domains = yield client.listDomains();
             for (let domain of domains) {
-                console.log(`Provisioning configured for ${domain}.`);
+                console.log(`Provisioning configured for "${domain}".`);
             }
             clients.push({
                 client,
