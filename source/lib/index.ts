@@ -59,7 +59,7 @@ async function makeClient(credentials: config.Provider): Promise<dns.Client> {
 };
 
 async function getCanonicalName(hostname: string): Promise<string> {
-	console.log(`Resolving canonical name for ${hostname}...`);
+	console.log(`Resolving canonical name for "${hostname}"...`);
 	let path = new Array<string>(hostname);
 	while (true) {
 		let hostnames = new Array<string>();
@@ -71,14 +71,14 @@ async function getCanonicalName(hostname: string): Promise<string> {
 		if (hostnames.length !== 1) {
 			throw `Expected exactly one hostname!`;
 		}
-		console.log(`Found redirect between ${hostname} and ${hostnames[0]}.`);
+		console.log(`Found redirect between "${hostname}" and "${hostnames[0]}".`);
 		hostname = hostnames[0];
 		if (path.includes(hostname)) {
 			throw `Expected canonical name to resolve properly!`;
 		}
 		path.push(hostname);
 	}
-	console.log(`Canonical name is ${hostname}.`);
+	console.log(`Canonical name is "${hostname}".`);
 	return hostname;
 };
 
@@ -88,9 +88,9 @@ async function makeResolver(hostname: string): Promise<libdns.promises.Resolver>
 	for (let i = 0; i <= parts.length - 2; i++) {
 		try {
 			let hostname = parts.slice(i).join(".");
-			console.log(`Attempting to locate nameserver for ${hostname}.`);
+			console.log(`Attempting to locate nameserver for "${hostname}".`);
 			let response = await libdns.promises.resolveSoa(hostname);
-			console.log(`Primary nameserver is ${response.nsname}.`);
+			console.log(`Primary nameserver is "${response.nsname}".`);
 			let addresses = await libdns.promises.resolve4(response.nsname);
 			for (let address of addresses) {
 				console.log(`Primary nameserver can be reached through ${address}.`);
@@ -177,7 +177,7 @@ function getPrivateKey(path: string): libcrypto.KeyObject {
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
 	console.log(`Processing entry...`);
 	for (let hostname of entry.hostnames) {
-		console.log(`Entry contains ${hostname}.`);
+		console.log(`Entry contains hostname "${hostname}".`);
 	}
 	if (entry.validity != null) {
 		let { notBefore, notAfter } = entry.validity;
@@ -216,12 +216,12 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 					}
 					if (challenge.status === "pending") {
 						let hostnameToAuthorize = makeProvisionHostname(authorization.payload.identifier.value);
-						console.log(`Proving authority over ${hostnameToAuthorize}...`);
+						console.log(`Proving authority over "${authorization.payload.identifier.value}" through "${hostnameToAuthorize}"...`);
 						let hostname = await getCanonicalName(hostnameToAuthorize);
 						let content = acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }) as any);
 						let { client, domain, subdomain } = getClientDetails(hostname, clients);
 						let resolver = await makeResolver(hostname);
-						console.log(`Provisioning record at ${hostname}...`);
+						console.log(`Provisioning record at "${hostname}"...`);
 						let undoable = await client.provisionTextRecord({
 							domain,
 							subdomain,
@@ -240,7 +240,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 					}
 				}
 			}
-			console.log(`Waiting for authority to be proven...`);
+			console.log(`Waiting for authority to be validated...`);
 			order = await retryWithExponentialBackoff(15, 4, async () => {
 				let updated = await handler.getOrder(account.url, order.url);
 				if (updated.payload.status === "pending") {
@@ -281,7 +281,7 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 			console.log(`Certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
 		}
 		entry.renewAfter = getRenewAfter(entry.validity);
-		console.log(`Certification process succeeded!`);
+		console.log(`Certification process successful!`);
 	} catch (error) {
 		console.log(String(error));
 		console.log(`Certification process failed!`);
@@ -369,7 +369,7 @@ export async function run(options: config.Options): Promise<void> {
 		let client = await makeClient(credentials);
 		let domains = await client.listDomains();
 		for (let domain of domains) {
-			console.log(`Provisioning configured for ${domain}.`);
+			console.log(`Provisioning configured for "${domain}".`);
 		}
 		clients.push({
 			client,
