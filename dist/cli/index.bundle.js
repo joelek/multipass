@@ -8984,7 +8984,7 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     function run() {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             let certificate = {
                 hostnames: [],
@@ -9041,6 +9041,14 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
                     options.filenames = (_c = options.filenames) !== null && _c !== void 0 ? _c : {};
                     options.filenames.full_chain = parts[1];
                 }
+                else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
+                    options.passphrases = (_d = options.passphrases) !== null && _d !== void 0 ? _d : {};
+                    options.passphrases.account_passphrase = parts[1];
+                }
+                else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
+                    options.passphrases = (_e = options.passphrases) !== null && _e !== void 0 ? _e : {};
+                    options.passphrases.certificate_passphrase = parts[1];
+                }
                 else {
                     foundUnrecognizedArgument = true;
                     console.log(`Unrecognized argument "${argv}"!`);
@@ -9066,6 +9074,10 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
                 console.log(`		Set filename for certificate key file (without extension).`);
                 console.log(`	--full-chain=string`);
                 console.log(`		Set filename for full certificate chain file (without extension).`);
+                console.log(`	--account-pass=string`);
+                console.log(`		Set passphrase used to encrypt the account key.`);
+                console.log(`	--certificate-pass=string`);
+                console.log(`		Set passphrase used to encrypt the certificate key.`);
                 return 1;
             }
             else {
