@@ -22,10 +22,16 @@ guard Filenames: {
 	"full_chain"?: string
 };
 
+guard Passphrases: {
+	"account_passphrase"?: string,
+	"certificate_passphrase"?: string
+};
+
 guard Options: {
 	"providers": Provider[],
 	"certificates": Certificate[],
 	"acme"?: string,
 	"monitor"?: boolean,
-	"filenames"?: Filenames
+	"filenames"?: Filenames,
+	"passphrases"?: Passphrases
 };

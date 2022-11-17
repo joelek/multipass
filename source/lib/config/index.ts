@@ -58,13 +58,24 @@ export type Filenames = autoguard.guards.Object<{}, {
 	"full_chain": autoguard.guards.String
 }>;
 
+export const Passphrases: autoguard.serialization.MessageGuard<Passphrases> = autoguard.guards.Object.of({}, {
+	"account_passphrase": autoguard.guards.String,
+	"certificate_passphrase": autoguard.guards.String
+});
+
+export type Passphrases = autoguard.guards.Object<{}, {
+	"account_passphrase": autoguard.guards.String,
+	"certificate_passphrase": autoguard.guards.String
+}>;
+
 export const Options: autoguard.serialization.MessageGuard<Options> = autoguard.guards.Object.of({
 	"providers": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Provider)),
 	"certificates": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Certificate))
 }, {
 	"acme": autoguard.guards.String,
 	"monitor": autoguard.guards.Boolean,
-	"filenames": autoguard.guards.Reference.of(() => Filenames)
+	"filenames": autoguard.guards.Reference.of(() => Filenames),
+	"passphrases": autoguard.guards.Reference.of(() => Passphrases)
 });
 
 export type Options = autoguard.guards.Object<{
@@ -73,7 +84,8 @@ export type Options = autoguard.guards.Object<{
 }, {
 	"acme": autoguard.guards.String,
 	"monitor": autoguard.guards.Boolean,
-	"filenames": autoguard.guards.Reference<Filenames>
+	"filenames": autoguard.guards.Reference<Filenames>,
+	"passphrases": autoguard.guards.Reference<Passphrases>
 }>;
 
 export namespace Autoguard {
@@ -83,6 +95,7 @@ export namespace Autoguard {
 		"Provider": autoguard.guards.Reference.of(() => Provider),
 		"Certificate": autoguard.guards.Reference.of(() => Certificate),
 		"Filenames": autoguard.guards.Reference.of(() => Filenames),
+		"Passphrases": autoguard.guards.Reference.of(() => Passphrases),
 		"Options": autoguard.guards.Reference.of(() => Options)
 	};
 
