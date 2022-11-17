@@ -18,15 +18,15 @@ export function generatePrivateKey(options?: KeyOptions): Buffer {
 	}
 };
 
-export type ConstructOptions = {
+export type ImportOptions = {
 	passphrase?: string;
 };
 
-export function constructPrivateKey(buffer: Buffer, options?: ConstructOptions): libcrypto.KeyObject {
+export function constructPrivateKey(buffer: Buffer, options?: ImportOptions): libcrypto.KeyObject {
 	return libcrypto.createPrivateKey({ key: buffer, passphrase: options?.passphrase });
 };
 
-export function generateOrConstructPrivateKey(path: string, options?: KeyOptions & ConstructOptions): libcrypto.KeyObject {
+export function generateOrConstructPrivateKey(path: string, options: KeyOptions): libcrypto.KeyObject {
 	libfs.mkdirSync(libpath.dirname(path), { recursive: true });
 	if (!libfs.existsSync(path)) {
 		let buffer = generatePrivateKey(options);
@@ -34,6 +34,6 @@ export function generateOrConstructPrivateKey(path: string, options?: KeyOptions
 	}
 	let buffer = libfs.readFileSync(path);
 	return constructPrivateKey(buffer, {
-		passphrase: options?.passphrase
+		passphrase: (options as ImportOptions).passphrase
 	});
 };

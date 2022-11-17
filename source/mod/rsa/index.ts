@@ -7,29 +7,48 @@ export type RSAKeyOptions = {
 	modulusLength?: number;
 };
 
-export type RSAExportOptionsPKCS1 = {
-	format: "der";
-} | {
-	format: "pem";
+export type RSAExportOptionsPKCS1DER = {
+
+};
+
+export type RSAExportOptionsPKCS1PEM = {
 	passphrase?: string;
 	cipher?: string;
 };
 
-export type RSAExportOptionsPKCS8 = {
+export type RSAExportOptionsPKCS1 = ({
 	format: "der";
-	passphrase?: string;
-	cipher?: string;
-} | {
+} & RSAExportOptionsPKCS1DER) | ({
 	format: "pem";
+} & RSAExportOptionsPKCS1PEM) | ({
+	format?: undefined;
+});
+
+export type RSAExportOptionsPKCS8DER = {
 	passphrase?: string;
 	cipher?: string;
 };
+
+export type RSAExportOptionsPKCS8PEM = {
+	passphrase?: string;
+	cipher?: string;
+};
+
+export type RSAExportOptionsPKCS8 = ({
+	format: "der";
+} & RSAExportOptionsPKCS8DER) | ({
+	format: "pem";
+} & RSAExportOptionsPKCS8PEM) | ({
+	format?: undefined;
+});
 
 export type RSAExportOptions = ({
 	container: "pkcs1";
 } & RSAExportOptionsPKCS1) | ({
 	container: "pkcs8";
-} & RSAExportOptionsPKCS8);
+} & RSAExportOptionsPKCS8) | ({
+	container?: undefined;
+});
 
 export type RSAOptions = RSAKeyOptions & RSAExportOptions;
 
@@ -41,45 +60,63 @@ export function generatePrivateKey(options?: RSAKeyOptions): libcrypto.KeyObject
 	return pair.privateKey;
 };
 
-export function generatePrivateKeyPKCS1(options?: RSAKeyOptions & RSAExportOptionsPKCS1): Buffer {
+export function generatePrivateKeyPKCS1DER(options?: RSAKeyOptions & RSAExportOptionsPKCS1DER): Buffer {
 	let key = generatePrivateKey(options);
-	if (options?.format === "pem") {
-		let passphrase = options.passphrase;
-		let cipher = options?.cipher ?? (typeof passphrase === "undefined" ? undefined : DEFAULT_CIPHER);
-		return Buffer.from(key.export({
-			format: "pem",
-			type: "pkcs1",
-			cipher: cipher,
-			passphrase: passphrase
-		}));
+	return key.export({
+		type: "pkcs1",
+		format: "der"
+	});
+};
+
+export function generatePrivateKeyPKCS1PEM(options?: RSAKeyOptions & RSAExportOptionsPKCS1PEM): Buffer {
+	let key = generatePrivateKey(options);
+	let passphrase = options?.passphrase;
+	let cipher = options?.cipher ?? (typeof passphrase === "undefined" ? undefined : DEFAULT_CIPHER);
+	return Buffer.from(key.export({
+		type: "pkcs1",
+		format: "pem",
+		passphrase: passphrase,
+		cipher: cipher
+	}));
+};
+
+export function generatePrivateKeyPKCS1(options?: RSAKeyOptions & RSAExportOptionsPKCS1): Buffer {
+	if (options?.format === "der") {
+		return generatePrivateKeyPKCS1DER(options);
 	} else {
-		return key.export({
-			format: "der",
-			type: "pkcs1"
-		});
+		return generatePrivateKeyPKCS1PEM(options);
 	}
 };
 
-export function generatePrivateKeyPKCS8(options?: RSAKeyOptions & RSAExportOptionsPKCS8): Buffer {
+export function generatePrivateKeyPKCS8DER(options?: RSAKeyOptions & RSAExportOptionsPKCS8DER): Buffer {
 	let key = generatePrivateKey(options);
-	if (options?.format === "pem") {
-		let passphrase = options?.passphrase;
-		let cipher = options?.cipher ?? (typeof passphrase === "undefined" ? undefined : DEFAULT_CIPHER);
-		return Buffer.from(key.export({
-			format: "pem",
-			type: "pkcs8",
-			cipher: cipher,
-			passphrase: passphrase
-		}));
+	let passphrase = options?.passphrase;
+	let cipher = options?.cipher ?? (typeof passphrase === "undefined" ? undefined : DEFAULT_CIPHER);
+	return key.export({
+		type: "pkcs8",
+		format: "der",
+		passphrase: passphrase,
+		cipher: cipher
+	});
+};
+
+export function generatePrivateKeyPKCS8PEM(options?: RSAKeyOptions & RSAExportOptionsPKCS8PEM): Buffer {
+	let key = generatePrivateKey(options);
+	let passphrase = options?.passphrase;
+	let cipher = options?.cipher ?? (typeof passphrase === "undefined" ? undefined : DEFAULT_CIPHER);
+	return Buffer.from(key.export({
+		type: "pkcs8",
+		format: "pem",
+		passphrase: passphrase,
+		cipher: cipher
+	}));
+};
+
+export function generatePrivateKeyPKCS8(options?: RSAKeyOptions & RSAExportOptionsPKCS8): Buffer {
+	if (options?.format === "der") {
+		return generatePrivateKeyPKCS8DER(options);
 	} else {
-		let passphrase = options?.passphrase;
-		let cipher = options?.cipher ?? (typeof passphrase === "undefined" ? undefined : DEFAULT_CIPHER);
-		return key.export({
-			format: "der",
-			type: "pkcs8",
-			cipher: cipher,
-			passphrase: passphrase
-		});
+		return generatePrivateKeyPKCS8PEM(options);
 	}
 };
 
@@ -93,11 +130,8 @@ export function generatePrivateKeyJWK(options?: RSAKeyOptions): jwk.RSAPrivateKe
 
 export function generatePrivateKeyBuffer(options?: RSAOptions): Buffer {
 	if (options?.container === "pkcs8") {
-		return generatePrivateKeyPKCS8(options);
+		return generatePrivateKeyPKCS1(options);
 	} else {
-		return generatePrivateKeyPKCS1({
-			format: "pem",
-			...options
-		});
+		return generatePrivateKeyPKCS8(options);
 	}
 };
