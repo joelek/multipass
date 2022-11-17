@@ -25,7 +25,7 @@ Multipass was created to make certificate management as simple as possible witho
 
 Multipass features support for loading cryptographic keys stored using the common `PKCS1`, `PKCS8` and `SEC1` containers and can generate strong assymetric keys automatically.
 
-By default, Multipass will generate 256-bit elliptic curve (EC) keys and store them using the `SEC1` container.
+By default, Multipass will generate 256-bit elliptic curve (EC) keys and store them using the `PKCS8` container.
 
 ### Automated certification
 
