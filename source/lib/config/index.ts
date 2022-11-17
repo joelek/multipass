@@ -59,13 +59,13 @@ export type Filenames = autoguard.guards.Object<{}, {
 }>;
 
 export const Passphrases: autoguard.serialization.MessageGuard<Passphrases> = autoguard.guards.Object.of({}, {
-	"account_passphrase": autoguard.guards.String,
-	"certificate_passphrase": autoguard.guards.String
+	"account_pass": autoguard.guards.String,
+	"certificate_pass": autoguard.guards.String
 });
 
 export type Passphrases = autoguard.guards.Object<{}, {
-	"account_passphrase": autoguard.guards.String,
-	"certificate_passphrase": autoguard.guards.String
+	"account_pass": autoguard.guards.String,
+	"certificate_pass": autoguard.guards.String
 }>;
 
 export const Options: autoguard.serialization.MessageGuard<Options> = autoguard.guards.Object.of({

@@ -23,8 +23,8 @@ guard Filenames: {
 };
 
 guard Passphrases: {
-	"account_passphrase"?: string,
-	"certificate_passphrase"?: string
+	"account_pass"?: string,
+	"certificate_pass"?: string
 };
 
 guard Options: {

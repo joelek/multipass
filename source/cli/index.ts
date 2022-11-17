@@ -50,10 +50,10 @@ async function run(): Promise<number> {
 			options.filenames.full_chain = parts[1];
 		} else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
 			options.passphrases = options.passphrases ?? {};
-			options.passphrases.account_passphrase = parts[1];
+			options.passphrases.account_pass = parts[1];
 		} else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
 			options.passphrases = options.passphrases ?? {};
-			options.passphrases.certificate_passphrase = parts[1];
+			options.passphrases.certificate_pass = parts[1];
 		} else {
 			foundUnrecognizedArgument = true;
 			console.log(`Unrecognized argument "${argv}"!`);
