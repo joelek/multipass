@@ -16,9 +16,16 @@ guard Certificate: {
 	"root"?: string
 };
 
+guard Filenames: {
+	"account_key"?: string,
+	"certificate_key"?: string,
+	"full_chain"?: string
+};
+
 guard Options: {
 	"providers": Provider[],
 	"certificates": Certificate[],
 	"acme"?: string,
-	"monitor"?: boolean
+	"monitor"?: boolean,
+	"filenames"?: Filenames
 };

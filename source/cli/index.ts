@@ -39,6 +39,15 @@ async function run(): Promise<number> {
 			certificate = {
 				hostnames: []
 			};
+		} else if ((parts = /^--account-key=(.*)$/.exec(argv)) != null) {
+			options.filenames = options.filenames ?? {};
+			options.filenames.account_key = parts[1];
+		} else if ((parts = /^--certificate-key=(.*)$/.exec(argv)) != null) {
+			options.filenames = options.filenames ?? {};
+			options.filenames.certificate_key = parts[1];
+		} else if ((parts = /^--full-chain=(.*)$/.exec(argv)) != null) {
+			options.filenames = options.filenames ?? {};
+			options.filenames.full_chain = parts[1];
 		} else {
 			foundUnrecognizedArgument = true;
 			console.log(`Unrecognized argument "${argv}"!`);
@@ -58,6 +67,12 @@ async function run(): Promise<number> {
 		console.log(`		Configure automatic monitoring and renewal of certificates.`);
 		console.log(`	--root=string`);
 		console.log(`		Set directory for which to store associated files.`);
+		console.log(`	--account-key=string`);
+		console.log(`		Set filename for account key file (without extension).`);
+		console.log(`	--certificate-key=string`);
+		console.log(`		Set filename for certificate key file (without extension).`);
+		console.log(`	--full-chain=string`);
+		console.log(`		Set filename for full certificate chain file (without extension).`);
 		return 1;
 	} else {
 		if (options.certificates.length === 0) {

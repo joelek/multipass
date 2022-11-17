@@ -46,12 +46,25 @@ export type Certificate = autoguard.guards.Object<{
 	"root": autoguard.guards.String
 }>;
 
+export const Filenames: autoguard.serialization.MessageGuard<Filenames> = autoguard.guards.Object.of({}, {
+	"account_key": autoguard.guards.String,
+	"certificate_key": autoguard.guards.String,
+	"full_chain": autoguard.guards.String
+});
+
+export type Filenames = autoguard.guards.Object<{}, {
+	"account_key": autoguard.guards.String,
+	"certificate_key": autoguard.guards.String,
+	"full_chain": autoguard.guards.String
+}>;
+
 export const Options: autoguard.serialization.MessageGuard<Options> = autoguard.guards.Object.of({
 	"providers": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Provider)),
 	"certificates": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => Certificate))
 }, {
 	"acme": autoguard.guards.String,
-	"monitor": autoguard.guards.Boolean
+	"monitor": autoguard.guards.Boolean,
+	"filenames": autoguard.guards.Reference.of(() => Filenames)
 });
 
 export type Options = autoguard.guards.Object<{
@@ -59,7 +72,8 @@ export type Options = autoguard.guards.Object<{
 	"certificates": autoguard.guards.Array<autoguard.guards.Reference<Certificate>>
 }, {
 	"acme": autoguard.guards.String,
-	"monitor": autoguard.guards.Boolean
+	"monitor": autoguard.guards.Boolean,
+	"filenames": autoguard.guards.Reference<Filenames>
 }>;
 
 export namespace Autoguard {
@@ -68,6 +82,7 @@ export namespace Autoguard {
 		"ProviderGlesys": autoguard.guards.Reference.of(() => ProviderGlesys),
 		"Provider": autoguard.guards.Reference.of(() => Provider),
 		"Certificate": autoguard.guards.Reference.of(() => Certificate),
+		"Filenames": autoguard.guards.Reference.of(() => Filenames),
 		"Options": autoguard.guards.Reference.of(() => Options)
 	};
 

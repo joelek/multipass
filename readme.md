@@ -228,7 +228,6 @@ npm install [-g] joelek/multipass#master
 * Implement RSA-PSS signatures.
 * Write a class-based implementation for ASN1 handling.
 * Add support for additional DNS APIs.
-* Add support for configuring account, key and cert filenames.
 * Add support for keys protected using passphrases.
 * Add support for NodeJS < 16 by implementing base64url encoding.
 * Make the certification process more robust.
