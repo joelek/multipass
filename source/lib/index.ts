@@ -1,4 +1,3 @@
-import * as libcrypto from "crypto";
 import * as libdns from "dns";
 import * as libfs from "fs";
 import * as libpath from "path";
@@ -8,7 +7,7 @@ import { asn1 } from "../mod";
 import { der } from "../mod";
 import { dns } from "../mod";
 import { dynu } from "../mod";
-import { ec } from "../mod";
+import { key } from "../mod";
 import { glesys } from "../mod";
 import { parsing } from "../mod";
 import { pem } from "../mod";
@@ -153,27 +152,6 @@ async function retryWithExponentialBackoff<A>(seconds: number, attempts: number,
 	throw `Expected operation to succeed!`;
 };
 
-function getPrivateKey(path: string): libcrypto.KeyObject {
-	libfs.mkdirSync(libpath.dirname(path), { recursive: true });
-	if (!libfs.existsSync(path)) {
-		let key = ec.generatePrivateKey();
-		let buffer = key.export({ format: "pem", type: "sec1" });
-		libfs.writeFileSync(path, buffer);
-		return key;
-	}
-	let buffer = libfs.readFileSync(path);
-	try {
-		return libcrypto.createPrivateKey({ key: buffer, format: "pem", type: "sec1" });
-	} catch (error) {}
-	try {
-		return libcrypto.createPrivateKey({ key: buffer, format: "pem", type: "pkcs8" });
-	} catch (error) {}
-	try {
-		return libcrypto.createPrivateKey({ key: buffer, format: "pem", type: "pkcs1" });
-	} catch (error) {}
-	throw `Expected a private key!`;
-};
-
 async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{ client: dns.Client, domains: Array<string> }>): Promise<void> {
 	console.log(`Processing entry...`);
 	for (let hostname of entry.hostnames) {
@@ -190,8 +168,12 @@ async function processEntry(acmeUrl: string, entry: QueueEntry, clients: Array<{
 	console.log(`Starting certification process...`);
 	let undoables = new Array<dns.Undoable>();
 	try {
-		let accountKey = getPrivateKey(entry.account);
-		let certificateKey = getPrivateKey(entry.key);
+		let accountKey = key.generateOrConstructPrivateKey(entry.account, {
+			type: "ec"
+		});
+		let certificateKey = key.generateOrConstructPrivateKey(entry.key, {
+			type: "ec"
+		});
 		let handler = await acme.handler.Handler.make(acmeUrl, accountKey);
 		await handler.createNonce();
 		let account = await handler.createAccount({
