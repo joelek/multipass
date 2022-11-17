@@ -8,6 +8,7 @@ export * as glesys from "./glesys";
 export * as json from "./json";
 export * as jwk from "./jwk";
 export * as jws from "./jws";
+export * as key from "./key";
 export * as parsing from "./parsing";
 export * as pem from "./pem";
 export * as pkcs1 from "./pkcs1";
