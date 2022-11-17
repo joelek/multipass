@@ -6,13 +6,58 @@ import * as ec from "./";
 })();
 
 (async () => {
-	let key = ec.generatePrivateKeyPKCS8();
-	console.assert(true, `It should generate keys using the PKCS8 format properly.`);
+	let key = ec.generatePrivateKeyPKCS8({
+		format: "der"
+	});
+	console.assert(true, `It should generate keys using the PKCS8 container and the DER format.`);
 })();
 
 (async () => {
-	let key = ec.generatePrivateKeySEC1();
-	console.assert(true, `It should generate keys using the SEC1 format properly.`);
+	let key = ec.generatePrivateKeyPKCS8({
+		format: "der",
+		passphrase: "test",
+		cipher: "aes-256-cbc"
+	});
+	console.assert(true, `It should generate encrypted keys using the PKCS8 container and the DER format.`);
+})();
+
+(async () => {
+	let key = ec.generatePrivateKeyPKCS8({
+		format: "pem"
+	});
+	console.assert(true, `It should generate keys using the PKCS8 container and the PEM format.`);
+})();
+
+(async () => {
+	let key = ec.generatePrivateKeyPKCS8({
+		format: "pem",
+		passphrase: "test",
+		cipher: "aes-256-cbc"
+	});
+	console.assert(true, `It should generate encrypted keys using the PKCS8 container and the PEM format.`);
+})();
+
+(async () => {
+	let key = ec.generatePrivateKeySEC1({
+		format: "der"
+	});
+	console.assert(true, `It should generate keys using the SEC1 container and the DER format.`);
+})();
+
+(async () => {
+	let key = ec.generatePrivateKeySEC1({
+		format: "pem"
+	});
+	console.assert(true, `It should generate keys using the SEC1 container and the PEM format.`);
+})();
+
+(async () => {
+	let key = ec.generatePrivateKeySEC1({
+		format: "pem",
+		passphrase: "test",
+		cipher: "aes-256-cbc"
+	});
+	console.assert(true, `It should generate encrypted keys using the SEC1 container and the PEM format.`);
 })();
 
 (async () => {
