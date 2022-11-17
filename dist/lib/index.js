@@ -389,7 +389,7 @@ function getRenewAfter(validity) {
 }
 ;
 function run(options) {
-    var _a;
+    var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function* () {
         let acme = (_a = options.acme) !== null && _a !== void 0 ? _a : LETS_ENCRYPT_STAGING;
         if (acme === "le") {
@@ -407,15 +407,18 @@ function run(options) {
                 domains
             });
         }
+        let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
+        let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
+        let full_chain = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.full_chain) !== null && _g !== void 0 ? _g : "full_chain";
         let queue = options.certificates
             .filter((certificate) => certificate.hostnames.length > 0)
             .map((certificate) => {
             var _a;
             let hostnames = certificate.hostnames;
             let root = (_a = certificate.root) !== null && _a !== void 0 ? _a : "./";
-            let account = libpath.join(root, "account_key.pem");
-            let key = libpath.join(root, "certificate_key.pem");
-            let cert = libpath.join(root, "full_chain.pem");
+            let account = libpath.join(root, `${account_key}.pem`);
+            let key = libpath.join(root, `${certificate_key}.pem`);
+            let cert = libpath.join(root, `${full_chain}.pem`);
             let validity = getValidityFromCertificate(cert);
             let renewAfter = getRenewAfter(validity);
             return {

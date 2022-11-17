@@ -12,6 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const lib = require("../lib");
 function run() {
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         let certificate = {
             hostnames: [],
@@ -56,6 +57,18 @@ function run() {
                     hostnames: []
                 };
             }
+            else if ((parts = /^--account-key=(.*)$/.exec(argv)) != null) {
+                options.filenames = (_a = options.filenames) !== null && _a !== void 0 ? _a : {};
+                options.filenames.account_key = parts[1];
+            }
+            else if ((parts = /^--certificate-key=(.*)$/.exec(argv)) != null) {
+                options.filenames = (_b = options.filenames) !== null && _b !== void 0 ? _b : {};
+                options.filenames.certificate_key = parts[1];
+            }
+            else if ((parts = /^--full-chain=(.*)$/.exec(argv)) != null) {
+                options.filenames = (_c = options.filenames) !== null && _c !== void 0 ? _c : {};
+                options.filenames.full_chain = parts[1];
+            }
             else {
                 foundUnrecognizedArgument = true;
                 console.log(`Unrecognized argument "${argv}"!`);
@@ -75,6 +88,12 @@ function run() {
             console.log(`		Configure automatic monitoring and renewal of certificates.`);
             console.log(`	--root=string`);
             console.log(`		Set directory for which to store associated files.`);
+            console.log(`	--account-key=string`);
+            console.log(`		Set filename for account key file (without extension).`);
+            console.log(`	--certificate-key=string`);
+            console.log(`		Set filename for certificate key file (without extension).`);
+            console.log(`	--full-chain=string`);
+            console.log(`		Set filename for full certificate chain file (without extension).`);
             return 1;
         }
         else {
