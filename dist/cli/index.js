@@ -71,11 +71,11 @@ function run() {
             }
             else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
                 options.passphrases = (_d = options.passphrases) !== null && _d !== void 0 ? _d : {};
-                options.passphrases.account_passphrase = parts[1];
+                options.passphrases.account_pass = parts[1];
             }
             else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
                 options.passphrases = (_e = options.passphrases) !== null && _e !== void 0 ? _e : {};
-                options.passphrases.certificate_passphrase = parts[1];
+                options.passphrases.certificate_pass = parts[1];
             }
             else {
                 foundUnrecognizedArgument = true;

@@ -29,8 +29,8 @@ export declare type Filenames = autoguard.guards.Object<{}, {
 }>;
 export declare const Passphrases: autoguard.serialization.MessageGuard<Passphrases>;
 export declare type Passphrases = autoguard.guards.Object<{}, {
-    "account_passphrase": autoguard.guards.String;
-    "certificate_passphrase": autoguard.guards.String;
+    "account_pass": autoguard.guards.String;
+    "certificate_pass": autoguard.guards.String;
 }>;
 export declare const Options: autoguard.serialization.MessageGuard<Options>;
 export declare type Options = autoguard.guards.Object<{
@@ -71,8 +71,8 @@ export declare namespace Autoguard {
             full_chain?: string | undefined;
         }>;
         Passphrases: autoguard.guards.ReferenceGuard<{
-            account_passphrase?: string | undefined;
-            certificate_passphrase?: string | undefined;
+            account_pass?: string | undefined;
+            certificate_pass?: string | undefined;
         }>;
         Options: autoguard.guards.ReferenceGuard<{
             providers: autoguard.guards.Array<{
@@ -95,8 +95,8 @@ export declare namespace Autoguard {
                 full_chain?: string | undefined;
             } | undefined;
             passphrases?: {
-                account_passphrase?: string | undefined;
-                certificate_passphrase?: string | undefined;
+                account_pass?: string | undefined;
+                certificate_pass?: string | undefined;
             } | undefined;
         }>;
     };

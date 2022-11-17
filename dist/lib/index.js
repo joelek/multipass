@@ -391,8 +391,8 @@ function run(options) {
         let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
         let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
         let full_chain = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.full_chain) !== null && _g !== void 0 ? _g : "full_chain";
-        let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_passphrase;
-        let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_passphrase;
+        let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_pass;
+        let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_pass;
         let queue = options.certificates
             .filter((certificate) => certificate.hostnames.length > 0)
             .map((certificate) => {

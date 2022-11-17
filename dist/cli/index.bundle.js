@@ -2460,8 +2460,8 @@ define("build/lib/config/index", ["require", "exports", "node_modules/@joelek/ts
         "full_chain": autoguard.guards.String
     });
     exports.Passphrases = autoguard.guards.Object.of({}, {
-        "account_passphrase": autoguard.guards.String,
-        "certificate_passphrase": autoguard.guards.String
+        "account_pass": autoguard.guards.String,
+        "certificate_pass": autoguard.guards.String
     });
     exports.Options = autoguard.guards.Object.of({
         "providers": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => exports.Provider)),
@@ -8901,8 +8901,8 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
             let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
             let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
             let full_chain = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.full_chain) !== null && _g !== void 0 ? _g : "full_chain";
-            let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_passphrase;
-            let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_passphrase;
+            let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_pass;
+            let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_pass;
             let queue = options.certificates
                 .filter((certificate) => certificate.hostnames.length > 0)
                 .map((certificate) => {
@@ -9043,11 +9043,11 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
                 }
                 else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
                     options.passphrases = (_d = options.passphrases) !== null && _d !== void 0 ? _d : {};
-                    options.passphrases.account_passphrase = parts[1];
+                    options.passphrases.account_pass = parts[1];
                 }
                 else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
                     options.passphrases = (_e = options.passphrases) !== null && _e !== void 0 ? _e : {};
-                    options.passphrases.certificate_passphrase = parts[1];
+                    options.passphrases.certificate_pass = parts[1];
                 }
                 else {
                     foundUnrecognizedArgument = true;
