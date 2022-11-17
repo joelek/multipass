@@ -27,6 +27,11 @@ export declare type Filenames = autoguard.guards.Object<{}, {
     "certificate_key": autoguard.guards.String;
     "full_chain": autoguard.guards.String;
 }>;
+export declare const Passphrases: autoguard.serialization.MessageGuard<Passphrases>;
+export declare type Passphrases = autoguard.guards.Object<{}, {
+    "account_passphrase": autoguard.guards.String;
+    "certificate_passphrase": autoguard.guards.String;
+}>;
 export declare const Options: autoguard.serialization.MessageGuard<Options>;
 export declare type Options = autoguard.guards.Object<{
     "providers": autoguard.guards.Array<autoguard.guards.Reference<Provider>>;
@@ -35,6 +40,7 @@ export declare type Options = autoguard.guards.Object<{
     "acme": autoguard.guards.String;
     "monitor": autoguard.guards.Boolean;
     "filenames": autoguard.guards.Reference<Filenames>;
+    "passphrases": autoguard.guards.Reference<Passphrases>;
 }>;
 export declare namespace Autoguard {
     const Guards: {
@@ -64,6 +70,10 @@ export declare namespace Autoguard {
             certificate_key?: string | undefined;
             full_chain?: string | undefined;
         }>;
+        Passphrases: autoguard.guards.ReferenceGuard<{
+            account_passphrase?: string | undefined;
+            certificate_passphrase?: string | undefined;
+        }>;
         Options: autoguard.guards.ReferenceGuard<{
             providers: autoguard.guards.Array<{
                 type: "dynu";
@@ -83,6 +93,10 @@ export declare namespace Autoguard {
                 account_key?: string | undefined;
                 certificate_key?: string | undefined;
                 full_chain?: string | undefined;
+            } | undefined;
+            passphrases?: {
+                account_passphrase?: string | undefined;
+                certificate_passphrase?: string | undefined;
             } | undefined;
         }>;
     };

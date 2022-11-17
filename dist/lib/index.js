@@ -24,7 +24,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.run = exports.loadConfig = void 0;
-const libcrypto = require("crypto");
 const libdns = require("dns");
 const libfs = require("fs");
 const libpath = require("path");
@@ -192,30 +191,6 @@ function retryWithExponentialBackoff(seconds, attempts, handler) {
     });
 }
 ;
-function getPrivateKey(path) {
-    libfs.mkdirSync(libpath.dirname(path), { recursive: true });
-    if (!libfs.existsSync(path)) {
-        let key = mod_5.ec.generatePrivateKey();
-        let buffer = key.export({ format: "pem", type: "sec1" });
-        libfs.writeFileSync(path, buffer);
-        return key;
-    }
-    let buffer = libfs.readFileSync(path);
-    try {
-        return libcrypto.createPrivateKey({ key: buffer, format: "pem", type: "sec1" });
-    }
-    catch (error) { }
-    try {
-        return libcrypto.createPrivateKey({ key: buffer, format: "pem", type: "pkcs8" });
-    }
-    catch (error) { }
-    try {
-        return libcrypto.createPrivateKey({ key: buffer, format: "pem", type: "pkcs1" });
-    }
-    catch (error) { }
-    throw `Expected a private key!`;
-}
-;
 function processEntry(acmeUrl, entry, clients) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`Processing entry...`);
@@ -233,8 +208,14 @@ function processEntry(acmeUrl, entry, clients) {
         console.log(`Starting certification process...`);
         let undoables = new Array();
         try {
-            let accountKey = getPrivateKey(entry.account);
-            let certificateKey = getPrivateKey(entry.key);
+            let accountKey = mod_5.key.generateOrConstructPrivateKey(entry.account, {
+                type: "ec",
+                passphrase: entry.account_pass
+            });
+            let certificateKey = mod_5.key.generateOrConstructPrivateKey(entry.key, {
+                type: "ec",
+                passphrase: entry.key_pass
+            });
             let handler = yield mod_1.acme.handler.Handler.make(acmeUrl, accountKey);
             yield handler.createNonce();
             let account = yield handler.createAccount({
@@ -389,7 +370,7 @@ function getRenewAfter(validity) {
 }
 ;
 function run(options) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     return __awaiter(this, void 0, void 0, function* () {
         let acme = (_a = options.acme) !== null && _a !== void 0 ? _a : LETS_ENCRYPT_STAGING;
         if (acme === "le") {
@@ -410,6 +391,8 @@ function run(options) {
         let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
         let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
         let full_chain = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.full_chain) !== null && _g !== void 0 ? _g : "full_chain";
+        let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_passphrase;
+        let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_passphrase;
         let queue = options.certificates
             .filter((certificate) => certificate.hostnames.length > 0)
             .map((certificate) => {
@@ -424,7 +407,9 @@ function run(options) {
             return {
                 hostnames,
                 account,
+                account_pass,
                 key,
+                key_pass,
                 cert,
                 validity,
                 renewAfter
