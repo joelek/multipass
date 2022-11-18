@@ -364,7 +364,7 @@ export async function run(options: config.Options): Promise<void> {
 	}
 	let account_key = options.filenames?.account_key ?? "account_key";
 	let certificate_key = options.filenames?.certificate_key ?? "certificate_key";
-	let full_chain = options.filenames?.full_chain ?? "full_chain";
+	let certificate = options.filenames?.certificate ?? "full_chain";
 	let account_pass = options.passphrases?.account_pass;
 	let key_pass = options.passphrases?.certificate_pass;
 	let queue = options.certificates
@@ -374,7 +374,7 @@ export async function run(options: config.Options): Promise<void> {
 			let root = certificate.root ?? "./";
 			let account = libpath.join(root, `${account_key}.pem`);
 			let key = libpath.join(root, `${certificate_key}.pem`);
-			let cert = libpath.join(root, `${full_chain}.pem`);
+			let cert = libpath.join(root, `${certificate}.pem`);
 			let validity = getValidityFromCertificate(cert);
 			let renewAfter = getRenewAfter(validity);
 			return {

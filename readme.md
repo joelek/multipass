@@ -152,7 +152,7 @@ Multipass can load configuration files stored using the JSON format shown below.
 	"filenames"?: {
 		"account_key"?: string,
 		"certificate_key"?: string,
-		"full_chain"?: string
+		"certificate"?: string
 	},
 	"passphrases"?: {
 		"account_pass"?: string,

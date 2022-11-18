@@ -49,13 +49,13 @@ export type Certificate = autoguard.guards.Object<{
 export const Filenames: autoguard.serialization.MessageGuard<Filenames> = autoguard.guards.Object.of({}, {
 	"account_key": autoguard.guards.String,
 	"certificate_key": autoguard.guards.String,
-	"full_chain": autoguard.guards.String
+	"certificate": autoguard.guards.String
 });
 
 export type Filenames = autoguard.guards.Object<{}, {
 	"account_key": autoguard.guards.String,
 	"certificate_key": autoguard.guards.String,
-	"full_chain": autoguard.guards.String
+	"certificate": autoguard.guards.String
 }>;
 
 export const Passphrases: autoguard.serialization.MessageGuard<Passphrases> = autoguard.guards.Object.of({}, {

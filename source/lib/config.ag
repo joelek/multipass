@@ -19,7 +19,7 @@ guard Certificate: {
 guard Filenames: {
 	"account_key"?: string,
 	"certificate_key"?: string,
-	"full_chain"?: string
+	"certificate"?: string
 };
 
 guard Passphrases: {
