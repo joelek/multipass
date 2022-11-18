@@ -370,7 +370,7 @@ function getRenewAfter(validity) {
 }
 ;
 function run(options) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         let acme = (_a = options.acme) !== null && _a !== void 0 ? _a : LETS_ENCRYPT_STAGING;
         if (acme === "le") {
@@ -388,20 +388,17 @@ function run(options) {
                 domains
             });
         }
-        let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
-        let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
-        let certificate = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.certificate) !== null && _g !== void 0 ? _g : "full_chain";
-        let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_pass;
-        let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_pass;
         let queue = options.certificates
             .filter((certificate) => certificate.hostnames.length > 0)
             .map((certificate) => {
-            var _a;
+            var _a, _b, _c, _d;
             let hostnames = certificate.hostnames;
             let root = (_a = certificate.root) !== null && _a !== void 0 ? _a : "./";
-            let account = libpath.join(root, `${account_key}.pem`);
-            let key = libpath.join(root, `${certificate_key}.pem`);
-            let cert = libpath.join(root, `${certificate}.pem`);
+            let account = libpath.join(root, `${(_b = certificate.account_key) !== null && _b !== void 0 ? _b : "account_key"}.pem`);
+            let account_pass = certificate.account_pass;
+            let key = libpath.join(root, `${(_c = certificate.certificate_key) !== null && _c !== void 0 ? _c : "certificate_key"}.pem`);
+            let key_pass = certificate.certificate_pass;
+            let cert = libpath.join(root, `${(_d = certificate.certificate) !== null && _d !== void 0 ? _d : "full_chain"}.pem`);
             let validity = getValidityFromCertificate(cert);
             let renewAfter = getRenewAfter(validity);
             return {

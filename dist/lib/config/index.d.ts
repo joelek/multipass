@@ -20,17 +20,11 @@ export declare type Certificate = autoguard.guards.Object<{
     "hostnames": autoguard.guards.Array<autoguard.guards.String>;
 }, {
     "root": autoguard.guards.String;
-}>;
-export declare const Filenames: autoguard.serialization.MessageGuard<Filenames>;
-export declare type Filenames = autoguard.guards.Object<{}, {
     "account_key": autoguard.guards.String;
-    "certificate_key": autoguard.guards.String;
-    "certificate": autoguard.guards.String;
-}>;
-export declare const Passphrases: autoguard.serialization.MessageGuard<Passphrases>;
-export declare type Passphrases = autoguard.guards.Object<{}, {
     "account_pass": autoguard.guards.String;
+    "certificate_key": autoguard.guards.String;
     "certificate_pass": autoguard.guards.String;
+    "certificate": autoguard.guards.String;
 }>;
 export declare const Options: autoguard.serialization.MessageGuard<Options>;
 export declare type Options = autoguard.guards.Object<{
@@ -39,8 +33,6 @@ export declare type Options = autoguard.guards.Object<{
 }, {
     "acme": autoguard.guards.String;
     "monitor": autoguard.guards.Boolean;
-    "filenames": autoguard.guards.Reference<Filenames>;
-    "passphrases": autoguard.guards.Reference<Passphrases>;
 }>;
 export declare namespace Autoguard {
     const Guards: {
@@ -64,15 +56,11 @@ export declare namespace Autoguard {
         Certificate: autoguard.guards.ReferenceGuard<{
             hostnames: autoguard.guards.Array<string>;
             root?: string | undefined;
-        }>;
-        Filenames: autoguard.guards.ReferenceGuard<{
             account_key?: string | undefined;
-            certificate_key?: string | undefined;
-            certificate?: string | undefined;
-        }>;
-        Passphrases: autoguard.guards.ReferenceGuard<{
             account_pass?: string | undefined;
+            certificate_key?: string | undefined;
             certificate_pass?: string | undefined;
+            certificate?: string | undefined;
         }>;
         Options: autoguard.guards.ReferenceGuard<{
             providers: autoguard.guards.Array<{
@@ -86,18 +74,14 @@ export declare namespace Autoguard {
             certificates: autoguard.guards.Array<{
                 hostnames: autoguard.guards.Array<string>;
                 root?: string | undefined;
+                account_key?: string | undefined;
+                account_pass?: string | undefined;
+                certificate_key?: string | undefined;
+                certificate_pass?: string | undefined;
+                certificate?: string | undefined;
             }>;
             acme?: string | undefined;
             monitor?: boolean | undefined;
-            filenames?: {
-                account_key?: string | undefined;
-                certificate_key?: string | undefined;
-                certificate?: string | undefined;
-            } | undefined;
-            passphrases?: {
-                account_pass?: string | undefined;
-                certificate_pass?: string | undefined;
-            } | undefined;
         }>;
     };
     type Guards = {
