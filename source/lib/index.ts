@@ -362,19 +362,16 @@ export async function run(options: config.Options): Promise<void> {
 			domains
 		});
 	}
-	let account_key = options.filenames?.account_key ?? "account_key";
-	let certificate_key = options.filenames?.certificate_key ?? "certificate_key";
-	let certificate = options.filenames?.certificate ?? "full_chain";
-	let account_pass = options.passphrases?.account_pass;
-	let key_pass = options.passphrases?.certificate_pass;
 	let queue = options.certificates
 		.filter((certificate) => certificate.hostnames.length > 0)
 		.map((certificate) => {
 			let hostnames = certificate.hostnames;
 			let root = certificate.root ?? "./";
-			let account = libpath.join(root, `${account_key}.pem`);
-			let key = libpath.join(root, `${certificate_key}.pem`);
-			let cert = libpath.join(root, `${certificate}.pem`);
+			let account = libpath.join(root, `${certificate.account_key ?? "account_key"}.pem`);
+			let account_pass = certificate.account_pass;
+			let key = libpath.join(root, `${certificate.certificate_key ?? "certificate_key"}.pem`);
+			let key_pass = certificate.certificate_pass;
+			let cert = libpath.join(root, `${certificate.certificate ?? "full_chain"}.pem`);
 			let validity = getValidityFromCertificate(cert);
 			let renewAfter = getRenewAfter(validity);
 			return {

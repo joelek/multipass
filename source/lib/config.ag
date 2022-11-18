@@ -13,25 +13,17 @@ guard Provider: ProviderDynu | ProviderGlesys;
 
 guard Certificate: {
 	"hostnames": string[],
-	"root"?: string
-};
-
-guard Filenames: {
+	"root"?: string,
 	"account_key"?: string,
-	"certificate_key"?: string,
-	"certificate"?: string
-};
-
-guard Passphrases: {
 	"account_pass"?: string,
-	"certificate_pass"?: string
+	"certificate_key"?: string,
+	"certificate_pass"?: string,
+	"certificate"?: string
 };
 
 guard Options: {
 	"providers": Provider[],
 	"certificates": Certificate[],
 	"acme"?: string,
-	"monitor"?: boolean,
-	"filenames"?: Filenames,
-	"passphrases"?: Passphrases
+	"monitor"?: boolean
 };

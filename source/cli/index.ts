@@ -40,20 +40,15 @@ async function run(): Promise<number> {
 				hostnames: []
 			};
 		} else if ((parts = /^--account-key=(.*)$/.exec(argv)) != null) {
-			options.filenames = options.filenames ?? {};
-			options.filenames.account_key = parts[1];
+			certificate.account_key = parts[1];
 		} else if ((parts = /^--certificate-key=(.*)$/.exec(argv)) != null) {
-			options.filenames = options.filenames ?? {};
-			options.filenames.certificate_key = parts[1];
+			certificate.certificate_key = parts[1];
 		} else if ((parts = /^--certificate=(.*)$/.exec(argv)) != null) {
-			options.filenames = options.filenames ?? {};
-			options.filenames.certificate = parts[1];
+			certificate.certificate = parts[1];
 		} else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
-			options.passphrases = options.passphrases ?? {};
-			options.passphrases.account_pass = parts[1];
+			certificate.account_pass = parts[1];
 		} else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
-			options.passphrases = options.passphrases ?? {};
-			options.passphrases.certificate_pass = parts[1];
+			certificate.certificate_pass = parts[1];
 		} else {
 			foundUnrecognizedArgument = true;
 			console.log(`Unrecognized argument "${argv}"!`);
