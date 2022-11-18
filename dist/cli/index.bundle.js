@@ -2457,7 +2457,7 @@ define("build/lib/config/index", ["require", "exports", "node_modules/@joelek/ts
     exports.Filenames = autoguard.guards.Object.of({}, {
         "account_key": autoguard.guards.String,
         "certificate_key": autoguard.guards.String,
-        "full_chain": autoguard.guards.String
+        "certificate": autoguard.guards.String
     });
     exports.Passphrases = autoguard.guards.Object.of({}, {
         "account_pass": autoguard.guards.String,
@@ -8900,7 +8900,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
             }
             let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
             let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
-            let full_chain = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.full_chain) !== null && _g !== void 0 ? _g : "full_chain";
+            let certificate = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.certificate) !== null && _g !== void 0 ? _g : "full_chain";
             let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_pass;
             let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_pass;
             let queue = options.certificates
@@ -8911,7 +8911,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
                 let root = (_a = certificate.root) !== null && _a !== void 0 ? _a : "./";
                 let account = libpath.join(root, `${account_key}.pem`);
                 let key = libpath.join(root, `${certificate_key}.pem`);
-                let cert = libpath.join(root, `${full_chain}.pem`);
+                let cert = libpath.join(root, `${certificate}.pem`);
                 let validity = getValidityFromCertificate(cert);
                 let renewAfter = getRenewAfter(validity);
                 return {
@@ -9037,9 +9037,9 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
                     options.filenames = (_b = options.filenames) !== null && _b !== void 0 ? _b : {};
                     options.filenames.certificate_key = parts[1];
                 }
-                else if ((parts = /^--full-chain=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--certificate=(.*)$/.exec(argv)) != null) {
                     options.filenames = (_c = options.filenames) !== null && _c !== void 0 ? _c : {};
-                    options.filenames.full_chain = parts[1];
+                    options.filenames.certificate = parts[1];
                 }
                 else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
                     options.passphrases = (_d = options.passphrases) !== null && _d !== void 0 ? _d : {};
@@ -9072,8 +9072,8 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
                 console.log(`		Set filename for account key file (without extension).`);
                 console.log(`	--certificate-key=string`);
                 console.log(`		Set filename for certificate key file (without extension).`);
-                console.log(`	--full-chain=string`);
-                console.log(`		Set filename for full certificate chain file (without extension).`);
+                console.log(`	--certificate=string`);
+                console.log(`		Set filename for certificate file (without extension).`);
                 console.log(`	--account-pass=string`);
                 console.log(`		Set passphrase used to encrypt the account key.`);
                 console.log(`	--certificate-pass=string`);

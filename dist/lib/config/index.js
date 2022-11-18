@@ -21,7 +21,7 @@ exports.Certificate = autoguard.guards.Object.of({
 exports.Filenames = autoguard.guards.Object.of({}, {
     "account_key": autoguard.guards.String,
     "certificate_key": autoguard.guards.String,
-    "full_chain": autoguard.guards.String
+    "certificate": autoguard.guards.String
 });
 exports.Passphrases = autoguard.guards.Object.of({}, {
     "account_pass": autoguard.guards.String,

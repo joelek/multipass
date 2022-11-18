@@ -390,7 +390,7 @@ function run(options) {
         }
         let account_key = (_c = (_b = options.filenames) === null || _b === void 0 ? void 0 : _b.account_key) !== null && _c !== void 0 ? _c : "account_key";
         let certificate_key = (_e = (_d = options.filenames) === null || _d === void 0 ? void 0 : _d.certificate_key) !== null && _e !== void 0 ? _e : "certificate_key";
-        let full_chain = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.full_chain) !== null && _g !== void 0 ? _g : "full_chain";
+        let certificate = (_g = (_f = options.filenames) === null || _f === void 0 ? void 0 : _f.certificate) !== null && _g !== void 0 ? _g : "full_chain";
         let account_pass = (_h = options.passphrases) === null || _h === void 0 ? void 0 : _h.account_pass;
         let key_pass = (_j = options.passphrases) === null || _j === void 0 ? void 0 : _j.certificate_pass;
         let queue = options.certificates
@@ -401,7 +401,7 @@ function run(options) {
             let root = (_a = certificate.root) !== null && _a !== void 0 ? _a : "./";
             let account = libpath.join(root, `${account_key}.pem`);
             let key = libpath.join(root, `${certificate_key}.pem`);
-            let cert = libpath.join(root, `${full_chain}.pem`);
+            let cert = libpath.join(root, `${certificate}.pem`);
             let validity = getValidityFromCertificate(cert);
             let renewAfter = getRenewAfter(validity);
             return {

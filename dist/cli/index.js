@@ -65,9 +65,9 @@ function run() {
                 options.filenames = (_b = options.filenames) !== null && _b !== void 0 ? _b : {};
                 options.filenames.certificate_key = parts[1];
             }
-            else if ((parts = /^--full-chain=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--certificate=(.*)$/.exec(argv)) != null) {
                 options.filenames = (_c = options.filenames) !== null && _c !== void 0 ? _c : {};
-                options.filenames.full_chain = parts[1];
+                options.filenames.certificate = parts[1];
             }
             else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
                 options.passphrases = (_d = options.passphrases) !== null && _d !== void 0 ? _d : {};
@@ -100,8 +100,8 @@ function run() {
             console.log(`		Set filename for account key file (without extension).`);
             console.log(`	--certificate-key=string`);
             console.log(`		Set filename for certificate key file (without extension).`);
-            console.log(`	--full-chain=string`);
-            console.log(`		Set filename for full certificate chain file (without extension).`);
+            console.log(`	--certificate=string`);
+            console.log(`		Set filename for certificate file (without extension).`);
             console.log(`	--account-pass=string`);
             console.log(`		Set passphrase used to encrypt the account key.`);
             console.log(`	--certificate-pass=string`);
