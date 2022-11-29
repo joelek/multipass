@@ -234,3 +234,5 @@ npm install [-g] joelek/multipass#master
 * Write a class-based implementation for ASN1 handling.
 * Add support for additional DNS APIs.
 * Add support for NodeJS < 16 by implementing base64url encoding.
+* Colorize terminal output.
+* Display name and version in CLI.
