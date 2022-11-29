@@ -166,7 +166,7 @@ function serialize(document) {
                 if (!/^([\x09\x20-\x7E]*)$/u.test(value)) {
                     throw `Expected a valid header value!`;
                 }
-                let parts = (_b = value.match(/.{1,64}/g)) !== null && _b !== void 0 ? _b : [];
+                let parts = (_b = value.match(/.{1,64}/g)) !== null && _b !== void 0 ? _b : [""];
                 if (key.length + 1 + parts[0].length > 64) {
                     parts.unshift("");
                 }

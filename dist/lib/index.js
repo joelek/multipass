@@ -28,6 +28,7 @@ const libdns = require("dns");
 const libfs = require("fs");
 const libpath = require("path");
 const config = require("./config");
+const terminal = require("./terminal");
 const mod_1 = require("../mod");
 const mod_2 = require("../mod");
 const mod_3 = require("../mod");
@@ -86,7 +87,7 @@ function makeClient(credentials) {
 ;
 function getCanonicalName(hostname) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(`Resolving canonical name for "${hostname}"...`);
+        console.log(`Resolving canonical name for ${terminal.stylize(hostname, terminal.FG_YELLOW)}...`);
         let path = new Array(hostname);
         while (true) {
             let hostnames = new Array();
@@ -99,31 +100,31 @@ function getCanonicalName(hostname) {
             if (hostnames.length !== 1) {
                 throw `Expected exactly one hostname!`;
             }
-            console.log(`Found redirect between "${hostname}" and "${hostnames[0]}".`);
+            console.log(`Found redirect between ${terminal.stylize(hostname, terminal.FG_YELLOW)} and ${terminal.stylize(hostnames[0], terminal.FG_YELLOW)}.`);
             hostname = hostnames[0];
             if (path.includes(hostname)) {
                 throw `Expected canonical name to resolve properly!`;
             }
             path.push(hostname);
         }
-        console.log(`Canonical name is "${hostname}".`);
+        console.log(`Canonical name is ${terminal.stylize(hostname, terminal.FG_YELLOW)}.`);
         return hostname;
     });
 }
 ;
 function makeResolver(hostname) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(`Creating resolver for ${hostname}...`);
+        console.log(`Creating resolver for ${terminal.stylize(hostname, terminal.FG_YELLOW)}...`);
         let parts = hostname.split(".");
         for (let i = 0; i <= parts.length - 2; i++) {
             try {
                 let hostname = parts.slice(i).join(".");
-                console.log(`Attempting to locate nameserver for "${hostname}".`);
+                console.log(`Attempting to locate nameserver for ${terminal.stylize(hostname, terminal.FG_YELLOW)}.`);
                 let response = yield libdns.promises.resolveSoa(hostname);
-                console.log(`Primary nameserver is "${response.nsname}".`);
+                console.log(`Primary nameserver is ${terminal.stylize(response.nsname, terminal.FG_YELLOW)}.`);
                 let addresses = yield libdns.promises.resolve4(response.nsname);
                 for (let address of addresses) {
-                    console.log(`Primary nameserver can be reached through ${address}.`);
+                    console.log(`Primary nameserver can be reached through ${terminal.stylize(address, terminal.FG_MAGENTA)}.`);
                 }
                 let resolver = new libdns.promises.Resolver();
                 resolver.setServers(addresses);
@@ -195,14 +196,14 @@ function processEntry(acmeUrl, entry, clients) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(`Processing entry...`);
         for (let hostname of entry.hostnames) {
-            console.log(`Entry contains hostname "${hostname}".`);
+            console.log(`Entry contains hostname ${terminal.stylize(hostname, terminal.FG_YELLOW)}.`);
         }
         if (entry.validity != null) {
             let { notBefore, notAfter } = entry.validity;
-            console.log(`Current certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
+            console.log(`Current certificate is valid between ${terminal.stylize(new Date(notBefore).toLocaleString(), terminal.FG_GREEN)} and ${terminal.stylize(new Date(notAfter).toLocaleString(), terminal.FG_GREEN)}.`);
         }
         if (entry.renewAfter > Date.now()) {
-            console.log(`Process should start no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
+            console.log(`Process should start no sooner than ${terminal.stylize(new Date(entry.renewAfter).toLocaleString(), terminal.FG_RED)}.`);
             return;
         }
         console.log(`Starting certification process...`);
@@ -240,12 +241,12 @@ function processEntry(acmeUrl, entry, clients) {
                         }
                         if (challenge.status === "pending") {
                             let hostnameToAuthorize = makeProvisionHostname(authorization.payload.identifier.value);
-                            console.log(`Proving authority over "${authorization.payload.identifier.value}" through "${hostnameToAuthorize}"...`);
+                            console.log(`Proving authority over ${terminal.stylize(authorization.payload.identifier.value, terminal.FG_YELLOW)} through ${terminal.stylize(hostnameToAuthorize, terminal.FG_YELLOW)}...`);
                             let hostname = yield getCanonicalName(hostnameToAuthorize);
                             let content = mod_1.acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }));
                             let { client, domain, subdomain } = getClientDetails(hostname, clients);
                             let resolver = yield makeResolver(hostname);
-                            console.log(`Provisioning record at "${hostname}"...`);
+                            console.log(`Provisioning record at ${terminal.stylize(hostname, terminal.FG_YELLOW)}...`);
                             let undoable = yield client.provisionTextRecord({
                                 domain,
                                 subdomain,
@@ -302,7 +303,7 @@ function processEntry(acmeUrl, entry, clients) {
             entry.validity = getValidityFromCertificate(entry.cert);
             if (entry.validity != null) {
                 let { notBefore, notAfter } = entry.validity;
-                console.log(`Certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
+                console.log(`Certificate is valid between ${terminal.stylize(new Date(notBefore).toLocaleString(), terminal.FG_GREEN)} and ${terminal.stylize(new Date(notAfter).toLocaleString(), terminal.FG_GREEN)}.`);
             }
             entry.renewAfter = getRenewAfter(entry.validity);
             console.log(`Certification process successful!`);
@@ -314,7 +315,7 @@ function processEntry(acmeUrl, entry, clients) {
             let factor = 1.0 + (0.5 * randomness);
             let msPerDay = 24 * 60 * 60 * 1000;
             entry.renewAfter = Date.now() + Math.round(msPerDay * factor);
-            console.log(`Retry may be attempted no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
+            console.log(`Retry will be made at ${terminal.stylize(new Date(entry.renewAfter).toLocaleString(), terminal.FG_GREEN)}.`);
         }
         for (let undoable of undoables) {
             yield undoable.undo();
@@ -381,7 +382,7 @@ function run(options) {
             let client = yield makeClient(credentials);
             let domains = yield client.listDomains();
             for (let domain of domains) {
-                console.log(`Provisioning configured for "${domain}".`);
+                console.log(`Provisioning configured for ${terminal.stylize(domain, terminal.FG_YELLOW)}.`);
             }
             clients.push({
                 client,

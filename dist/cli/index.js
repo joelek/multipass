@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const app = require("../app.json");
 const lib = require("../lib");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -20,63 +21,68 @@ function run() {
             providers: [],
             certificates: []
         };
-        let foundUnrecognizedArgument = false;
-        for (let argv of process.argv.slice(2)) {
+        let unrecognizedArguments = [];
+        for (let arg of process.argv.slice(2)) {
             let parts = null;
-            if ((parts = /^--acme=(.*)$/.exec(argv)) != null) {
+            if ((parts = /^--acme=(.*)$/.exec(arg)) != null) {
                 options.acme = parts[1] || undefined;
             }
-            else if ((parts = /^--config=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--config=(.*)$/.exec(arg)) != null) {
                 options = lib.loadConfig(parts[1]);
                 break;
             }
-            else if ((parts = /^--dns=dynu[:]([^:]*)$/.exec(argv)) != null) {
+            else if ((parts = /^--dns=dynu[:]([^:]*)$/.exec(arg)) != null) {
                 options.providers.push({
                     type: "dynu",
                     key: parts[1]
                 });
             }
-            else if ((parts = /^--dns=glesys[:]([^:]*)[:]([^:]*)$/.exec(argv)) != null) {
+            else if ((parts = /^--dns=glesys[:]([^:]*)[:]([^:]*)$/.exec(arg)) != null) {
                 options.providers.push({
                     type: "glesys",
                     account: parts[1],
                     key: parts[2]
                 });
             }
-            else if ((parts = /^--hostname=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--hostname=(.*)$/.exec(arg)) != null) {
                 certificate.hostnames.push(parts[1]);
             }
-            else if ((parts = /^--monitor=(true|false)$/.exec(argv)) != null) {
+            else if ((parts = /^--monitor=(true|false)$/.exec(arg)) != null) {
                 options.monitor = parts[1] === "true";
             }
-            else if ((parts = /^--root=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--root=(.*)$/.exec(arg)) != null) {
                 certificate.root = parts[1] || undefined;
                 options.certificates.push(certificate);
                 certificate = {
                     hostnames: []
                 };
             }
-            else if ((parts = /^--account-key=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--account-key=(.*)$/.exec(arg)) != null) {
                 certificate.account_key = parts[1];
             }
-            else if ((parts = /^--certificate-key=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--certificate-key=(.*)$/.exec(arg)) != null) {
                 certificate.certificate_key = parts[1];
             }
-            else if ((parts = /^--certificate=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--certificate=(.*)$/.exec(arg)) != null) {
                 certificate.certificate = parts[1];
             }
-            else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--account-pass=(.*)$/.exec(arg)) != null) {
                 certificate.account_pass = parts[1];
             }
-            else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
+            else if ((parts = /^--certificate-pass=(.*)$/.exec(arg)) != null) {
                 certificate.certificate_pass = parts[1];
             }
             else {
-                foundUnrecognizedArgument = true;
-                console.log(`Unrecognized argument "${argv}"!`);
+                unrecognizedArguments.push(arg);
             }
         }
-        if (foundUnrecognizedArgument) {
+        if (unrecognizedArguments.length > 0) {
+            console.log(`${app.name} v${app.version}`);
+            console.log(``);
+            for (let unrecognizedArgument of unrecognizedArguments) {
+                console.log(`Unrecognized argument "${unrecognizedArgument}"!`);
+            }
+            console.log(``);
             console.log(`Arguments:`);
             console.log(`	--acme=string`);
             console.log(`		Set ACME directory URL.`);

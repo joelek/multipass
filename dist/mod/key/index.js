@@ -10,9 +10,10 @@ function generatePrivateKey(options) {
     if ((options === null || options === void 0 ? void 0 : options.type) === "rsa") {
         return rsa.generatePrivateKeyBuffer(options);
     }
-    else {
+    if ((options === null || options === void 0 ? void 0 : options.type) === "ec") {
         return ec.generatePrivateKeyBuffer(options);
     }
+    return ec.generatePrivateKeyBuffer();
 }
 exports.generatePrivateKey = generatePrivateKey;
 ;

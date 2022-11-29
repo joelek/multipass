@@ -13,6 +13,10 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
+define("build/app", [], {
+    "name": "@joelek/multipass",
+    "version": "1.2.0"
+});
 define("node_modules/@joelek/ts-autoguard/dist/lib-shared/serialization", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -2478,6 +2482,37 @@ define("build/lib/config/index", ["require", "exports", "node_modules/@joelek/ts
         Autoguard.Requests = {};
         Autoguard.Responses = {};
     })(Autoguard = exports.Autoguard || (exports.Autoguard = {}));
+    ;
+});
+define("build/lib/terminal", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.stylize = exports.BG_WHITE = exports.BG_CYAN = exports.BG_MAGENTA = exports.BG_BLUE = exports.BG_YELLOW = exports.BG_GREEN = exports.BG_RED = exports.BG_BLACK = exports.FG_WHITE = exports.FG_CYAN = exports.FG_MAGENTA = exports.FG_BLUE = exports.FG_YELLOW = exports.FG_GREEN = exports.FG_RED = exports.FG_BLACK = exports.UNDERLINE = exports.ITALIC = exports.FAINT = exports.BOLD = exports.RESET = void 0;
+    exports.RESET = 0;
+    exports.BOLD = 1;
+    exports.FAINT = 2;
+    exports.ITALIC = 3;
+    exports.UNDERLINE = 4;
+    exports.FG_BLACK = 30;
+    exports.FG_RED = 31;
+    exports.FG_GREEN = 32;
+    exports.FG_YELLOW = 33;
+    exports.FG_BLUE = 34;
+    exports.FG_MAGENTA = 35;
+    exports.FG_CYAN = 36;
+    exports.FG_WHITE = 37;
+    exports.BG_BLACK = 40;
+    exports.BG_RED = 41;
+    exports.BG_GREEN = 42;
+    exports.BG_YELLOW = 43;
+    exports.BG_BLUE = 44;
+    exports.BG_MAGENTA = 45;
+    exports.BG_CYAN = 46;
+    exports.BG_WHITE = 47;
+    function stylize(string, ...parameters) {
+        return `\x1B[${parameters.join(";")}m` + string + `\x1B[${exports.RESET}m`;
+    }
+    exports.stylize = stylize;
     ;
 });
 define("build/mod/asn1/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
@@ -7335,9 +7370,10 @@ define("build/mod/key/index", ["require", "exports", "crypto", "fs", "path", "bu
         if ((options === null || options === void 0 ? void 0 : options.type) === "rsa") {
             return rsa.generatePrivateKeyBuffer(options);
         }
-        else {
+        if ((options === null || options === void 0 ? void 0 : options.type) === "ec") {
             return ec.generatePrivateKeyBuffer(options);
         }
+        return ec.generatePrivateKeyBuffer();
     }
     exports.generatePrivateKey = generatePrivateKey;
     ;
@@ -7529,7 +7565,7 @@ define("build/mod/pem/index", ["require", "exports", "crypto"], function (requir
                     if (!/^([\x09\x20-\x7E]*)$/u.test(value)) {
                         throw `Expected a valid header value!`;
                     }
-                    let parts = (_b = value.match(/.{1,64}/g)) !== null && _b !== void 0 ? _b : [];
+                    let parts = (_b = value.match(/.{1,64}/g)) !== null && _b !== void 0 ? _b : [""];
                     if (key.length + 1 + parts[0].length > 64) {
                         parts.unshift("");
                     }
@@ -8493,7 +8529,7 @@ define("build/mod/index", ["require", "exports", "build/mod/acme/index", "build/
     exports.sec1 = sec1;
     exports.x509 = x509;
 });
-define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib/config/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/lib/config/index"], function (require, exports, libdns, libfs, libpath, config, mod_1, mod_2, mod_3, mod_4, mod_5, mod_6, mod_7, mod_8, mod_9, config_3) {
+define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib/config/index", "build/lib/terminal", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/mod/index", "build/lib/config/index"], function (require, exports, libdns, libfs, libpath, config, terminal, mod_1, mod_2, mod_3, mod_4, mod_5, mod_6, mod_7, mod_8, mod_9, config_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
@@ -8588,7 +8624,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
     ;
     function getCanonicalName(hostname) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Resolving canonical name for "${hostname}"...`);
+            console.log(`Resolving canonical name for ${terminal.stylize(hostname, terminal.FG_YELLOW)}...`);
             let path = new Array(hostname);
             while (true) {
                 let hostnames = new Array();
@@ -8601,31 +8637,31 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
                 if (hostnames.length !== 1) {
                     throw `Expected exactly one hostname!`;
                 }
-                console.log(`Found redirect between "${hostname}" and "${hostnames[0]}".`);
+                console.log(`Found redirect between ${terminal.stylize(hostname, terminal.FG_YELLOW)} and ${terminal.stylize(hostnames[0], terminal.FG_YELLOW)}.`);
                 hostname = hostnames[0];
                 if (path.includes(hostname)) {
                     throw `Expected canonical name to resolve properly!`;
                 }
                 path.push(hostname);
             }
-            console.log(`Canonical name is "${hostname}".`);
+            console.log(`Canonical name is ${terminal.stylize(hostname, terminal.FG_YELLOW)}.`);
             return hostname;
         });
     }
     ;
     function makeResolver(hostname) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Creating resolver for ${hostname}...`);
+            console.log(`Creating resolver for ${terminal.stylize(hostname, terminal.FG_YELLOW)}...`);
             let parts = hostname.split(".");
             for (let i = 0; i <= parts.length - 2; i++) {
                 try {
                     let hostname = parts.slice(i).join(".");
-                    console.log(`Attempting to locate nameserver for "${hostname}".`);
+                    console.log(`Attempting to locate nameserver for ${terminal.stylize(hostname, terminal.FG_YELLOW)}.`);
                     let response = yield libdns.promises.resolveSoa(hostname);
-                    console.log(`Primary nameserver is "${response.nsname}".`);
+                    console.log(`Primary nameserver is ${terminal.stylize(response.nsname, terminal.FG_YELLOW)}.`);
                     let addresses = yield libdns.promises.resolve4(response.nsname);
                     for (let address of addresses) {
-                        console.log(`Primary nameserver can be reached through ${address}.`);
+                        console.log(`Primary nameserver can be reached through ${terminal.stylize(address, terminal.FG_MAGENTA)}.`);
                     }
                     let resolver = new libdns.promises.Resolver();
                     resolver.setServers(addresses);
@@ -8697,14 +8733,14 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
         return __awaiter(this, void 0, void 0, function* () {
             console.log(`Processing entry...`);
             for (let hostname of entry.hostnames) {
-                console.log(`Entry contains hostname "${hostname}".`);
+                console.log(`Entry contains hostname ${terminal.stylize(hostname, terminal.FG_YELLOW)}.`);
             }
             if (entry.validity != null) {
                 let { notBefore, notAfter } = entry.validity;
-                console.log(`Current certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
+                console.log(`Current certificate is valid between ${terminal.stylize(new Date(notBefore).toLocaleString(), terminal.FG_GREEN)} and ${terminal.stylize(new Date(notAfter).toLocaleString(), terminal.FG_GREEN)}.`);
             }
             if (entry.renewAfter > Date.now()) {
-                console.log(`Process should start no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
+                console.log(`Process should start no sooner than ${terminal.stylize(new Date(entry.renewAfter).toLocaleString(), terminal.FG_RED)}.`);
                 return;
             }
             console.log(`Starting certification process...`);
@@ -8742,12 +8778,12 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
                             }
                             if (challenge.status === "pending") {
                                 let hostnameToAuthorize = makeProvisionHostname(authorization.payload.identifier.value);
-                                console.log(`Proving authority over "${authorization.payload.identifier.value}" through "${hostnameToAuthorize}"...`);
+                                console.log(`Proving authority over ${terminal.stylize(authorization.payload.identifier.value, terminal.FG_YELLOW)} through ${terminal.stylize(hostnameToAuthorize, terminal.FG_YELLOW)}...`);
                                 let hostname = yield getCanonicalName(hostnameToAuthorize);
                                 let content = mod_1.acme.computeKeyAuthorization(challenge.token, accountKey.export({ format: "jwk" }));
                                 let { client, domain, subdomain } = getClientDetails(hostname, clients);
                                 let resolver = yield makeResolver(hostname);
-                                console.log(`Provisioning record at "${hostname}"...`);
+                                console.log(`Provisioning record at ${terminal.stylize(hostname, terminal.FG_YELLOW)}...`);
                                 let undoable = yield client.provisionTextRecord({
                                     domain,
                                     subdomain,
@@ -8804,7 +8840,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
                 entry.validity = getValidityFromCertificate(entry.cert);
                 if (entry.validity != null) {
                     let { notBefore, notAfter } = entry.validity;
-                    console.log(`Certificate is valid between ${new Date(notBefore).toLocaleString()} and ${new Date(notAfter).toLocaleString()}.`);
+                    console.log(`Certificate is valid between ${terminal.stylize(new Date(notBefore).toLocaleString(), terminal.FG_GREEN)} and ${terminal.stylize(new Date(notAfter).toLocaleString(), terminal.FG_GREEN)}.`);
                 }
                 entry.renewAfter = getRenewAfter(entry.validity);
                 console.log(`Certification process successful!`);
@@ -8816,7 +8852,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
                 let factor = 1.0 + (0.5 * randomness);
                 let msPerDay = 24 * 60 * 60 * 1000;
                 entry.renewAfter = Date.now() + Math.round(msPerDay * factor);
-                console.log(`Retry may be attempted no sooner than ${new Date(entry.renewAfter).toLocaleString()}.`);
+                console.log(`Retry will be made at ${terminal.stylize(new Date(entry.renewAfter).toLocaleString(), terminal.FG_GREEN)}.`);
             }
             for (let undoable of undoables) {
                 yield undoable.undo();
@@ -8883,7 +8919,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
                 let client = yield makeClient(credentials);
                 let domains = yield client.listDomains();
                 for (let domain of domains) {
-                    console.log(`Provisioning configured for "${domain}".`);
+                    console.log(`Provisioning configured for ${terminal.stylize(domain, terminal.FG_YELLOW)}.`);
                 }
                 clients.push({
                     client,
@@ -8945,7 +8981,7 @@ define("build/lib/index", ["require", "exports", "dns", "fs", "path", "build/lib
     exports.run = run;
     ;
 });
-define("build/cli/index", ["require", "exports", "build/lib/index"], function (require, exports, lib) {
+define("build/cli/index", ["require", "exports", "build/app", "build/lib/index"], function (require, exports, app, lib) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -8981,63 +9017,68 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
                 providers: [],
                 certificates: []
             };
-            let foundUnrecognizedArgument = false;
-            for (let argv of process.argv.slice(2)) {
+            let unrecognizedArguments = [];
+            for (let arg of process.argv.slice(2)) {
                 let parts = null;
-                if ((parts = /^--acme=(.*)$/.exec(argv)) != null) {
+                if ((parts = /^--acme=(.*)$/.exec(arg)) != null) {
                     options.acme = parts[1] || undefined;
                 }
-                else if ((parts = /^--config=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--config=(.*)$/.exec(arg)) != null) {
                     options = lib.loadConfig(parts[1]);
                     break;
                 }
-                else if ((parts = /^--dns=dynu[:]([^:]*)$/.exec(argv)) != null) {
+                else if ((parts = /^--dns=dynu[:]([^:]*)$/.exec(arg)) != null) {
                     options.providers.push({
                         type: "dynu",
                         key: parts[1]
                     });
                 }
-                else if ((parts = /^--dns=glesys[:]([^:]*)[:]([^:]*)$/.exec(argv)) != null) {
+                else if ((parts = /^--dns=glesys[:]([^:]*)[:]([^:]*)$/.exec(arg)) != null) {
                     options.providers.push({
                         type: "glesys",
                         account: parts[1],
                         key: parts[2]
                     });
                 }
-                else if ((parts = /^--hostname=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--hostname=(.*)$/.exec(arg)) != null) {
                     certificate.hostnames.push(parts[1]);
                 }
-                else if ((parts = /^--monitor=(true|false)$/.exec(argv)) != null) {
+                else if ((parts = /^--monitor=(true|false)$/.exec(arg)) != null) {
                     options.monitor = parts[1] === "true";
                 }
-                else if ((parts = /^--root=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--root=(.*)$/.exec(arg)) != null) {
                     certificate.root = parts[1] || undefined;
                     options.certificates.push(certificate);
                     certificate = {
                         hostnames: []
                     };
                 }
-                else if ((parts = /^--account-key=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--account-key=(.*)$/.exec(arg)) != null) {
                     certificate.account_key = parts[1];
                 }
-                else if ((parts = /^--certificate-key=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--certificate-key=(.*)$/.exec(arg)) != null) {
                     certificate.certificate_key = parts[1];
                 }
-                else if ((parts = /^--certificate=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--certificate=(.*)$/.exec(arg)) != null) {
                     certificate.certificate = parts[1];
                 }
-                else if ((parts = /^--account-pass=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--account-pass=(.*)$/.exec(arg)) != null) {
                     certificate.account_pass = parts[1];
                 }
-                else if ((parts = /^--certificate-pass=(.*)$/.exec(argv)) != null) {
+                else if ((parts = /^--certificate-pass=(.*)$/.exec(arg)) != null) {
                     certificate.certificate_pass = parts[1];
                 }
                 else {
-                    foundUnrecognizedArgument = true;
-                    console.log(`Unrecognized argument "${argv}"!`);
+                    unrecognizedArguments.push(arg);
                 }
             }
-            if (foundUnrecognizedArgument) {
+            if (unrecognizedArguments.length > 0) {
+                console.log(`${app.name} v${app.version}`);
+                console.log(``);
+                for (let unrecognizedArgument of unrecognizedArguments) {
+                    console.log(`Unrecognized argument "${unrecognizedArgument}"!`);
+                }
+                console.log(``);
                 console.log(`Arguments:`);
                 console.log(`	--acme=string`);
                 console.log(`		Set ACME directory URL.`);
@@ -9082,4 +9123,4 @@ define("build/cli/index", ["require", "exports", "build/lib/index"], function (r
         process.exit(code);
     });
 });
-function define(e,t,l){let n=define;function u(e){return require(e)}null==n.moduleStates&&(n.moduleStates=new Map),null==n.dependentsMap&&(n.dependentsMap=new Map);let d=n.moduleStates.get(e);if(null!=d)throw"Duplicate module found with name "+e+"!";d={callback:l,dependencies:t,module:null},n.moduleStates.set(e,d);for(let l of t){let t=n.dependentsMap.get(l);null==t&&(t=new Set,n.dependentsMap.set(l,t)),t.add(e)}!function e(t){let l=n.moduleStates.get(t);if(null==l||null!=l.module)return;let d=Array(),o={exports:{}};for(let e of l.dependencies){if("require"===e){d.push(u);continue}if("module"===e){d.push(o);continue}if("exports"===e){d.push(o.exports);continue}try{d.push(u(e));continue}catch(e){}let t=n.moduleStates.get(e);if(null==t||null==t.module)return;d.push(t.module.exports)}l.callback(...d),l.module=o;let p=n.dependentsMap.get(t);if(null!=p)for(let t of p)e(t)}(e)}
+function define(e,t,n){let l=define;function u(e){return require(e)}null==l.moduleStates&&(l.moduleStates=new Map),null==l.dependentsMap&&(l.dependentsMap=new Map);let i=l.moduleStates.get(e);if(null!=i)throw new Error("Duplicate module found with name "+e+"!");i={initializer:n,dependencies:t,module:null},l.moduleStates.set(e,i);for(let n of t){let t=l.dependentsMap.get(n);null==t&&(t=new Set,l.dependentsMap.set(n,t)),t.add(e)}!function e(t){let n=l.moduleStates.get(t);if(null==n||null!=n.module)return;let i=Array(),o={exports:{}};for(let e of n.dependencies){if("require"===e){i.push(u);continue}if("module"===e){i.push(o);continue}if("exports"===e){i.push(o.exports);continue}try{i.push(u(e));continue}catch(e){}let t=l.moduleStates.get(e);if(null==t||null==t.module)return;i.push(t.module.exports)}"function"==typeof n.initializer?n.initializer(...i):o.exports=n.initializer,n.module=o;let d=l.dependentsMap.get(t);if(null!=d)for(let t of d)e(t)}(e)}
