@@ -19,7 +19,7 @@
 	},
 	"scripts": {
 		"appgen": "node -p \"JSON.stringify((({ name, version }) => ({ name, version }))(require('./package.json')), null, '\t')\" > ./source/app.json",
-		"build": "npm run appgen && npm run codegen && npm run compile && npm run package",
+		"build": "npm run appgen && npm run codegen && npm run compile && npm run package && npm run test",
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"codegen": "npx autoguard",
 		"compile": "rm -rf ./build/* && npx tsc --build",
@@ -27,7 +27,8 @@
 		"package:cli": "npx tsb --dependencies=true --entry=./build/cli/index.js --bundle=./dist/cli/index.bundle.js",
 		"package": "npm run package:all && npm run package:cli",
 		"version": "npm run build && git add ./",
-		"postversion": "git push && git push --tags"
+		"postversion": "git push && git push --tags",
+		"test": ""
 	},
 	"version": "1.2.0"
 }

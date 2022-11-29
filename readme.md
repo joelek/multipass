@@ -236,3 +236,4 @@ npm install [-g] joelek/multipass#master
 * Add support for NodeJS < 16 by implementing base64url encoding.
 * Colorize terminal output.
 * Display name and version in CLI.
+* Run tests through NPM.
