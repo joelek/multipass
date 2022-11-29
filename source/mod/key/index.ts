@@ -13,9 +13,11 @@ export type KeyOptions = ({
 export function generatePrivateKey(options?: KeyOptions): Buffer {
 	if (options?.type === "rsa") {
 		return rsa.generatePrivateKeyBuffer(options);
-	} else {
+	}
+	if (options?.type === "ec") {
 		return ec.generatePrivateKeyBuffer(options);
 	}
+	return ec.generatePrivateKeyBuffer();
 };
 
 export type ImportOptions = {
