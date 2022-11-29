@@ -183,7 +183,7 @@ export function serialize(document: Document): string {
 				if (!/^([\x09\x20-\x7E]*)$/u.test(value)) {
 					throw `Expected a valid header value!`;
 				}
-				let parts = value.match(/.{1,64}/g) ?? [];
+				let parts = value.match(/.{1,64}/g) ?? [""];
 				if (key.length + 1 + parts[0].length > 64) {
 					parts.unshift("");
 				}
