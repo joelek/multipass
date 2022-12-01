@@ -3,13 +3,13 @@
 import * as libcrypto from "crypto";
 import * as ec from "../ec";
 import * as rsa from "../rsa";
-export declare type KeyOptions = ({
+export type KeyOptions = ({
     type: "ec";
 } & ec.ECOptions) | ({
     type: "rsa";
 } & rsa.RSAOptions);
 export declare function generatePrivateKey(options?: KeyOptions): Buffer;
-export declare type ImportOptions = {
+export type ImportOptions = {
     passphrase?: string;
 };
 export declare function constructPrivateKey(buffer: Buffer, options?: ImportOptions): libcrypto.KeyObject;

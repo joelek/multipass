@@ -97,7 +97,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Union = exports.UnionGuard = exports.Undefined = exports.UndefinedGuard = exports.Tuple = exports.TupleGuard = exports.StringLiteral = exports.StringLiteralGuard = exports.String = exports.StringGuard = exports.Reference = exports.ReferenceGuard = exports.Record = exports.RecordGuard = exports.Object = exports.ObjectGuard = exports.NumberLiteral = exports.NumberLiteralGuard = exports.Number = exports.NumberGuard = exports.Null = exports.NullGuard = exports.Intersection = exports.IntersectionGuard = exports.Group = exports.GroupGuard = exports.BooleanLiteral = exports.BooleanLiteralGuard = exports.Boolean = exports.BooleanGuard = exports.Binary = exports.BinaryGuard = exports.BigInt = exports.BigIntGuard = exports.Array = exports.ArrayGuard = exports.Any = exports.AnyGuard = void 0;
+    exports.Union = exports.UnionGuard = exports.Undefined = exports.UndefinedGuard = exports.Tuple = exports.TupleGuard = exports.StringLiteral = exports.StringLiteralGuard = exports.String = exports.StringGuard = exports.Reference = exports.ReferenceGuard = exports.Record = exports.RecordGuard = exports.Object = exports.ObjectGuard = exports.NumberLiteral = exports.NumberLiteralGuard = exports.Number = exports.NumberGuard = exports.Null = exports.NullGuard = exports.Intersection = exports.IntersectionGuard = exports.Integer = exports.IntegerGuard = exports.Group = exports.GroupGuard = exports.BooleanLiteral = exports.BooleanLiteralGuard = exports.Boolean = exports.BooleanGuard = exports.Binary = exports.BinaryGuard = exports.BigInt = exports.BigIntGuard = exports.Array = exports.ArrayGuard = exports.Any = exports.AnyGuard = void 0;
     class AnyGuard extends serialization.MessageGuardBase {
         constructor() {
             super();
@@ -159,7 +159,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
             super();
         }
         as(subject, path = "") {
-            if ((subject != null) && (subject.constructor === globalThis.Uint8Array)) {
+            if ((subject != null) && (subject instanceof Uint8Array)) {
                 return subject;
             }
             throw new serialization.MessageGuardError(this, subject, path);
@@ -231,6 +231,23 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
             return new GroupGuard(guard, name);
         }
     };
+    class IntegerGuard extends serialization.MessageGuardBase {
+        constructor() {
+            super();
+        }
+        as(subject, path = "") {
+            if ((subject != null) && (subject.constructor === globalThis.Number) && globalThis.Number.isInteger(subject)) {
+                return subject;
+            }
+            throw new serialization.MessageGuardError(this, subject, path);
+        }
+        ts(eol = "\n") {
+            return "number";
+        }
+    }
+    exports.IntegerGuard = IntegerGuard;
+    ;
+    exports.Integer = new IntegerGuard();
     class IntersectionGuard extends serialization.MessageGuardBase {
         constructor(...guards) {
             super();
@@ -937,16 +954,23 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exp
     exports.deserializeValue = deserializeValue;
     ;
     function collectPayload(binary) {
-        var binary_1, binary_1_1;
-        var e_1, _a;
+        var _a, binary_1, binary_1_1;
+        var _b, e_1, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             let chunks = new Array();
             let length = 0;
             try {
-                for (binary_1 = __asyncValues(binary); binary_1_1 = yield binary_1.next(), !binary_1_1.done;) {
-                    let chunk = binary_1_1.value;
-                    chunks.push(chunk);
-                    length += chunk.length;
+                for (_a = true, binary_1 = __asyncValues(binary); binary_1_1 = yield binary_1.next(), _b = binary_1_1.done, !_b;) {
+                    _d = binary_1_1.value;
+                    _a = false;
+                    try {
+                        let chunk = _d;
+                        chunks.push(chunk);
+                        length += chunk.length;
+                    }
+                    finally {
+                        _a = true;
+                    }
                 }
             }
             catch (e_1_1) {
@@ -954,8 +978,8 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exp
             }
             finally {
                 try {
-                    if (binary_1_1 && !binary_1_1.done && (_a = binary_1.return))
-                        yield _a.call(binary_1);
+                    if (!_a && !_b && (_c = binary_1.return))
+                        yield _c.call(binary_1);
                 }
                 finally {
                     if (e_1)
@@ -1046,21 +1070,69 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exp
     exports.wrapMessageGuard = wrapMessageGuard;
     ;
 });
-define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], function (require, exports) {
+define("node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.VarLength = exports.VarInteger = exports.VarCategory = exports.Chunk = exports.IntegerAssert = exports.Parser = void 0;
+    exports.IntegerAssert = void 0;
+    class IntegerAssert {
+        constructor() { }
+        static atLeast(min, value) {
+            this.integer(min);
+            this.integer(value);
+            if (value < min) {
+                throw new Error(`Expected ${value} to be at least ${min}!`);
+            }
+            return value;
+        }
+        static atMost(max, value) {
+            this.integer(value);
+            this.integer(max);
+            if (value > max) {
+                throw new Error(`Expected ${value} to be at most ${max}!`);
+            }
+            return value;
+        }
+        static between(min, value, max) {
+            this.integer(min);
+            this.integer(value);
+            this.integer(max);
+            if (value < min || value > max) {
+                throw new Error(`Expected ${value} to be between ${min} and ${max}!`);
+            }
+            return value;
+        }
+        static exactly(value, expected) {
+            this.integer(expected);
+            this.integer(value);
+            if (value !== expected) {
+                throw new Error(`Expected ${value} to be exactly ${expected}!`);
+            }
+            return value;
+        }
+        static integer(value) {
+            if (!Number.isInteger(value)) {
+                throw new Error(`Expected ${value} to be an integer!`);
+            }
+            return value;
+        }
+    }
+    exports.IntegerAssert = IntegerAssert;
+    ;
+});
+define("node_modules/@joelek/ts-stdlib/dist/lib/data/parser", ["require", "exports", "node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer"], function (require, exports, integer_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Parser = void 0;
     class Parser {
-        buffer;
-        offset;
         constructor(buffer, offset) {
             this.buffer = buffer;
-            this.offset = offset ?? 0;
+            this.offset = offset !== null && offset !== void 0 ? offset : 0;
         }
         chunk(length) {
-            length = length ?? this.buffer.length - this.offset;
+            length = length !== null && length !== void 0 ? length : this.buffer.length - this.offset;
             if (this.offset + length > this.buffer.length) {
-                throw `Expected to read at least ${length} bytes!`;
+                throw new Error(`Expected to read at least ${length} bytes!`);
             }
             let buffer = this.buffer.slice(this.offset, this.offset + length);
             this.offset += length;
@@ -1071,7 +1143,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
         }
         signed(length, endian) {
             let value = this.unsigned(length, endian);
-            let bias = 2 ** (length * 8 - 1);
+            let bias = Math.pow(2, (length * 8 - 1));
             if (value >= bias) {
                 value -= bias + bias;
             }
@@ -1097,12 +1169,12 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                     this.offset = offset;
                 }
             }
-            throw `Expected one supplier to succeed!`;
+            throw new Error(`Expected one supplier to succeed!`);
         }
         unsigned(length, endian) {
-            IntegerAssert.between(1, length, 6);
+            integer_1.IntegerAssert.between(1, length, 6);
             if (this.offset + length > this.buffer.length) {
-                throw `Expected to read at least ${length} bytes!`;
+                throw new Error(`Expected to read at least ${length} bytes!`);
             }
             if (endian === "little") {
                 let value = 0;
@@ -1126,50 +1198,11 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
     }
     exports.Parser = Parser;
     ;
-    class IntegerAssert {
-        constructor() { }
-        static atLeast(min, value) {
-            this.integer(min);
-            this.integer(value);
-            if (value < min) {
-                throw `Expected ${value} to be at least ${min}!`;
-            }
-            return value;
-        }
-        static atMost(max, value) {
-            this.integer(value);
-            this.integer(max);
-            if (value > max) {
-                throw `Expected ${value} to be at most ${max}!`;
-            }
-            return value;
-        }
-        static between(min, value, max) {
-            this.integer(min);
-            this.integer(value);
-            this.integer(max);
-            if (value < min || value > max) {
-                throw `Expected ${value} to be between ${min} and ${max}!`;
-            }
-            return value;
-        }
-        static exactly(value, expected) {
-            this.integer(expected);
-            this.integer(value);
-            if (value !== expected) {
-                throw `Expected ${value} to be exactly ${expected}!`;
-            }
-            return value;
-        }
-        static integer(value) {
-            if (!Number.isInteger(value)) {
-                throw `Expected ${value} to be an integer!`;
-            }
-            return value;
-        }
-    }
-    exports.IntegerAssert = IntegerAssert;
-    ;
+});
+define("node_modules/@joelek/ts-stdlib/dist/lib/data/chunk", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Chunk = void 0;
     class Chunk {
         constructor() { }
         static fromString(string, encoding) {
@@ -1182,6 +1215,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                 return Uint8Array.from(bytes);
             }
             if (encoding === "base64") {
+                // @ts-ignore
                 return Chunk.fromString(atob(string), "binary");
             }
             if (encoding === "base64url") {
@@ -1212,6 +1246,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                 return parts.join("");
             }
             if (encoding === "base64") {
+                // @ts-ignore
                 return btoa(Chunk.toString(chunk, "binary"));
             }
             if (encoding === "base64url") {
@@ -1263,10 +1298,19 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
     }
     exports.Chunk = Chunk;
     ;
+});
+define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports", "node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", "node_modules/@joelek/ts-stdlib/dist/lib/data/parser", "node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", "node_modules/@joelek/ts-stdlib/dist/lib/data/chunk", "node_modules/@joelek/ts-stdlib/dist/lib/data/parser"], function (require, exports, integer_1, parser_1, integer_2, chunk_1, parser_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.VarLength = exports.VarInteger = exports.VarCategory = exports.Parser = exports.Chunk = exports.IntegerAssert = void 0;
+    Object.defineProperty(exports, "IntegerAssert", { enumerable: true, get: function () { return integer_2.IntegerAssert; } });
+    Object.defineProperty(exports, "Chunk", { enumerable: true, get: function () { return chunk_1.Chunk; } });
+    Object.defineProperty(exports, "Parser", { enumerable: true, get: function () { return parser_2.Parser; } });
     class VarCategory {
         constructor() { }
         static decode(parser, maxBytes = 8) {
-            parser = parser instanceof Parser ? parser : new Parser(parser);
+            parser = parser instanceof parser_1.Parser ? parser : new parser_1.Parser(parser);
             return parser.try((parser) => {
                 let value = 0;
                 for (let i = 0; i < maxBytes; i++) {
@@ -1282,7 +1326,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                             return value;
                         }
                         if (i === 0 && bits === 0) {
-                            throw `Expected a distinguished encoding!`;
+                            throw new Error(`Expected a distinguished encoding!`);
                         }
                     }
                     else {
@@ -1292,16 +1336,16 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                             return value;
                         }
                         if (i === 0 && bits === 0) {
-                            throw `Expected a distinguished encoding!`;
+                            throw new Error(`Expected a distinguished encoding!`);
                         }
                     }
                 }
-                throw `Expected to decode at most ${maxBytes} bytes!`;
+                throw new Error(`Expected to decode at most ${maxBytes} bytes!`);
             });
         }
         ;
         static encode(value, maxBytes = 8) {
-            IntegerAssert.integer(value);
+            integer_1.IntegerAssert.integer(value);
             let bytes = new Array();
             if (value >= 0) {
                 do {
@@ -1324,7 +1368,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                 bytes[bytes.length - 1] += 64;
             }
             if (bytes.length > maxBytes) {
-                throw `Expected to encode at most ${maxBytes} bytes!`;
+                throw new Error(`Expected to encode at most ${maxBytes} bytes!`);
             }
             return Uint8Array.from(bytes);
         }
@@ -1335,7 +1379,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
     class VarInteger {
         constructor() { }
         static decode(parser, maxBytes = 8) {
-            parser = parser instanceof Parser ? parser : new Parser(parser);
+            parser = parser instanceof parser_1.Parser ? parser : new parser_1.Parser(parser);
             return parser.try((parser) => {
                 let value = 0;
                 for (let i = 0; i < maxBytes; i++) {
@@ -1351,7 +1395,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                             return value;
                         }
                         if (i === 0 && bits === 0) {
-                            throw `Expected a distinguished encoding!`;
+                            throw new Error(`Expected a distinguished encoding!`);
                         }
                     }
                     else {
@@ -1361,16 +1405,16 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                             return value;
                         }
                         if (i === 0 && bits === 0) {
-                            throw `Expected a distinguished encoding!`;
+                            throw new Error(`Expected a distinguished encoding!`);
                         }
                     }
                 }
-                throw `Expected to decode at most ${maxBytes} bytes!`;
+                throw new Error(`Expected to decode at most ${maxBytes} bytes!`);
             });
         }
         ;
         static encode(value, maxBytes = 8) {
-            IntegerAssert.integer(value);
+            integer_1.IntegerAssert.integer(value);
             let bytes = new Array();
             if (value >= 0) {
                 do {
@@ -1395,7 +1439,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                 bytes[bytes.length - 1] += 64;
             }
             if (bytes.length > maxBytes) {
-                throw `Expected to encode at most ${maxBytes} bytes!`;
+                throw new Error(`Expected to encode at most ${maxBytes} bytes!`);
             }
             return Uint8Array.from(bytes);
         }
@@ -1406,7 +1450,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
     class VarLength {
         constructor() { }
         static decode(parser, maxBytes = 8) {
-            parser = parser instanceof Parser ? parser : new Parser(parser);
+            parser = parser instanceof parser_1.Parser ? parser : new parser_1.Parser(parser);
             return parser.try((parser) => {
                 let value = 0;
                 for (let i = 0; i < maxBytes; i++) {
@@ -1418,15 +1462,15 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                         return value;
                     }
                     if (i === 0 && bits === 0) {
-                        throw `Expected a distinguished encoding!`;
+                        throw new Error(`Expected a distinguished encoding!`);
                     }
                 }
-                throw `Expected to decode at most ${maxBytes} bytes!`;
+                throw new Error(`Expected to decode at most ${maxBytes} bytes!`);
             });
         }
         ;
         static encode(value, maxBytes = 8) {
-            IntegerAssert.atLeast(0, value);
+            integer_1.IntegerAssert.atLeast(0, value);
             let bytes = new Array();
             do {
                 let bits = value % 128;
@@ -1438,7 +1482,7 @@ define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports"], fu
                 bytes[i] += 128;
             }
             if (bytes.length > maxBytes) {
-                throw `Expected to encode at most ${maxBytes} bytes!`;
+                throw new Error(`Expected to encode at most ${maxBytes} bytes!`);
             }
             return Uint8Array.from(bytes);
         }
@@ -1558,7 +1602,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                 return exports.Unknown.encodePayload(subject, path);
             }
             catch (error) { }
-            throw `Expected subject to be encodable!`;
+            throw new Error(`Expected subject to be encodable!`);
         }
     }
     exports.AnyCodec = AnyCodec;
@@ -1572,14 +1616,14 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.NULL) {
-                    throw `Expected Null at ${path}!`;
+                    throw new Error(`Expected Null at ${path}!`);
                 }
                 return null;
             });
         }
         encodePayload(subject, path = "") {
             if (subject !== null) {
-                throw `Expected Null at ${path}!`;
+                throw new Error(`Expected Null at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.NULL));
@@ -1597,14 +1641,14 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.FALSE) {
-                    throw `Expected False at ${path}!`;
+                    throw new Error(`Expected False at ${path}!`);
                 }
                 return false;
             });
         }
         encodePayload(subject, path = "") {
             if (subject !== false) {
-                throw `Expected False at ${path}!`;
+                throw new Error(`Expected False at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.FALSE));
@@ -1622,14 +1666,14 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.TRUE) {
-                    throw `Expected True at ${path}!`;
+                    throw new Error(`Expected True at ${path}!`);
                 }
                 return true;
             });
         }
         encodePayload(subject, path = "") {
             if (subject !== true) {
-                throw `Expected True at ${path}!`;
+                throw new Error(`Expected True at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.TRUE));
@@ -1647,7 +1691,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.NUMBER) {
-                    throw `Expected Number at ${path}!`;
+                    throw new Error(`Expected Number at ${path}!`);
                 }
                 let chunk = parser.chunk(8);
                 if (((chunk[0] >> 7) & 0x01) === 0x01) {
@@ -1668,7 +1712,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
         encodePayload(subject, path = "") {
             if (subject == null || subject.constructor !== globalThis.Number) {
-                throw `Expected Number at ${path}!`;
+                throw new Error(`Expected Number at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.NUMBER));
@@ -1701,7 +1745,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.STRING) {
-                    throw `Expected String at ${path}!`;
+                    throw new Error(`Expected String at ${path}!`);
                 }
                 let value = utils.Chunk.toString(parser.chunk(), "utf-8");
                 return value;
@@ -1709,7 +1753,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
         encodePayload(subject, path = "") {
             if (subject == null || subject.constructor !== globalThis.String) {
-                throw `Expected String at ${path}!`;
+                throw new Error(`Expected String at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.STRING));
@@ -1728,15 +1772,15 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.BINARY) {
-                    throw `Expected Binary at ${path}!`;
+                    throw new Error(`Expected Binary at ${path}!`);
                 }
                 let value = parser.chunk();
                 return value;
             });
         }
         encodePayload(subject, path = "") {
-            if (subject == null || subject.constructor !== globalThis.Uint8Array) {
-                throw `Expected Binary at ${path}!`;
+            if (subject == null || !(subject instanceof globalThis.Uint8Array)) {
+                throw new Error(`Expected Binary at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.BINARY));
@@ -1755,7 +1799,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.BIGINT) {
-                    throw `Expected BigInt at ${path}!`;
+                    throw new Error(`Expected BigInt at ${path}!`);
                 }
                 let category = utils.VarCategory.decode(parser);
                 let value = 0n;
@@ -1782,7 +1826,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
         encodePayload(subject, path = "") {
             if (subject == null || subject.constructor !== globalThis.BigInt) {
-                throw `Expected BigInt at ${path}!`;
+                throw new Error(`Expected BigInt at ${path}!`);
             }
             let chunks = [];
             chunks.push(Uint8Array.of(Tag.BIGINT));
@@ -1824,7 +1868,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.LIST) {
-                    throw `Expected List at ${path}!`;
+                    throw new Error(`Expected List at ${path}!`);
                 }
                 decode = decode ?? ((key, path, parser) => exports.Any.decode(parser, path));
                 let value = [];
@@ -1839,7 +1883,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
         encodePayload(subject, path = "", encode) {
             if (subject == null || subject.constructor !== globalThis.Array) {
-                throw `Expected List at ${path}!`;
+                throw new Error(`Expected List at ${path}!`);
             }
             encode = encode ?? ((key, path, subject) => exports.Any.encode(subject, path));
             let chunks = [];
@@ -1866,7 +1910,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
             parser = parser instanceof utils.Parser ? parser : new utils.Parser(parser);
             return parser.try((parser) => {
                 if (parser.unsigned(1) !== Tag.MAP) {
-                    throw `Expected Map at ${path}!`;
+                    throw new Error(`Expected Map at ${path}!`);
                 }
                 decode = decode ?? ((key, path, parser) => exports.Any.decode(parser, path));
                 let value = {};
@@ -1880,7 +1924,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
         encodePayload(subject, path = "", encode) {
             if (subject == null || subject.constructor !== globalThis.Object) {
-                throw `Expected Map at ${path}!`;
+                throw new Error(`Expected Map at ${path}!`);
             }
             encode = encode ?? ((key, path, subject) => exports.Any.encode(subject, path));
             let chunks = [];
@@ -1913,7 +1957,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         constructor(chunk) {
             utils.IntegerAssert.atLeast(1, chunk.length);
             if (chunk[0] in Tag) {
-                throw `Expected tag ${Tag[chunk[0]]} to be unknown!`;
+                throw new Error(`Expected tag ${Tag[chunk[0]]} to be unknown!`);
             }
             this.chunk = chunk;
         }
@@ -1936,7 +1980,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         }
         encodePayload(subject, path = "") {
             if (subject == null || subject.constructor !== UnknownValue) {
-                throw `Expected Unknown at ${path}!`;
+                throw new Error(`Expected Unknown at ${path}!`);
             }
             let chunks = [];
             chunks.push(subject.getChunk());
@@ -2037,7 +2081,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                     }
                 });
                 if (indices.size !== 0) {
-                    throw `Expected members ${globalThis.Array.from(indices)} to be decoded!`;
+                    throw new Error(`Expected members ${globalThis.Array.from(indices)} to be decoded!`);
                 }
                 return subject;
             });
@@ -2054,7 +2098,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                 }
             });
             if (indices.size !== 0) {
-                throw `Expected members ${globalThis.Array.from(indices)} to be encoded!`;
+                throw new Error(`Expected members ${globalThis.Array.from(indices)} to be encoded!`);
             }
             return payload;
         }
@@ -2091,7 +2135,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                     }
                 });
                 if (keys.size !== 0) {
-                    throw `Expected members ${globalThis.Array.from(keys)} to be decoded!`;
+                    throw new Error(`Expected members ${globalThis.Array.from(keys)} to be decoded!`);
                 }
                 return subject;
             });
@@ -2111,7 +2155,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                 }
             });
             if (keys.size !== 0) {
-                throw `Expected members ${globalThis.Array.from(keys)} to be encoded!`;
+                throw new Error(`Expected members ${globalThis.Array.from(keys)} to be encoded!`);
             }
             return payload;
         }
@@ -2136,7 +2180,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                 }
                 catch (error) { }
             }
-            throw `Expected subject to be decodable!`;
+            throw new Error(`Expected subject to be decodable!`);
         }
         encodePayload(subject, path = "") {
             for (let codec of this.codecs) {
@@ -2145,7 +2189,7 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
                 }
                 catch (error) { }
             }
-            throw `Expected subject to be encodable!`;
+            throw new Error(`Expected subject to be encodable!`);
         }
     }
     exports.UnionCodec = UnionCodec;
@@ -2188,10 +2232,10 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         decodePayload(parser, path = "") {
             let subject = exports.BigInt.decodePayload(parser, path);
             if (subject < globalThis.BigInt(globalThis.Number.MIN_SAFE_INTEGER)) {
-                throw `Expected ${subject} at ${path} to be within safe range!`;
+                throw new Error(`Expected ${subject} at ${path} to be within safe range!`);
             }
             if (subject > globalThis.BigInt(globalThis.Number.MAX_SAFE_INTEGER)) {
-                throw `Expected ${subject} at ${path} to be within safe range!`;
+                throw new Error(`Expected ${subject} at ${path} to be within safe range!`);
             }
             return globalThis.Number(subject);
         }
@@ -2211,13 +2255,13 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         decodePayload(parser, path = "") {
             let subject = exports.String.decodePayload(parser, path);
             if (subject !== this.value) {
-                throw `Expected "${this.value}" at ${path}!`;
+                throw new Error(`Expected "${this.value}" at ${path}!`);
             }
             return this.value;
         }
         encodePayload(subject, path = "") {
             if (subject !== this.value) {
-                throw `Expected "${this.value}" at ${path}!`;
+                throw new Error(`Expected "${this.value}" at ${path}!`);
             }
             return exports.String.encodePayload(subject, path);
         }
@@ -2238,13 +2282,13 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         decodePayload(parser, path = "") {
             let subject = exports.Number.decodePayload(parser, path);
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return this.value;
         }
         encodePayload(subject, path = "") {
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return exports.Number.encodePayload(subject, path);
         }
@@ -2265,13 +2309,13 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         decodePayload(parser, path = "") {
             let subject = exports.BigInt.decodePayload(parser, path);
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return this.value;
         }
         encodePayload(subject, path = "") {
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return exports.BigInt.encodePayload(subject, path);
         }
@@ -2292,13 +2336,13 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         decodePayload(parser, path = "") {
             let subject = exports.Boolean.decodePayload(parser, path);
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return this.value;
         }
         encodePayload(subject, path = "") {
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return exports.Boolean.encodePayload(subject, path);
         }
@@ -2319,13 +2363,13 @@ define("node_modules/@joelek/bedrock/dist/lib/codecs", ["require", "exports", "n
         decodePayload(parser, path = "") {
             let subject = exports.Integer.decodePayload(parser, path);
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return this.value;
         }
         encodePayload(subject, path = "") {
             if (subject !== this.value) {
-                throw `Expected ${this.value} at ${path}!`;
+                throw new Error(`Expected ${this.value} at ${path}!`);
             }
             return exports.Integer.encodePayload(subject, path);
         }
@@ -5080,21 +5124,28 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
     exports.finalizeResponse = finalizeResponse;
     ;
     function respond(httpResponse, raw, serverOptions) {
-        var e_1, _a;
-        var _b, _c, _d;
+        var _a, e_1, _b, _c;
+        var _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             let rawHeaders = new Array();
-            for (let header of (_b = raw.headers) !== null && _b !== void 0 ? _b : []) {
+            for (let header of (_d = raw.headers) !== null && _d !== void 0 ? _d : []) {
                 rawHeaders.push(...header);
             }
-            httpResponse.writeHead((_c = raw.status) !== null && _c !== void 0 ? _c : 200, rawHeaders);
+            httpResponse.writeHead((_e = raw.status) !== null && _e !== void 0 ? _e : 200, rawHeaders);
             try {
-                for (var _e = __asyncValues((_d = raw.payload) !== null && _d !== void 0 ? _d : []), _f; _f = yield _e.next(), !_f.done;) {
-                    let chunk = _f.value;
-                    if (!httpResponse.write(chunk)) {
-                        yield new Promise((resolve, reject) => {
-                            httpResponse.once("drain", resolve);
-                        });
+                for (var _g = true, _h = __asyncValues((_f = raw.payload) !== null && _f !== void 0 ? _f : []), _j; _j = yield _h.next(), _a = _j.done, !_a;) {
+                    _c = _j.value;
+                    _g = false;
+                    try {
+                        let chunk = _c;
+                        if (!httpResponse.write(chunk)) {
+                            yield new Promise((resolve, reject) => {
+                                httpResponse.once("drain", resolve);
+                            });
+                        }
+                    }
+                    finally {
+                        _g = true;
                     }
                 }
             }
@@ -5103,8 +5154,8 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
             }
             finally {
                 try {
-                    if (_f && !_f.done && (_a = _e.return))
-                        yield _a.call(_e);
+                    if (!_g && !_a && (_b = _h.return))
+                        yield _b.call(_h);
                 }
                 finally {
                     if (e_1)
@@ -5147,20 +5198,20 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
                 let auxillary = {
                     socket
                 };
-                let filteredEndpoints = endpoints.map((endpoint) => endpoint(raw, auxillary));
-                filteredEndpoints = filteredEndpoints.filter((endpoint) => endpoint.acceptsComponents());
-                if (filteredEndpoints.length === 0) {
+                let allEndpoints = endpoints.map((endpoint) => endpoint(raw, auxillary));
+                let endpointsAcceptingComponents = allEndpoints.filter((endpoint) => endpoint.acceptsComponents());
+                if (endpointsAcceptingComponents.length === 0) {
                     return respond(httpResponse, {
                         status: 404
                     }, serverOptions);
                 }
-                filteredEndpoints = filteredEndpoints.filter((endpoint) => endpoint.acceptsMethod());
-                if (filteredEndpoints.length === 0) {
+                let endpointsAcceptingComponentsAndMethod = endpointsAcceptingComponents.filter((endpoint) => endpoint.acceptsMethod());
+                if (endpointsAcceptingComponentsAndMethod.length === 0) {
                     return respond(httpResponse, {
                         status: 405
                     }, serverOptions);
                 }
-                let endpoint = filteredEndpoints[0];
+                let endpoint = endpointsAcceptingComponentsAndMethod[0];
                 let valid = yield endpoint.validateRequest();
                 try {
                     let handled = yield valid.handleRequest();

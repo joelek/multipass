@@ -5,15 +5,15 @@ import { Integer } from "../../asn1";
 import { OctetString } from "../../asn1";
 import { Sequence } from "../../asn1";
 export declare const ASN1BitString: autoguard.serialization.MessageGuard<ASN1BitString>;
-export declare type ASN1BitString = autoguard.guards.Reference<BitString>;
+export type ASN1BitString = autoguard.guards.Reference<BitString>;
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;
-export declare type ASN1Integer = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 export declare const ASN1OctetString: autoguard.serialization.MessageGuard<ASN1OctetString>;
-export declare type ASN1OctetString = autoguard.guards.Reference<OctetString>;
+export type ASN1OctetString = autoguard.guards.Reference<OctetString>;
 export declare const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence>;
-export declare type ASN1Sequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 export declare const ECPrivateKey: autoguard.serialization.MessageGuard<ECPrivateKey>;
-export declare type ECPrivateKey = autoguard.guards.Intersection<[
+export type ECPrivateKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[

@@ -16,33 +16,33 @@ import { Set } from "../../asn1";
 import { UTCTime } from "../../asn1";
 import { UTF8String } from "../../asn1";
 export declare const ASN1BitString: autoguard.serialization.MessageGuard<ASN1BitString>;
-export declare type ASN1BitString = autoguard.guards.Reference<BitString>;
+export type ASN1BitString = autoguard.guards.Reference<BitString>;
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;
-export declare type ASN1Integer = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 export declare const ASN1Null: autoguard.serialization.MessageGuard<ASN1Null>;
-export declare type ASN1Null = autoguard.guards.Reference<Null>;
+export type ASN1Null = autoguard.guards.Reference<Null>;
 export declare const ASN1Node: autoguard.serialization.MessageGuard<ASN1Node>;
-export declare type ASN1Node = autoguard.guards.Reference<Node>;
+export type ASN1Node = autoguard.guards.Reference<Node>;
 export declare const ASN1ObjectIdentifier: autoguard.serialization.MessageGuard<ASN1ObjectIdentifier>;
-export declare type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
+export type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
 export declare const ASN1OctetString: autoguard.serialization.MessageGuard<ASN1OctetString>;
-export declare type ASN1OctetString = autoguard.guards.Reference<OctetString>;
+export type ASN1OctetString = autoguard.guards.Reference<OctetString>;
 export declare const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence>;
-export declare type ASN1Sequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 export declare const ASN1Set: autoguard.serialization.MessageGuard<ASN1Set>;
-export declare type ASN1Set = autoguard.guards.Reference<Set>;
+export type ASN1Set = autoguard.guards.Reference<Set>;
 export declare const ASN1UTF8String: autoguard.serialization.MessageGuard<ASN1UTF8String>;
-export declare type ASN1UTF8String = autoguard.guards.Reference<UTF8String>;
+export type ASN1UTF8String = autoguard.guards.Reference<UTF8String>;
 export declare const ASN1UTCTime: autoguard.serialization.MessageGuard<ASN1UTCTime>;
-export declare type ASN1UTCTime = autoguard.guards.Reference<UTCTime>;
+export type ASN1UTCTime = autoguard.guards.Reference<UTCTime>;
 export declare const ASN1Boolean: autoguard.serialization.MessageGuard<ASN1Boolean>;
-export declare type ASN1Boolean = autoguard.guards.Reference<Boolean>;
+export type ASN1Boolean = autoguard.guards.Reference<Boolean>;
 export declare const Version: autoguard.serialization.MessageGuard<Version>;
-export declare type Version = autoguard.guards.Reference<ASN1Integer>;
+export type Version = autoguard.guards.Reference<ASN1Integer>;
 export declare const CertificateSerialNumber: autoguard.serialization.MessageGuard<CertificateSerialNumber>;
-export declare type CertificateSerialNumber = autoguard.guards.Reference<ASN1Integer>;
+export type CertificateSerialNumber = autoguard.guards.Reference<ASN1Integer>;
 export declare const Validity: autoguard.serialization.MessageGuard<Validity>;
-export declare type Validity = autoguard.guards.Intersection<[
+export type Validity = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -52,7 +52,7 @@ export declare type Validity = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const SubjectKeyIdentifierExtension: autoguard.serialization.MessageGuard<SubjectKeyIdentifierExtension>;
-export declare type SubjectKeyIdentifierExtension = autoguard.guards.Intersection<[
+export type SubjectKeyIdentifierExtension = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Extension>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -67,7 +67,7 @@ export declare type SubjectKeyIdentifierExtension = autoguard.guards.Intersectio
     }, {}>
 ]>;
 export declare const AuthorityKeyIdentifierExtension: autoguard.serialization.MessageGuard<AuthorityKeyIdentifierExtension>;
-export declare type AuthorityKeyIdentifierExtension = autoguard.guards.Intersection<[
+export type AuthorityKeyIdentifierExtension = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Extension>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -82,7 +82,7 @@ export declare type AuthorityKeyIdentifierExtension = autoguard.guards.Intersect
     }, {}>
 ]>;
 export declare const BasicConstraintsExtension: autoguard.serialization.MessageGuard<BasicConstraintsExtension>;
-export declare type BasicConstraintsExtension = autoguard.guards.Intersection<[
+export type BasicConstraintsExtension = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Extension>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -98,7 +98,7 @@ export declare type BasicConstraintsExtension = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const TBSCertificate: autoguard.serialization.MessageGuard<TBSCertificate>;
-export declare type TBSCertificate = autoguard.guards.Intersection<[
+export type TBSCertificate = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -128,7 +128,7 @@ export declare type TBSCertificate = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const Certificate: autoguard.serialization.MessageGuard<Certificate>;
-export declare type Certificate = autoguard.guards.Intersection<[
+export type Certificate = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[

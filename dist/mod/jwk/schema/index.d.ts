@@ -42,11 +42,11 @@ export declare namespace Curve {
     function valueFromKey(key: string): Value;
 }
 export declare const Key: autoguard.serialization.MessageGuard<Key>;
-export declare type Key = autoguard.guards.Object<{
+export type Key = autoguard.guards.Object<{
     "kty": autoguard.guards.Reference<KeyType.Key>;
 }, {}>;
 export declare const AssymetricKey: autoguard.serialization.MessageGuard<AssymetricKey>;
-export declare type AssymetricKey = autoguard.guards.Intersection<[
+export type AssymetricKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Key>,
     autoguard.guards.Object<{
         "kty": autoguard.guards.Union<[
@@ -56,11 +56,11 @@ export declare type AssymetricKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECKey: autoguard.serialization.MessageGuard<ECKey>;
-export declare type ECKey = autoguard.guards.Object<{
+export type ECKey = autoguard.guards.Object<{
     "kty": autoguard.guards.StringLiteral<"EC">;
 }, {}>;
 export declare const ECPublicKey: autoguard.serialization.MessageGuard<ECPublicKey>;
-export declare type ECPublicKey = autoguard.guards.Intersection<[
+export type ECPublicKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ECKey>,
     autoguard.guards.Object<{
         "crv": autoguard.guards.Reference<Curve.Key>;
@@ -69,21 +69,21 @@ export declare type ECPublicKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECPrivateKey: autoguard.serialization.MessageGuard<ECPrivateKey>;
-export declare type ECPrivateKey = autoguard.guards.Intersection<[
+export type ECPrivateKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ECPublicKey>,
     autoguard.guards.Object<{
         "d": autoguard.guards.String;
     }, {}>
 ]>;
 export declare const RSAKey: autoguard.serialization.MessageGuard<RSAKey>;
-export declare type RSAKey = autoguard.guards.Intersection<[
+export type RSAKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AssymetricKey>,
     autoguard.guards.Object<{
         "kty": autoguard.guards.StringLiteral<"RSA">;
     }, {}>
 ]>;
 export declare const RSAPublicKey: autoguard.serialization.MessageGuard<RSAPublicKey>;
-export declare type RSAPublicKey = autoguard.guards.Intersection<[
+export type RSAPublicKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<RSAKey>,
     autoguard.guards.Object<{
         "n": autoguard.guards.String;
@@ -91,7 +91,7 @@ export declare type RSAPublicKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const RSAPrivateKey: autoguard.serialization.MessageGuard<RSAPrivateKey>;
-export declare type RSAPrivateKey = autoguard.guards.Intersection<[
+export type RSAPrivateKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<RSAPublicKey>,
     autoguard.guards.Object<{
         "d": autoguard.guards.String;
@@ -109,12 +109,12 @@ export declare type RSAPrivateKey = autoguard.guards.Intersection<[
     }>
 ]>;
 export declare const PublicKey: autoguard.serialization.MessageGuard<PublicKey>;
-export declare type PublicKey = autoguard.guards.Union<[
+export type PublicKey = autoguard.guards.Union<[
     autoguard.guards.Reference<ECPublicKey>,
     autoguard.guards.Reference<RSAPublicKey>
 ]>;
 export declare const PrivateKey: autoguard.serialization.MessageGuard<PrivateKey>;
-export declare type PrivateKey = autoguard.guards.Union<[
+export type PrivateKey = autoguard.guards.Union<[
     autoguard.guards.Reference<ECPrivateKey>,
     autoguard.guards.Reference<RSAPrivateKey>
 ]>;

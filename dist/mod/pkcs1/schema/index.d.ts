@@ -2,11 +2,11 @@ import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 import { Integer } from "../../asn1";
 import { Sequence } from "../../asn1";
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;
-export declare type ASN1Integer = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 export declare const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence>;
-export declare type ASN1Sequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 export declare const OtherPrimeInfo: autoguard.serialization.MessageGuard<OtherPrimeInfo>;
-export declare type OtherPrimeInfo = autoguard.guards.Intersection<[
+export type OtherPrimeInfo = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -17,14 +17,14 @@ export declare type OtherPrimeInfo = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const OtherPrimeInfos: autoguard.serialization.MessageGuard<OtherPrimeInfos>;
-export declare type OtherPrimeInfos = autoguard.guards.Intersection<[
+export type OtherPrimeInfos = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Array<autoguard.guards.Reference<OtherPrimeInfo>>;
     }, {}>
 ]>;
 export declare const RSAPublicKey: autoguard.serialization.MessageGuard<RSAPublicKey>;
-export declare type RSAPublicKey = autoguard.guards.Intersection<[
+export type RSAPublicKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -34,7 +34,7 @@ export declare type RSAPublicKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const RSAPrivateKey: autoguard.serialization.MessageGuard<RSAPrivateKey>;
-export declare type RSAPrivateKey = autoguard.guards.Intersection<[
+export type RSAPrivateKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[

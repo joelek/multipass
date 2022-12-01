@@ -165,7 +165,7 @@ export declare namespace Type {
     function valueFromKey(key: string): Value;
 }
 export declare const Node: autoguard.serialization.MessageGuard<Node>;
-export declare type Node = autoguard.guards.Object<{
+export type Node = autoguard.guards.Object<{
     "kind": autoguard.guards.Reference<Kind.Key>;
     "form": autoguard.guards.Reference<Form.Key>;
     "type": autoguard.guards.Reference<Type.Key>;
@@ -175,77 +175,77 @@ export declare type Node = autoguard.guards.Object<{
     ]>;
 }, {}>;
 export declare const BitString: autoguard.serialization.MessageGuard<BitString>;
-export declare type BitString = autoguard.guards.Object<{
+export type BitString = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"BIT_STRING">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const Integer: autoguard.serialization.MessageGuard<Integer>;
-export declare type Integer = autoguard.guards.Object<{
+export type Integer = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"INTEGER">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const Null: autoguard.serialization.MessageGuard<Null>;
-export declare type Null = autoguard.guards.Object<{
+export type Null = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"NULL">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const ObjectIdentifier: autoguard.serialization.MessageGuard<ObjectIdentifier>;
-export declare type ObjectIdentifier = autoguard.guards.Object<{
+export type ObjectIdentifier = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"OBJECT_IDENTIFIER">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const OctetString: autoguard.serialization.MessageGuard<OctetString>;
-export declare type OctetString = autoguard.guards.Object<{
+export type OctetString = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"OCTET_STRING">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const Sequence: autoguard.serialization.MessageGuard<Sequence>;
-export declare type Sequence = autoguard.guards.Object<{
+export type Sequence = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"CONSTRUCTED">;
     "type": autoguard.guards.StringLiteral<"SEQUENCE">;
     "data": autoguard.guards.Array<autoguard.guards.Reference<Node>>;
 }, {}>;
 export declare const Set: autoguard.serialization.MessageGuard<Set>;
-export declare type Set = autoguard.guards.Object<{
+export type Set = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"CONSTRUCTED">;
     "type": autoguard.guards.StringLiteral<"SET">;
     "data": autoguard.guards.Array<autoguard.guards.Reference<Node>>;
 }, {}>;
 export declare const UTF8String: autoguard.serialization.MessageGuard<UTF8String>;
-export declare type UTF8String = autoguard.guards.Object<{
+export type UTF8String = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"UTF8_STRING">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const Date: autoguard.serialization.MessageGuard<Date>;
-export declare type Date = autoguard.guards.Object<{
+export type Date = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"DATE">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const UTCTime: autoguard.serialization.MessageGuard<UTCTime>;
-export declare type UTCTime = autoguard.guards.Object<{
+export type UTCTime = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"UTC_TIME">;
     "data": autoguard.guards.String;
 }, {}>;
 export declare const Boolean: autoguard.serialization.MessageGuard<Boolean>;
-export declare type Boolean = autoguard.guards.Object<{
+export type Boolean = autoguard.guards.Object<{
     "kind": autoguard.guards.StringLiteral<"UNIVERSAL">;
     "form": autoguard.guards.StringLiteral<"PRIMITIVE">;
     "type": autoguard.guards.StringLiteral<"BOOLEAN">;

@@ -7,21 +7,21 @@ import { ObjectIdentifier } from "../../asn1";
 import { OctetString } from "../../asn1";
 import { Sequence } from "../../asn1";
 export declare const ASN1BitString: autoguard.serialization.MessageGuard<ASN1BitString>;
-export declare type ASN1BitString = autoguard.guards.Reference<BitString>;
+export type ASN1BitString = autoguard.guards.Reference<BitString>;
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;
-export declare type ASN1Integer = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 export declare const ASN1Null: autoguard.serialization.MessageGuard<ASN1Null>;
-export declare type ASN1Null = autoguard.guards.Reference<Null>;
+export type ASN1Null = autoguard.guards.Reference<Null>;
 export declare const ASN1ObjectIdentifier: autoguard.serialization.MessageGuard<ASN1ObjectIdentifier>;
-export declare type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
+export type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
 export declare const ASN1OctetString: autoguard.serialization.MessageGuard<ASN1OctetString>;
-export declare type ASN1OctetString = autoguard.guards.Reference<OctetString>;
+export type ASN1OctetString = autoguard.guards.Reference<OctetString>;
 export declare const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence>;
-export declare type ASN1Sequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 export declare const PKCS5AlgorithmIdentifier: autoguard.serialization.MessageGuard<PKCS5AlgorithmIdentifier>;
-export declare type PKCS5AlgorithmIdentifier = autoguard.guards.Reference<AlgorithmIdentifier>;
+export type PKCS5AlgorithmIdentifier = autoguard.guards.Reference<AlgorithmIdentifier>;
 export declare const PublicKeyInfo: autoguard.serialization.MessageGuard<PublicKeyInfo>;
-export declare type PublicKeyInfo = autoguard.guards.Intersection<[
+export type PublicKeyInfo = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -31,7 +31,7 @@ export declare type PublicKeyInfo = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const PrivateKeyInfo: autoguard.serialization.MessageGuard<PrivateKeyInfo>;
-export declare type PrivateKeyInfo = autoguard.guards.Intersection<[
+export type PrivateKeyInfo = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -42,34 +42,34 @@ export declare type PrivateKeyInfo = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECCurvePrime256v1: autoguard.serialization.MessageGuard<ECCurvePrime256v1>;
-export declare type ECCurvePrime256v1 = autoguard.guards.Intersection<[
+export type ECCurvePrime256v1 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1ObjectIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.StringLiteral<"1.2.840.10045.3.1.7">;
     }, {}>
 ]>;
 export declare const ECCurveSecp384r1: autoguard.serialization.MessageGuard<ECCurveSecp384r1>;
-export declare type ECCurveSecp384r1 = autoguard.guards.Intersection<[
+export type ECCurveSecp384r1 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1ObjectIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.StringLiteral<"1.3.132.0.34">;
     }, {}>
 ]>;
 export declare const ECCurveSecp521r1: autoguard.serialization.MessageGuard<ECCurveSecp521r1>;
-export declare type ECCurveSecp521r1 = autoguard.guards.Intersection<[
+export type ECCurveSecp521r1 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1ObjectIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.StringLiteral<"1.3.132.0.35">;
     }, {}>
 ]>;
 export declare const ECCurve: autoguard.serialization.MessageGuard<ECCurve>;
-export declare type ECCurve = autoguard.guards.Union<[
+export type ECCurve = autoguard.guards.Union<[
     autoguard.guards.Reference<ECCurvePrime256v1>,
     autoguard.guards.Reference<ECCurveSecp384r1>,
     autoguard.guards.Reference<ECCurveSecp521r1>
 ]>;
 export declare const ECIdentifier: autoguard.serialization.MessageGuard<ECIdentifier>;
-export declare type ECIdentifier = autoguard.guards.Intersection<[
+export type ECIdentifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -84,7 +84,7 @@ export declare type ECIdentifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECPublicKey: autoguard.serialization.MessageGuard<ECPublicKey>;
-export declare type ECPublicKey = autoguard.guards.Intersection<[
+export type ECPublicKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<PublicKeyInfo>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -94,7 +94,7 @@ export declare type ECPublicKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECPrivateKey: autoguard.serialization.MessageGuard<ECPrivateKey>;
-export declare type ECPrivateKey = autoguard.guards.Intersection<[
+export type ECPrivateKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<PrivateKeyInfo>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -105,7 +105,7 @@ export declare type ECPrivateKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const RSAIdentifier: autoguard.serialization.MessageGuard<RSAIdentifier>;
-export declare type RSAIdentifier = autoguard.guards.Intersection<[
+export type RSAIdentifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<PKCS5AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -120,7 +120,7 @@ export declare type RSAIdentifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const RSAPublicKey: autoguard.serialization.MessageGuard<RSAPublicKey>;
-export declare type RSAPublicKey = autoguard.guards.Intersection<[
+export type RSAPublicKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<PublicKeyInfo>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -130,7 +130,7 @@ export declare type RSAPublicKey = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const RSAPrivateKey: autoguard.serialization.MessageGuard<RSAPrivateKey>;
-export declare type RSAPrivateKey = autoguard.guards.Intersection<[
+export type RSAPrivateKey = autoguard.guards.Intersection<[
     autoguard.guards.Reference<PrivateKeyInfo>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[

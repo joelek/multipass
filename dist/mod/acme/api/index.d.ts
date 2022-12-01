@@ -1,7 +1,7 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 import { AssymetricKey } from "../../jwk";
 export declare const Account: autoguard.serialization.MessageGuard<Account>;
-export declare type Account = autoguard.guards.Object<{
+export type Account = autoguard.guards.Object<{
     "status": autoguard.guards.Union<[
         autoguard.guards.StringLiteral<"valid">,
         autoguard.guards.StringLiteral<"deactivated">,
@@ -14,7 +14,7 @@ export declare type Account = autoguard.guards.Object<{
     "termsOfServiceAgreed": autoguard.guards.Boolean;
 }>;
 export declare const Authorization: autoguard.serialization.MessageGuard<Authorization>;
-export declare type Authorization = autoguard.guards.Object<{
+export type Authorization = autoguard.guards.Object<{
     "identifier": autoguard.guards.Reference<Identifier>;
     "status": autoguard.guards.Union<[
         autoguard.guards.StringLiteral<"pending">,
@@ -30,7 +30,7 @@ export declare type Authorization = autoguard.guards.Object<{
     "wildcard": autoguard.guards.Boolean;
 }>;
 export declare const Challenge: autoguard.serialization.MessageGuard<Challenge>;
-export declare type Challenge = autoguard.guards.Object<{
+export type Challenge = autoguard.guards.Object<{
     "status": autoguard.guards.Union<[
         autoguard.guards.StringLiteral<"pending">,
         autoguard.guards.StringLiteral<"processing">,
@@ -44,7 +44,7 @@ export declare type Challenge = autoguard.guards.Object<{
     "validated": autoguard.guards.String;
 }>;
 export declare const ChallengeHTTP01: autoguard.serialization.MessageGuard<ChallengeHTTP01>;
-export declare type ChallengeHTTP01 = autoguard.guards.Intersection<[
+export type ChallengeHTTP01 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Challenge>,
     autoguard.guards.Object<{
         "type": autoguard.guards.StringLiteral<"http-01">;
@@ -52,7 +52,7 @@ export declare type ChallengeHTTP01 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ChallengeDNS01: autoguard.serialization.MessageGuard<ChallengeDNS01>;
-export declare type ChallengeDNS01 = autoguard.guards.Intersection<[
+export type ChallengeDNS01 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Challenge>,
     autoguard.guards.Object<{
         "type": autoguard.guards.StringLiteral<"dns-01">;
@@ -60,7 +60,7 @@ export declare type ChallengeDNS01 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ChallengeTLSALPN01: autoguard.serialization.MessageGuard<ChallengeTLSALPN01>;
-export declare type ChallengeTLSALPN01 = autoguard.guards.Intersection<[
+export type ChallengeTLSALPN01 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Challenge>,
     autoguard.guards.Object<{
         "type": autoguard.guards.StringLiteral<"tls-alpn-01">;
@@ -68,7 +68,7 @@ export declare type ChallengeTLSALPN01 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const Directory: autoguard.serialization.MessageGuard<Directory>;
-export declare type Directory = autoguard.guards.Object<{
+export type Directory = autoguard.guards.Object<{
     "keyChange": autoguard.guards.String;
     "newAccount": autoguard.guards.String;
     "newNonce": autoguard.guards.String;
@@ -84,12 +84,12 @@ export declare type Directory = autoguard.guards.Object<{
     "newAuthz": autoguard.guards.String;
 }>;
 export declare const Identifier: autoguard.serialization.MessageGuard<Identifier>;
-export declare type Identifier = autoguard.guards.Object<{
+export type Identifier = autoguard.guards.Object<{
     "type": autoguard.guards.StringLiteral<"dns">;
     "value": autoguard.guards.String;
 }, {}>;
 export declare const Order: autoguard.serialization.MessageGuard<Order>;
-export declare type Order = autoguard.guards.Object<{
+export type Order = autoguard.guards.Object<{
     "authorizations": autoguard.guards.Array<autoguard.guards.String>;
     "finalize": autoguard.guards.String;
     "identifiers": autoguard.guards.Array<autoguard.guards.Reference<Identifier>>;
@@ -108,40 +108,40 @@ export declare type Order = autoguard.guards.Object<{
     "notAfter": autoguard.guards.String;
 }>;
 export declare const Protected: autoguard.serialization.MessageGuard<Protected>;
-export declare type Protected = autoguard.guards.Object<{
+export type Protected = autoguard.guards.Object<{
     "nonce": autoguard.guards.String;
     "url": autoguard.guards.String;
 }, {}>;
 export declare const ProtectedWithJWK: autoguard.serialization.MessageGuard<ProtectedWithJWK>;
-export declare type ProtectedWithJWK = autoguard.guards.Intersection<[
+export type ProtectedWithJWK = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Protected>,
     autoguard.guards.Object<{
         "jwk": autoguard.guards.Reference<AssymetricKey>;
     }, {}>
 ]>;
 export declare const ProtectedWithKID: autoguard.serialization.MessageGuard<ProtectedWithKID>;
-export declare type ProtectedWithKID = autoguard.guards.Intersection<[
+export type ProtectedWithKID = autoguard.guards.Intersection<[
     autoguard.guards.Reference<Protected>,
     autoguard.guards.Object<{
         "kid": autoguard.guards.String;
     }, {}>
 ]>;
 export declare const CreateAccountPayload: autoguard.serialization.MessageGuard<CreateAccountPayload>;
-export declare type CreateAccountPayload = autoguard.guards.Object<{}, {
+export type CreateAccountPayload = autoguard.guards.Object<{}, {
     "contact": autoguard.guards.Array<autoguard.guards.String>;
     "termsOfServiceAgreed": autoguard.guards.Boolean;
     "onlyReturnExisting": autoguard.guards.Boolean;
     "externalAccountBinding": autoguard.guards.Object<{}, {}>;
 }>;
 export declare const CreateOrderPayload: autoguard.serialization.MessageGuard<CreateOrderPayload>;
-export declare type CreateOrderPayload = autoguard.guards.Object<{
+export type CreateOrderPayload = autoguard.guards.Object<{
     "identifiers": autoguard.guards.Array<autoguard.guards.Reference<Identifier>>;
 }, {
     "notBefore": autoguard.guards.String;
     "notAfter": autoguard.guards.String;
 }>;
 export declare const FinalizeOrderPayload: autoguard.serialization.MessageGuard<FinalizeOrderPayload>;
-export declare type FinalizeOrderPayload = autoguard.guards.Object<{
+export type FinalizeOrderPayload = autoguard.guards.Object<{
     "csr": autoguard.guards.String;
 }, {}>;
 export declare namespace Autoguard {

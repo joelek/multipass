@@ -1,12 +1,12 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 export declare const DomainPrice: autoguard.serialization.MessageGuard<DomainPrice>;
-export declare type DomainPrice = autoguard.guards.Object<{
+export type DomainPrice = autoguard.guards.Object<{
     "amount": autoguard.guards.Number;
     "currency": autoguard.guards.String;
     "years": autoguard.guards.Number;
 }, {}>;
 export declare const RegistrarInfo: autoguard.serialization.MessageGuard<RegistrarInfo>;
-export declare type RegistrarInfo = autoguard.guards.Object<{
+export type RegistrarInfo = autoguard.guards.Object<{
     "autorenew": autoguard.guards.String;
     "state": autoguard.guards.String;
 }, {
@@ -16,7 +16,7 @@ export declare type RegistrarInfo = autoguard.guards.Object<{
     "invoicenumber": autoguard.guards.String;
 }>;
 export declare const Domain: autoguard.serialization.MessageGuard<Domain>;
-export declare type Domain = autoguard.guards.Object<{
+export type Domain = autoguard.guards.Object<{
     "domainname": autoguard.guards.String;
 }, {
     "available": autoguard.guards.Boolean;
@@ -35,12 +35,12 @@ export declare type Domain = autoguard.guards.Object<{
     "usingglesysnameserver": autoguard.guards.String;
 }>;
 export declare const DomainRecordHost: autoguard.serialization.MessageGuard<DomainRecordHost>;
-export declare type DomainRecordHost = autoguard.guards.Union<[
+export type DomainRecordHost = autoguard.guards.Union<[
     autoguard.guards.StringLiteral<"@">,
     autoguard.guards.String
 ]>;
 export declare const DomainRecordType: autoguard.serialization.MessageGuard<DomainRecordType>;
-export declare type DomainRecordType = autoguard.guards.Union<[
+export type DomainRecordType = autoguard.guards.Union<[
     autoguard.guards.StringLiteral<"A">,
     autoguard.guards.StringLiteral<"NS">,
     autoguard.guards.StringLiteral<"MX">,
@@ -48,7 +48,7 @@ export declare type DomainRecordType = autoguard.guards.Union<[
     autoguard.guards.String
 ]>;
 export declare const DomainRecord: autoguard.serialization.MessageGuard<DomainRecord>;
-export declare type DomainRecord = autoguard.guards.Object<{
+export type DomainRecord = autoguard.guards.Object<{
     "domainname": autoguard.guards.String;
     "data": autoguard.guards.String;
     "host": autoguard.guards.Reference<DomainRecordHost>;

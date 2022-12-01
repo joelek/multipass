@@ -1,22 +1,22 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 export declare const ProviderDynu: autoguard.serialization.MessageGuard<ProviderDynu>;
-export declare type ProviderDynu = autoguard.guards.Object<{
+export type ProviderDynu = autoguard.guards.Object<{
     "type": autoguard.guards.StringLiteral<"dynu">;
     "key": autoguard.guards.String;
 }, {}>;
 export declare const ProviderGlesys: autoguard.serialization.MessageGuard<ProviderGlesys>;
-export declare type ProviderGlesys = autoguard.guards.Object<{
+export type ProviderGlesys = autoguard.guards.Object<{
     "type": autoguard.guards.StringLiteral<"glesys">;
     "account": autoguard.guards.String;
     "key": autoguard.guards.String;
 }, {}>;
 export declare const Provider: autoguard.serialization.MessageGuard<Provider>;
-export declare type Provider = autoguard.guards.Union<[
+export type Provider = autoguard.guards.Union<[
     autoguard.guards.Reference<ProviderDynu>,
     autoguard.guards.Reference<ProviderGlesys>
 ]>;
 export declare const Certificate: autoguard.serialization.MessageGuard<Certificate>;
-export declare type Certificate = autoguard.guards.Object<{
+export type Certificate = autoguard.guards.Object<{
     "hostnames": autoguard.guards.Array<autoguard.guards.String>;
 }, {
     "root": autoguard.guards.String;
@@ -27,7 +27,7 @@ export declare type Certificate = autoguard.guards.Object<{
     "certificate": autoguard.guards.String;
 }>;
 export declare const Options: autoguard.serialization.MessageGuard<Options>;
-export declare type Options = autoguard.guards.Object<{
+export type Options = autoguard.guards.Object<{
     "providers": autoguard.guards.Array<autoguard.guards.Reference<Provider>>;
     "certificates": autoguard.guards.Array<autoguard.guards.Reference<Certificate>>;
 }, {

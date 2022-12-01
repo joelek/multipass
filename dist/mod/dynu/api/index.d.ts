@@ -1,11 +1,11 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 export declare const Domain: autoguard.serialization.MessageGuard<Domain>;
-export declare type Domain = autoguard.guards.Object<{
+export type Domain = autoguard.guards.Object<{
     "id": autoguard.guards.Number;
     "name": autoguard.guards.String;
 }, {}>;
 export declare const DomainRecordStubGeneric: autoguard.serialization.MessageGuard<DomainRecordStubGeneric>;
-export declare type DomainRecordStubGeneric = autoguard.guards.Object<{
+export type DomainRecordStubGeneric = autoguard.guards.Object<{
     "nodeName": autoguard.guards.String;
     "recordType": autoguard.guards.String;
 }, {
@@ -13,7 +13,7 @@ export declare type DomainRecordStubGeneric = autoguard.guards.Object<{
     "state": autoguard.guards.Boolean;
 }>;
 export declare const DomainRecordStubTXT: autoguard.serialization.MessageGuard<DomainRecordStubTXT>;
-export declare type DomainRecordStubTXT = autoguard.guards.Intersection<[
+export type DomainRecordStubTXT = autoguard.guards.Intersection<[
     autoguard.guards.Reference<DomainRecordStubGeneric>,
     autoguard.guards.Object<{
         "recordType": autoguard.guards.StringLiteral<"TXT">;
@@ -21,27 +21,27 @@ export declare type DomainRecordStubTXT = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const DomainRecordStub: autoguard.serialization.MessageGuard<DomainRecordStub>;
-export declare type DomainRecordStub = autoguard.guards.Union<[
+export type DomainRecordStub = autoguard.guards.Union<[
     autoguard.guards.Reference<DomainRecordStubGeneric>,
     autoguard.guards.Reference<DomainRecordStubTXT>
 ]>;
 export declare const DomainRecordBase: autoguard.serialization.MessageGuard<DomainRecordBase>;
-export declare type DomainRecordBase = autoguard.guards.Object<{
+export type DomainRecordBase = autoguard.guards.Object<{
     "id": autoguard.guards.Number;
     "domainId": autoguard.guards.Number;
 }, {}>;
 export declare const DomainRecordGeneric: autoguard.serialization.MessageGuard<DomainRecordGeneric>;
-export declare type DomainRecordGeneric = autoguard.guards.Intersection<[
+export type DomainRecordGeneric = autoguard.guards.Intersection<[
     autoguard.guards.Reference<DomainRecordBase>,
     autoguard.guards.Reference<DomainRecordStubGeneric>
 ]>;
 export declare const DomainRecordTXT: autoguard.serialization.MessageGuard<DomainRecordTXT>;
-export declare type DomainRecordTXT = autoguard.guards.Intersection<[
+export type DomainRecordTXT = autoguard.guards.Intersection<[
     autoguard.guards.Reference<DomainRecordBase>,
     autoguard.guards.Reference<DomainRecordStubTXT>
 ]>;
 export declare const DomainRecord: autoguard.serialization.MessageGuard<DomainRecord>;
-export declare type DomainRecord = autoguard.guards.Union<[
+export type DomainRecord = autoguard.guards.Union<[
     autoguard.guards.Reference<DomainRecordGeneric>,
     autoguard.guards.Reference<DomainRecordTXT>
 ]>;

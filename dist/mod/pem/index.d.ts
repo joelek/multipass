@@ -1,15 +1,15 @@
 /// <reference types="node" />
-export declare type Header = {
+export type Header = {
     key: string;
     value: string;
 };
-export declare type Section = {
+export type Section = {
     preamble?: Array<string>;
     label: string;
     headers?: Array<Header>;
     buffer: Buffer;
 };
-export declare type Document = {
+export type Document = {
     sections: Array<Section>;
     postamble?: Array<string>;
 };

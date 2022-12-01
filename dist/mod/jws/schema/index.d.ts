@@ -48,11 +48,11 @@ export declare namespace SignatureAlgorithm {
     function valueFromKey(key: string): Value;
 }
 export declare const Protected: autoguard.serialization.MessageGuard<Protected>;
-export declare type Protected = autoguard.guards.Object<{
+export type Protected = autoguard.guards.Object<{
     "alg": autoguard.guards.Reference<SignatureAlgorithm.Key>;
 }, {}>;
 export declare const Body: autoguard.serialization.MessageGuard<Body>;
-export declare type Body = autoguard.guards.Object<{
+export type Body = autoguard.guards.Object<{
     "protected": autoguard.guards.String;
     "payload": autoguard.guards.String;
     "signature": autoguard.guards.String;

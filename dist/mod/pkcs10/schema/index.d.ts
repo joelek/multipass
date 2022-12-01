@@ -12,27 +12,27 @@ import { Sequence } from "../../asn1";
 import { Set } from "../../asn1";
 import { UTF8String } from "../../asn1";
 export declare const ASN1BitString: autoguard.serialization.MessageGuard<ASN1BitString>;
-export declare type ASN1BitString = autoguard.guards.Reference<BitString>;
+export type ASN1BitString = autoguard.guards.Reference<BitString>;
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;
-export declare type ASN1Integer = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 export declare const ASN1Null: autoguard.serialization.MessageGuard<ASN1Null>;
-export declare type ASN1Null = autoguard.guards.Reference<Null>;
+export type ASN1Null = autoguard.guards.Reference<Null>;
 export declare const ASN1Node: autoguard.serialization.MessageGuard<ASN1Node>;
-export declare type ASN1Node = autoguard.guards.Reference<Node>;
+export type ASN1Node = autoguard.guards.Reference<Node>;
 export declare const ASN1Set: autoguard.serialization.MessageGuard<ASN1Set>;
-export declare type ASN1Set = autoguard.guards.Reference<Set>;
+export type ASN1Set = autoguard.guards.Reference<Set>;
 export declare const ASN1ObjectIdentifier: autoguard.serialization.MessageGuard<ASN1ObjectIdentifier>;
-export declare type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
+export type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
 export declare const ASN1OctetString: autoguard.serialization.MessageGuard<ASN1OctetString>;
-export declare type ASN1OctetString = autoguard.guards.Reference<OctetString>;
+export type ASN1OctetString = autoguard.guards.Reference<OctetString>;
 export declare const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence>;
-export declare type ASN1Sequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 export declare const ASN1UTF8String: autoguard.serialization.MessageGuard<ASN1UTF8String>;
-export declare type ASN1UTF8String = autoguard.guards.Reference<UTF8String>;
+export type ASN1UTF8String = autoguard.guards.Reference<UTF8String>;
 export declare const ASN1Boolean: autoguard.serialization.MessageGuard<ASN1Boolean>;
-export declare type ASN1Boolean = autoguard.guards.Reference<Boolean>;
+export type ASN1Boolean = autoguard.guards.Reference<Boolean>;
 export declare const AttributeTypeAndValue: autoguard.serialization.MessageGuard<AttributeTypeAndValue>;
-export declare type AttributeTypeAndValue = autoguard.guards.Intersection<[
+export type AttributeTypeAndValue = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -42,7 +42,7 @@ export declare type AttributeTypeAndValue = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const CommonName: autoguard.serialization.MessageGuard<CommonName>;
-export declare type CommonName = autoguard.guards.Intersection<[
+export type CommonName = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AttributeTypeAndValue>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -57,23 +57,23 @@ export declare type CommonName = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const RelativeDistinguishedName: autoguard.serialization.MessageGuard<RelativeDistinguishedName>;
-export declare type RelativeDistinguishedName = autoguard.guards.Intersection<[
+export type RelativeDistinguishedName = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Set>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Array<autoguard.guards.Reference<AttributeTypeAndValue>>;
     }, {}>
 ]>;
 export declare const RDNSequence: autoguard.serialization.MessageGuard<RDNSequence>;
-export declare type RDNSequence = autoguard.guards.Intersection<[
+export type RDNSequence = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Array<autoguard.guards.Reference<RelativeDistinguishedName>>;
     }, {}>
 ]>;
 export declare const Name: autoguard.serialization.MessageGuard<Name>;
-export declare type Name = autoguard.guards.Reference<RDNSequence>;
+export type Name = autoguard.guards.Reference<RDNSequence>;
 export declare const CRIAttribute: autoguard.serialization.MessageGuard<CRIAttribute>;
-export declare type CRIAttribute = autoguard.guards.Intersection<[
+export type CRIAttribute = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -83,7 +83,7 @@ export declare type CRIAttribute = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const Extension1: autoguard.serialization.MessageGuard<Extension1>;
-export declare type Extension1 = autoguard.guards.Intersection<[
+export type Extension1 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -94,7 +94,7 @@ export declare type Extension1 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const Extension2: autoguard.serialization.MessageGuard<Extension2>;
-export declare type Extension2 = autoguard.guards.Intersection<[
+export type Extension2 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -104,7 +104,7 @@ export declare type Extension2 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const SubjectAlternativeNameExtension: autoguard.serialization.MessageGuard<SubjectAlternativeNameExtension>;
-export declare type SubjectAlternativeNameExtension = autoguard.guards.Intersection<[
+export type SubjectAlternativeNameExtension = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -119,19 +119,19 @@ export declare type SubjectAlternativeNameExtension = autoguard.guards.Intersect
     }, {}>
 ]>;
 export declare const Extension: autoguard.serialization.MessageGuard<Extension>;
-export declare type Extension = autoguard.guards.Union<[
+export type Extension = autoguard.guards.Union<[
     autoguard.guards.Reference<Extension1>,
     autoguard.guards.Reference<Extension2>
 ]>;
 export declare const Extensions: autoguard.serialization.MessageGuard<Extensions>;
-export declare type Extensions = autoguard.guards.Intersection<[
+export type Extensions = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Array<autoguard.guards.Reference<Extension>>;
     }, {}>
 ]>;
 export declare const ExtensionRequests: autoguard.serialization.MessageGuard<ExtensionRequests>;
-export declare type ExtensionRequests = autoguard.guards.Intersection<[
+export type ExtensionRequests = autoguard.guards.Intersection<[
     autoguard.guards.Reference<CRIAttribute>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -153,7 +153,7 @@ export declare type ExtensionRequests = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const CertificationRequestInfo: autoguard.serialization.MessageGuard<CertificationRequestInfo>;
-export declare type CertificationRequestInfo = autoguard.guards.Intersection<[
+export type CertificationRequestInfo = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -170,7 +170,7 @@ export declare type CertificationRequestInfo = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const CertificationRequest: autoguard.serialization.MessageGuard<CertificationRequest>;
-export declare type CertificationRequest = autoguard.guards.Intersection<[
+export type CertificationRequest = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[

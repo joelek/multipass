@@ -1,6 +1,6 @@
 import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
 export declare const Config: autoguard.serialization.MessageGuard<Config>;
-export declare type Config = autoguard.guards.Object<{
+export type Config = autoguard.guards.Object<{
     "account": autoguard.guards.String;
     "key": autoguard.guards.String;
 }, {}>;

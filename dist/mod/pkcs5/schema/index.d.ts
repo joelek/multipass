@@ -6,19 +6,19 @@ import { ObjectIdentifier } from "../../asn1";
 import { OctetString } from "../../asn1";
 import { Sequence } from "../../asn1";
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;
-export declare type ASN1Integer = autoguard.guards.Reference<Integer>;
+export type ASN1Integer = autoguard.guards.Reference<Integer>;
 export declare const ASN1Node: autoguard.serialization.MessageGuard<ASN1Node>;
-export declare type ASN1Node = autoguard.guards.Reference<Node>;
+export type ASN1Node = autoguard.guards.Reference<Node>;
 export declare const ASN1Null: autoguard.serialization.MessageGuard<ASN1Null>;
-export declare type ASN1Null = autoguard.guards.Reference<Null>;
+export type ASN1Null = autoguard.guards.Reference<Null>;
 export declare const ASN1ObjectIdentifier: autoguard.serialization.MessageGuard<ASN1ObjectIdentifier>;
-export declare type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
+export type ASN1ObjectIdentifier = autoguard.guards.Reference<ObjectIdentifier>;
 export declare const ASN1OctetString: autoguard.serialization.MessageGuard<ASN1OctetString>;
-export declare type ASN1OctetString = autoguard.guards.Reference<OctetString>;
+export type ASN1OctetString = autoguard.guards.Reference<OctetString>;
 export declare const ASN1Sequence: autoguard.serialization.MessageGuard<ASN1Sequence>;
-export declare type ASN1Sequence = autoguard.guards.Reference<Sequence>;
+export type ASN1Sequence = autoguard.guards.Reference<Sequence>;
 export declare const AlgorithmIdentifier: autoguard.serialization.MessageGuard<AlgorithmIdentifier>;
-export declare type AlgorithmIdentifier = autoguard.guards.Intersection<[
+export type AlgorithmIdentifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -28,7 +28,7 @@ export declare type AlgorithmIdentifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECDSAWithSHA256: autoguard.serialization.MessageGuard<ECDSAWithSHA256>;
-export declare type ECDSAWithSHA256 = autoguard.guards.Intersection<[
+export type ECDSAWithSHA256 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -43,7 +43,7 @@ export declare type ECDSAWithSHA256 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECDSAWithSHA384: autoguard.serialization.MessageGuard<ECDSAWithSHA384>;
-export declare type ECDSAWithSHA384 = autoguard.guards.Intersection<[
+export type ECDSAWithSHA384 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -58,7 +58,7 @@ export declare type ECDSAWithSHA384 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const ECDSAWithSHA512: autoguard.serialization.MessageGuard<ECDSAWithSHA512>;
-export declare type ECDSAWithSHA512 = autoguard.guards.Intersection<[
+export type ECDSAWithSHA512 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -73,7 +73,7 @@ export declare type ECDSAWithSHA512 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const SHA256WithRSAEncryption: autoguard.serialization.MessageGuard<SHA256WithRSAEncryption>;
-export declare type SHA256WithRSAEncryption = autoguard.guards.Intersection<[
+export type SHA256WithRSAEncryption = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -88,7 +88,7 @@ export declare type SHA256WithRSAEncryption = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const SHA384WithRSAEncryption: autoguard.serialization.MessageGuard<SHA384WithRSAEncryption>;
-export declare type SHA384WithRSAEncryption = autoguard.guards.Intersection<[
+export type SHA384WithRSAEncryption = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -103,7 +103,7 @@ export declare type SHA384WithRSAEncryption = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const SHA512WithRSAEncryption: autoguard.serialization.MessageGuard<SHA512WithRSAEncryption>;
-export declare type SHA512WithRSAEncryption = autoguard.guards.Intersection<[
+export type SHA512WithRSAEncryption = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -118,7 +118,7 @@ export declare type SHA512WithRSAEncryption = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const AES128CBCIdentifier: autoguard.serialization.MessageGuard<AES128CBCIdentifier>;
-export declare type AES128CBCIdentifier = autoguard.guards.Intersection<[
+export type AES128CBCIdentifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -133,7 +133,7 @@ export declare type AES128CBCIdentifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const AES192CBCIdentifier: autoguard.serialization.MessageGuard<AES192CBCIdentifier>;
-export declare type AES192CBCIdentifier = autoguard.guards.Intersection<[
+export type AES192CBCIdentifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -148,7 +148,7 @@ export declare type AES192CBCIdentifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const AES256CBCIdentifier: autoguard.serialization.MessageGuard<AES256CBCIdentifier>;
-export declare type AES256CBCIdentifier = autoguard.guards.Intersection<[
+export type AES256CBCIdentifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -163,7 +163,7 @@ export declare type AES256CBCIdentifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA1Identifier: autoguard.serialization.MessageGuard<HMACSHA1Identifier>;
-export declare type HMACSHA1Identifier = autoguard.guards.Intersection<[
+export type HMACSHA1Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -178,7 +178,7 @@ export declare type HMACSHA1Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA224Identifier: autoguard.serialization.MessageGuard<HMACSHA224Identifier>;
-export declare type HMACSHA224Identifier = autoguard.guards.Intersection<[
+export type HMACSHA224Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -193,7 +193,7 @@ export declare type HMACSHA224Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA256Identifier: autoguard.serialization.MessageGuard<HMACSHA256Identifier>;
-export declare type HMACSHA256Identifier = autoguard.guards.Intersection<[
+export type HMACSHA256Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -208,7 +208,7 @@ export declare type HMACSHA256Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA384Identifier: autoguard.serialization.MessageGuard<HMACSHA384Identifier>;
-export declare type HMACSHA384Identifier = autoguard.guards.Intersection<[
+export type HMACSHA384Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -223,7 +223,7 @@ export declare type HMACSHA384Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA512Identifier: autoguard.serialization.MessageGuard<HMACSHA512Identifier>;
-export declare type HMACSHA512Identifier = autoguard.guards.Intersection<[
+export type HMACSHA512Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -238,7 +238,7 @@ export declare type HMACSHA512Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA512224Identifier: autoguard.serialization.MessageGuard<HMACSHA512224Identifier>;
-export declare type HMACSHA512224Identifier = autoguard.guards.Intersection<[
+export type HMACSHA512224Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -253,7 +253,7 @@ export declare type HMACSHA512224Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const HMACSHA512256Identifier: autoguard.serialization.MessageGuard<HMACSHA512256Identifier>;
-export declare type HMACSHA512256Identifier = autoguard.guards.Intersection<[
+export type HMACSHA512256Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -268,7 +268,7 @@ export declare type HMACSHA512256Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const PBKDF2Identifier1: autoguard.serialization.MessageGuard<PBKDF2Identifier1>;
-export declare type PBKDF2Identifier1 = autoguard.guards.Intersection<[
+export type PBKDF2Identifier1 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -296,7 +296,7 @@ export declare type PBKDF2Identifier1 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const PBKDF2Identifier2: autoguard.serialization.MessageGuard<PBKDF2Identifier2>;
-export declare type PBKDF2Identifier2 = autoguard.guards.Intersection<[
+export type PBKDF2Identifier2 = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -323,12 +323,12 @@ export declare type PBKDF2Identifier2 = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const PBKDF2Identifier: autoguard.serialization.MessageGuard<PBKDF2Identifier>;
-export declare type PBKDF2Identifier = autoguard.guards.Union<[
+export type PBKDF2Identifier = autoguard.guards.Union<[
     autoguard.guards.Reference<PBKDF2Identifier1>,
     autoguard.guards.Reference<PBKDF2Identifier2>
 ]>;
 export declare const PBES2Identifier: autoguard.serialization.MessageGuard<PBES2Identifier>;
-export declare type PBES2Identifier = autoguard.guards.Intersection<[
+export type PBES2Identifier = autoguard.guards.Intersection<[
     autoguard.guards.Reference<AlgorithmIdentifier>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
@@ -351,7 +351,7 @@ export declare type PBES2Identifier = autoguard.guards.Intersection<[
     }, {}>
 ]>;
 export declare const EncryptedPrivateKeyInfo: autoguard.serialization.MessageGuard<EncryptedPrivateKeyInfo>;
-export declare type EncryptedPrivateKeyInfo = autoguard.guards.Intersection<[
+export type EncryptedPrivateKeyInfo = autoguard.guards.Intersection<[
     autoguard.guards.Reference<ASN1Sequence>,
     autoguard.guards.Object<{
         "data": autoguard.guards.Tuple<[
