@@ -18,7 +18,7 @@
 		"url": "https://github.com/joelek/multipass.git"
 	},
 	"scripts": {
-		"appgen": "node -p \"JSON.stringify((({ name, version }) => ({ name, version }))(require('./package.json')), null, '\t')\" > ./source/app.json",
+		"appgen": "node -e \"process.stdout.write(JSON.stringify((({ name, version }) => ({ name, version }))(require('./package.json')), null, '\t').split(/\\r?\\n/).join(require('os').EOL) + require('os').EOL)\" > ./source/app.json",
 		"build": "npm run appgen && npm run codegen && npm run compile && npm run package && npm run test",
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"codegen": "npx autoguard",
