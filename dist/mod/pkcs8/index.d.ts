@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as jwk from "../jwk";
 export * from "./schema";
 export declare function parseRSAPublicKey(bufferPKCS8: Buffer): jwk.RSAPublicKey;

@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 export declare const ProviderDynu: autoguard.serialization.MessageGuard<ProviderDynu>;
 export type ProviderDynu = autoguard.guards.Object<{
     "type": autoguard.guards.StringLiteral<"dynu">;

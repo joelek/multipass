@@ -1,22 +1,36 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 export declare enum KeyType {
     "EC" = 0,
     "RSA" = 1,
     "oct" = 2
 }
 export declare namespace KeyType {
+    const Entries: readonly [{
+        readonly key: "EC";
+        readonly value: 0;
+    }, {
+        readonly key: "RSA";
+        readonly value: 1;
+    }, {
+        readonly key: "oct";
+        readonly value: 2;
+    }];
+    const Keys: readonly ["EC", "RSA", "oct"];
+    const Values: readonly [0, 1, 2];
+    const KeyToValueMap: {
+        readonly EC: 0;
+        readonly RSA: 1;
+        readonly oct: 2;
+    };
+    const ValueToKeyMap: {
+        readonly 0: "EC";
+        readonly 1: "RSA";
+        readonly 2: "oct";
+    };
+    type Key = typeof Keys[number];
     const Key: autoguard.serialization.MessageGuard<Key>;
-    type Key = autoguard.guards.Union<[
-        autoguard.guards.StringLiteral<"EC">,
-        autoguard.guards.StringLiteral<"RSA">,
-        autoguard.guards.StringLiteral<"oct">
-    ]>;
+    type Value = typeof Values[number];
     const Value: autoguard.serialization.MessageGuard<Value>;
-    type Value = autoguard.guards.Union<[
-        autoguard.guards.NumberLiteral<0>,
-        autoguard.guards.NumberLiteral<1>,
-        autoguard.guards.NumberLiteral<2>
-    ]>;
     function keyFromValue(value: number): Key;
     function valueFromKey(key: string): Value;
 }
@@ -26,18 +40,32 @@ export declare enum Curve {
     "P-521" = 2
 }
 export declare namespace Curve {
+    const Entries: readonly [{
+        readonly key: "P-256";
+        readonly value: 0;
+    }, {
+        readonly key: "P-384";
+        readonly value: 1;
+    }, {
+        readonly key: "P-521";
+        readonly value: 2;
+    }];
+    const Keys: readonly ["P-256", "P-384", "P-521"];
+    const Values: readonly [0, 1, 2];
+    const KeyToValueMap: {
+        readonly "P-256": 0;
+        readonly "P-384": 1;
+        readonly "P-521": 2;
+    };
+    const ValueToKeyMap: {
+        readonly 0: "P-256";
+        readonly 1: "P-384";
+        readonly 2: "P-521";
+    };
+    type Key = typeof Keys[number];
     const Key: autoguard.serialization.MessageGuard<Key>;
-    type Key = autoguard.guards.Union<[
-        autoguard.guards.StringLiteral<"P-256">,
-        autoguard.guards.StringLiteral<"P-384">,
-        autoguard.guards.StringLiteral<"P-521">
-    ]>;
+    type Value = typeof Values[number];
     const Value: autoguard.serialization.MessageGuard<Value>;
-    type Value = autoguard.guards.Union<[
-        autoguard.guards.NumberLiteral<0>,
-        autoguard.guards.NumberLiteral<1>,
-        autoguard.guards.NumberLiteral<2>
-    ]>;
     function keyFromValue(value: number): Key;
     function valueFromKey(key: string): Value;
 }

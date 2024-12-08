@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as schema from "./schema";
 export * from "./schema";
 export declare const SEQUENCE: schema.Sequence;

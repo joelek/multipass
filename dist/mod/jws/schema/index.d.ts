@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 export declare enum SignatureAlgorithm {
     "HS256" = 0,
     "HS384" = 1,
@@ -14,36 +14,77 @@ export declare enum SignatureAlgorithm {
     "PS512" = 11
 }
 export declare namespace SignatureAlgorithm {
+    const Entries: readonly [{
+        readonly key: "HS256";
+        readonly value: 0;
+    }, {
+        readonly key: "HS384";
+        readonly value: 1;
+    }, {
+        readonly key: "HS512";
+        readonly value: 2;
+    }, {
+        readonly key: "RS256";
+        readonly value: 3;
+    }, {
+        readonly key: "RS384";
+        readonly value: 4;
+    }, {
+        readonly key: "RS512";
+        readonly value: 5;
+    }, {
+        readonly key: "ES256";
+        readonly value: 6;
+    }, {
+        readonly key: "ES384";
+        readonly value: 7;
+    }, {
+        readonly key: "ES512";
+        readonly value: 8;
+    }, {
+        readonly key: "PS256";
+        readonly value: 9;
+    }, {
+        readonly key: "PS384";
+        readonly value: 10;
+    }, {
+        readonly key: "PS512";
+        readonly value: 11;
+    }];
+    const Keys: readonly ["HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "ES256", "ES384", "ES512", "PS256", "PS384", "PS512"];
+    const Values: readonly [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    const KeyToValueMap: {
+        readonly HS256: 0;
+        readonly HS384: 1;
+        readonly HS512: 2;
+        readonly RS256: 3;
+        readonly RS384: 4;
+        readonly RS512: 5;
+        readonly ES256: 6;
+        readonly ES384: 7;
+        readonly ES512: 8;
+        readonly PS256: 9;
+        readonly PS384: 10;
+        readonly PS512: 11;
+    };
+    const ValueToKeyMap: {
+        readonly 0: "HS256";
+        readonly 1: "HS384";
+        readonly 2: "HS512";
+        readonly 3: "RS256";
+        readonly 4: "RS384";
+        readonly 5: "RS512";
+        readonly 6: "ES256";
+        readonly 7: "ES384";
+        readonly 8: "ES512";
+        readonly 9: "PS256";
+        readonly 10: "PS384";
+        readonly 11: "PS512";
+    };
+    type Key = typeof Keys[number];
     const Key: autoguard.serialization.MessageGuard<Key>;
-    type Key = autoguard.guards.Union<[
-        autoguard.guards.StringLiteral<"HS256">,
-        autoguard.guards.StringLiteral<"HS384">,
-        autoguard.guards.StringLiteral<"HS512">,
-        autoguard.guards.StringLiteral<"RS256">,
-        autoguard.guards.StringLiteral<"RS384">,
-        autoguard.guards.StringLiteral<"RS512">,
-        autoguard.guards.StringLiteral<"ES256">,
-        autoguard.guards.StringLiteral<"ES384">,
-        autoguard.guards.StringLiteral<"ES512">,
-        autoguard.guards.StringLiteral<"PS256">,
-        autoguard.guards.StringLiteral<"PS384">,
-        autoguard.guards.StringLiteral<"PS512">
-    ]>;
+    type Value = typeof Values[number];
     const Value: autoguard.serialization.MessageGuard<Value>;
-    type Value = autoguard.guards.Union<[
-        autoguard.guards.NumberLiteral<0>,
-        autoguard.guards.NumberLiteral<1>,
-        autoguard.guards.NumberLiteral<2>,
-        autoguard.guards.NumberLiteral<3>,
-        autoguard.guards.NumberLiteral<4>,
-        autoguard.guards.NumberLiteral<5>,
-        autoguard.guards.NumberLiteral<6>,
-        autoguard.guards.NumberLiteral<7>,
-        autoguard.guards.NumberLiteral<8>,
-        autoguard.guards.NumberLiteral<9>,
-        autoguard.guards.NumberLiteral<10>,
-        autoguard.guards.NumberLiteral<11>
-    ]>;
     function keyFromValue(value: number): Key;
     function valueFromKey(key: string): Value;
 }

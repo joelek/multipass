@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as digest from "../digest";
 import * as schema from "../../schema";
 import { Algorithm } from "../algorithm";

@@ -1,5 +1,6 @@
 /// <reference types="node" />
 /// <reference types="node" />
+/// <reference types="node" />
 import * as libcrypto from "crypto";
 import * as ec from "../ec";
 import * as rsa from "../rsa";

@@ -15,9 +15,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 define("build/app", [], {
     "name": "@joelek/multipass",
+    "timestamp": 1733660933189,
     "version": "1.2.1"
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/serialization", ["require", "exports"], function (require, exports) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/serialization", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.MessageSerializer = exports.MessageGuardError = exports.MessageGuardBase = void 0;
@@ -93,11 +94,11 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/serialization", ["requ
     exports.MessageSerializer = MessageSerializer;
     ;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/serialization"], function (require, exports, serialization) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/guards", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/serialization"], function (require, exports, serialization) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Union = exports.UnionGuard = exports.Undefined = exports.UndefinedGuard = exports.Tuple = exports.TupleGuard = exports.StringLiteral = exports.StringLiteralGuard = exports.String = exports.StringGuard = exports.Reference = exports.ReferenceGuard = exports.Record = exports.RecordGuard = exports.Object = exports.ObjectGuard = exports.NumberLiteral = exports.NumberLiteralGuard = exports.Number = exports.NumberGuard = exports.Null = exports.NullGuard = exports.Intersection = exports.IntersectionGuard = exports.Integer = exports.IntegerGuard = exports.Group = exports.GroupGuard = exports.BooleanLiteral = exports.BooleanLiteralGuard = exports.Boolean = exports.BooleanGuard = exports.Binary = exports.BinaryGuard = exports.BigInt = exports.BigIntGuard = exports.Array = exports.ArrayGuard = exports.Any = exports.AnyGuard = void 0;
+    exports.Union = exports.UnionGuard = exports.Undefined = exports.UndefinedGuard = exports.Tuple = exports.TupleGuard = exports.StringLiteral = exports.StringLiteralGuard = exports.String = exports.StringGuard = exports.Reference = exports.ReferenceGuard = exports.Key = exports.KeyGuard = exports.Record = exports.RecordGuard = exports.Object = exports.ObjectGuard = exports.NumberLiteral = exports.NumberLiteralGuard = exports.Number = exports.NumberGuard = exports.Null = exports.NullGuard = exports.Intersection = exports.IntersectionGuard = exports.IntegerLiteral = exports.IntegerLiteralGuard = exports.Integer = exports.IntegerGuard = exports.Group = exports.GroupGuard = exports.BooleanLiteral = exports.BooleanLiteralGuard = exports.Boolean = exports.BooleanGuard = exports.Binary = exports.BinaryGuard = exports.BigInt = exports.BigIntGuard = exports.Array = exports.ArrayGuard = exports.Any = exports.AnyGuard = void 0;
     class AnyGuard extends serialization.MessageGuardBase {
         constructor() {
             super();
@@ -232,22 +233,59 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
         }
     };
     class IntegerGuard extends serialization.MessageGuardBase {
-        constructor() {
+        constructor(min, max) {
             super();
+            this.min = min;
+            this.max = max;
         }
         as(subject, path = "") {
             if ((subject != null) && (subject.constructor === globalThis.Number) && globalThis.Number.isInteger(subject)) {
-                return subject;
+                let number = subject;
+                if (this.min != null && number < this.min) {
+                    throw new serialization.MessageGuardError(this, subject, path);
+                }
+                if (this.max != null && number > this.max) {
+                    throw new serialization.MessageGuardError(this, subject, path);
+                }
+                return number;
             }
             throw new serialization.MessageGuardError(this, subject, path);
         }
         ts(eol = "\n") {
-            return "number";
+            var _a, _b;
+            if (this.min == null && this.max == null) {
+                return "integer";
+            }
+            else {
+                return `integer(${(_a = this.min) !== null && _a !== void 0 ? _a : "*"}, ${(_b = this.max) !== null && _b !== void 0 ? _b : "*"})`;
+            }
         }
     }
     exports.IntegerGuard = IntegerGuard;
     ;
     exports.Integer = new IntegerGuard();
+    class IntegerLiteralGuard extends serialization.MessageGuardBase {
+        constructor(value) {
+            super();
+            this.value = value;
+        }
+        as(subject, path = "") {
+            if (subject === this.value) {
+                return subject;
+            }
+            throw new serialization.MessageGuardError(this, subject, path);
+        }
+        ts(eol = "\n") {
+            return `${this.value}`;
+        }
+    }
+    exports.IntegerLiteralGuard = IntegerLiteralGuard;
+    ;
+    exports.IntegerLiteral = {
+        of(value) {
+            return new IntegerLiteralGuard(value);
+        }
+    };
     class IntersectionGuard extends serialization.MessageGuardBase {
         constructor(...guards) {
             super();
@@ -292,17 +330,32 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
     ;
     exports.Null = new NullGuard();
     class NumberGuard extends serialization.MessageGuardBase {
-        constructor() {
+        constructor(min, max) {
             super();
+            this.min = min;
+            this.max = max;
         }
         as(subject, path = "") {
             if ((subject != null) && (subject.constructor === globalThis.Number)) {
-                return subject;
+                let number = subject;
+                if (this.min != null && number < this.min) {
+                    throw new serialization.MessageGuardError(this, subject, path);
+                }
+                if (this.max != null && number > this.max) {
+                    throw new serialization.MessageGuardError(this, subject, path);
+                }
+                return number;
             }
             throw new serialization.MessageGuardError(this, subject, path);
         }
         ts(eol = "\n") {
-            return "number";
+            var _a, _b;
+            if (this.min == null && this.max == null) {
+                return "number";
+            }
+            else {
+                return `number(${(_a = this.min) !== null && _a !== void 0 ? _a : "*"}, ${(_b = this.max) !== null && _b !== void 0 ? _b : "*"})`;
+            }
         }
     }
     exports.NumberGuard = NumberGuard;
@@ -394,6 +447,35 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
             return new RecordGuard(guard);
         }
     };
+    class KeyGuard extends serialization.MessageGuardBase {
+        constructor(record) {
+            super();
+            this.record = record;
+        }
+        as(subject, path = "") {
+            if ((subject != null) && (subject.constructor === globalThis.String)) {
+                let string = subject;
+                if (string in this.record) {
+                    return string;
+                }
+            }
+            throw new serialization.MessageGuardError(this, subject, path);
+        }
+        ts(eol = "\n") {
+            let lines = new globalThis.Array();
+            for (let key of globalThis.Object.keys(this.record)) {
+                lines.push(`\t"${key}"`);
+            }
+            return lines.length === 0 ? "key<>" : "key<" + eol + lines.join("," + eol) + eol + ">";
+        }
+    }
+    exports.KeyGuard = KeyGuard;
+    ;
+    exports.Key = {
+        of(record) {
+            return new KeyGuard(record);
+        }
+    };
     class ReferenceGuard extends serialization.MessageGuardBase {
         constructor(guard) {
             super();
@@ -414,17 +496,28 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
         }
     };
     class StringGuard extends serialization.MessageGuardBase {
-        constructor() {
+        constructor(pattern) {
             super();
+            this.pattern = pattern;
         }
         as(subject, path = "") {
             if ((subject != null) && (subject.constructor === globalThis.String)) {
-                return subject;
+                let string = subject;
+                if (this.pattern != null && !this.pattern.test(string)) {
+                    throw new serialization.MessageGuardError(this, subject, path);
+                }
+                return string;
             }
             throw new serialization.MessageGuardError(this, subject, path);
         }
         ts(eol = "\n") {
-            return "string";
+            if (this.pattern == null) {
+                return "string";
+            }
+            else {
+                let pattern = this.pattern != null ? `"${this.pattern.source}"` : "*";
+                return `string(${pattern})`;
+            }
         }
     }
     exports.StringGuard = StringGuard;
@@ -528,7 +621,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", ["require", "
         }
     };
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/guards"], function (require, exports, guards) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/api", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/guards"], function (require, exports, guards) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -953,10 +1046,11 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exp
     }
     exports.deserializeValue = deserializeValue;
     ;
-    function collectPayload(binary) {
+    function collectPayload(binary, maxByteLength) {
         var _a, binary_1, binary_1_1;
         var _b, e_1, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
+            maxByteLength = maxByteLength !== null && maxByteLength !== void 0 ? maxByteLength : Infinity;
             let chunks = new Array();
             let length = 0;
             try {
@@ -967,6 +1061,9 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exp
                         let chunk = _d;
                         chunks.push(chunk);
                         length += chunk.length;
+                        if (length > maxByteLength) {
+                            throw `Expected payload to contain at most ${maxByteLength} bytes!`;
+                        }
                     }
                     finally {
                         _a = true;
@@ -1070,7 +1167,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/api", ["require", "exp
     exports.wrapMessageGuard = wrapMessageGuard;
     ;
 });
-define("node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", ["require", "exports"], function (require, exports) {
+define("node_modules/@joelek/stdlib/dist/lib/asserts/integer", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.IntegerAssert = void 0;
@@ -1119,7 +1216,147 @@ define("node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", ["require", "e
     exports.IntegerAssert = IntegerAssert;
     ;
 });
-define("node_modules/@joelek/ts-stdlib/dist/lib/data/parser", ["require", "exports", "node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer"], function (require, exports, integer_1) {
+define("node_modules/@joelek/stdlib/dist/lib/data/chunk", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Chunk = void 0;
+    class Chunk {
+        constructor() { }
+        static fromString(string, encoding) {
+            if (encoding === "binary") {
+                let bytes = new Array();
+                for (let i = 0; i < string.length; i += 1) {
+                    let code_unit = string.charCodeAt(i);
+                    bytes.push(code_unit);
+                }
+                return Uint8Array.from(bytes);
+            }
+            if (encoding === "base64") {
+                // @ts-ignore
+                return Chunk.fromString(atob(string), "binary");
+            }
+            if (encoding === "base64url") {
+                return Chunk.fromString(string.replaceAll("-", "+").replaceAll("_", "/"), "base64");
+            }
+            if (encoding === "hex") {
+                if (string.length % 2 === 1) {
+                    string = `0${string}`;
+                }
+                let bytes = new Array();
+                for (let i = 0; i < string.length; i += 2) {
+                    let part = string.slice(i, i + 2);
+                    let byte = Number.parseInt(part, 16);
+                    bytes.push(byte);
+                }
+                return Uint8Array.from(bytes);
+            }
+            if (encoding === "utf16be") {
+                let bytes = new Array();
+                for (let i = 0; i < string.length; i++) {
+                    let code_unit = string.charCodeAt(i);
+                    let hi = (code_unit >> 8) & 0xFF;
+                    let lo = (code_unit >> 0) & 0xFF;
+                    bytes.push(hi, lo);
+                }
+                return Uint8Array.from(bytes);
+            }
+            if (encoding === "utf16le") {
+                let bytes = new Array();
+                for (let i = 0; i < string.length; i++) {
+                    let code_unit = string.charCodeAt(i);
+                    let lo = (code_unit >> 8) & 0xFF;
+                    let hi = (code_unit >> 0) & 0xFF;
+                    bytes.push(hi, lo);
+                }
+                return Uint8Array.from(bytes);
+            }
+            // @ts-ignore
+            return new TextEncoder().encode(string);
+        }
+        static toString(chunk, encoding) {
+            if (encoding === "binary") {
+                let parts = new Array();
+                for (let byte of chunk) {
+                    let part = String.fromCharCode(byte);
+                    parts.push(part);
+                }
+                return parts.join("");
+            }
+            if (encoding === "base64") {
+                // @ts-ignore
+                return btoa(Chunk.toString(chunk, "binary"));
+            }
+            if (encoding === "base64url") {
+                return Chunk.toString(chunk, "base64").replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+            }
+            if (encoding === "hex") {
+                let parts = new Array();
+                for (let byte of chunk) {
+                    let part = byte.toString(16).toUpperCase().padStart(2, "0");
+                    parts.push(part);
+                }
+                return parts.join("");
+            }
+            if (encoding === "utf16be") {
+                let parts = new Array();
+                for (let i = 0; i < chunk.length; i += 2) {
+                    let hi = chunk[i + 0] || 0;
+                    let lo = chunk[i + 1] || 0;
+                    let code_unit = (hi << 8) | lo;
+                    parts.push(String.fromCharCode(code_unit));
+                }
+                return parts.join("");
+            }
+            if (encoding === "utf16le") {
+                let parts = new Array();
+                for (let i = 0; i < chunk.length; i += 2) {
+                    let lo = chunk[i + 0] || 0;
+                    let hi = chunk[i + 1] || 0;
+                    let code_unit = (hi << 8) | lo;
+                    parts.push(String.fromCharCode(code_unit));
+                }
+                return parts.join("");
+            }
+            // @ts-ignore
+            return new TextDecoder().decode(chunk);
+        }
+        static equals(one, two) {
+            return this.comparePrefixes(one, two) === 0;
+        }
+        static comparePrefixes(one, two) {
+            for (let i = 0; i < Math.min(one.length, two.length); i++) {
+                let a = one[i];
+                let b = two[i];
+                if (a < b) {
+                    return -1;
+                }
+                if (a > b) {
+                    return 1;
+                }
+            }
+            if (one.length < two.length) {
+                return -1;
+            }
+            if (one.length > two.length) {
+                return 1;
+            }
+            return 0;
+        }
+        static concat(buffers) {
+            let length = buffers.reduce((sum, buffer) => sum + buffer.length, 0);
+            let result = new Uint8Array(length);
+            let offset = 0;
+            for (let buffer of buffers) {
+                result.set(buffer, offset);
+                offset += buffer.length;
+            }
+            return result;
+        }
+    }
+    exports.Chunk = Chunk;
+    ;
+});
+define("node_modules/@joelek/stdlib/dist/lib/data/parser", ["require", "exports", "node_modules/@joelek/stdlib/dist/lib/asserts/integer", "node_modules/@joelek/stdlib/dist/lib/data/chunk"], function (require, exports, integer_1, chunk_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -1141,6 +1378,12 @@ define("node_modules/@joelek/ts-stdlib/dist/lib/data/parser", ["require", "expor
         eof() {
             return this.offset >= this.buffer.length;
         }
+        seek(offset) {
+            if (offset > this.buffer.length) {
+                throw new Error(`Expected a valid offset!`);
+            }
+            this.offset = offset;
+        }
         signed(length, endian) {
             let value = this.unsigned(length, endian);
             let bias = Math.pow(2, (length * 8 - 1));
@@ -1148,6 +1391,26 @@ define("node_modules/@joelek/ts-stdlib/dist/lib/data/parser", ["require", "expor
                 value -= bias + bias;
             }
             return value;
+        }
+        string(encoding, length) {
+            if (length != null) {
+                let chunk = this.chunk(length);
+                return chunk_1.Chunk.toString(chunk, encoding);
+            }
+            let bytes = [];
+            while (!this.eof()) {
+                if (this.offset > this.buffer.length) {
+                    throw new Error(`Expected to read at least 1 byte!`);
+                }
+                let byte = this.buffer[this.offset];
+                this.offset += 1;
+                if (byte === 0) {
+                    break;
+                }
+                bytes.push(byte);
+            }
+            let chunk = Uint8Array.from(bytes);
+            return chunk_1.Chunk.toString(chunk, encoding);
         }
         try(supplier) {
             let offset = this.offset;
@@ -1199,107 +1462,7 @@ define("node_modules/@joelek/ts-stdlib/dist/lib/data/parser", ["require", "expor
     exports.Parser = Parser;
     ;
 });
-define("node_modules/@joelek/ts-stdlib/dist/lib/data/chunk", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Chunk = void 0;
-    class Chunk {
-        constructor() { }
-        static fromString(string, encoding) {
-            if (encoding === "binary") {
-                let bytes = new Array();
-                for (let i = 0; i < string.length; i += 1) {
-                    let byte = string.charCodeAt(i);
-                    bytes.push(byte);
-                }
-                return Uint8Array.from(bytes);
-            }
-            if (encoding === "base64") {
-                // @ts-ignore
-                return Chunk.fromString(atob(string), "binary");
-            }
-            if (encoding === "base64url") {
-                return Chunk.fromString(string.replaceAll("-", "+").replaceAll("_", "/"), "base64");
-            }
-            if (encoding === "hex") {
-                if (string.length % 2 === 1) {
-                    string = `0${string}`;
-                }
-                let bytes = new Array();
-                for (let i = 0; i < string.length; i += 2) {
-                    let part = string.slice(i, i + 2);
-                    let byte = Number.parseInt(part, 16);
-                    bytes.push(byte);
-                }
-                return Uint8Array.from(bytes);
-            }
-            // @ts-ignore
-            return new TextEncoder().encode(string);
-        }
-        static toString(chunk, encoding) {
-            if (encoding === "binary") {
-                let parts = new Array();
-                for (let byte of chunk) {
-                    let part = String.fromCharCode(byte);
-                    parts.push(part);
-                }
-                return parts.join("");
-            }
-            if (encoding === "base64") {
-                // @ts-ignore
-                return btoa(Chunk.toString(chunk, "binary"));
-            }
-            if (encoding === "base64url") {
-                return Chunk.toString(chunk, "base64").replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
-            }
-            if (encoding === "hex") {
-                let parts = new Array();
-                for (let byte of chunk) {
-                    let part = byte.toString(16).toUpperCase().padStart(2, "0");
-                    parts.push(part);
-                }
-                return parts.join("");
-            }
-            // @ts-ignore
-            return new TextDecoder().decode(chunk);
-        }
-        static equals(one, two) {
-            return this.comparePrefixes(one, two) === 0;
-        }
-        static comparePrefixes(one, two) {
-            for (let i = 0; i < Math.min(one.length, two.length); i++) {
-                let a = one[i];
-                let b = two[i];
-                if (a < b) {
-                    return -1;
-                }
-                if (a > b) {
-                    return 1;
-                }
-            }
-            if (one.length < two.length) {
-                return -1;
-            }
-            if (one.length > two.length) {
-                return 1;
-            }
-            return 0;
-        }
-        static concat(buffers) {
-            let length = buffers.reduce((sum, buffer) => sum + buffer.length, 0);
-            let result = new Uint8Array(length);
-            let offset = 0;
-            for (let buffer of buffers) {
-                result.set(buffer, offset);
-                offset += buffer.length;
-            }
-            return result;
-        }
-    }
-    exports.Chunk = Chunk;
-    ;
-});
-define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports", "node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", "node_modules/@joelek/ts-stdlib/dist/lib/data/parser", "node_modules/@joelek/ts-stdlib/dist/lib/asserts/integer", "node_modules/@joelek/ts-stdlib/dist/lib/data/chunk", "node_modules/@joelek/ts-stdlib/dist/lib/data/parser"], function (require, exports, integer_1, parser_1, integer_2, chunk_1, parser_2) {
+define("node_modules/@joelek/bedrock/dist/lib/utils", ["require", "exports", "node_modules/@joelek/stdlib/dist/lib/asserts/integer", "node_modules/@joelek/stdlib/dist/lib/data/parser", "node_modules/@joelek/stdlib/dist/lib/asserts/integer", "node_modules/@joelek/stdlib/dist/lib/data/chunk", "node_modules/@joelek/stdlib/dist/lib/data/parser"], function (require, exports, integer_1, parser_1, integer_2, chunk_1, parser_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -2391,7 +2554,7 @@ define("node_modules/@joelek/bedrock/dist/lib/index", ["require", "exports", "no
     exports.codecs = codecs;
     exports.utils = utils;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/bedrock", ["require", "exports", "node_modules/@joelek/bedrock/dist/lib/index"], function (require, exports, bedrock) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/codecs/bedrock", ["require", "exports", "node_modules/@joelek/bedrock/dist/lib/index"], function (require, exports, bedrock) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -2409,7 +2572,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/bedrock", ["req
     ;
     exports.CODEC = new BedrockCodec();
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/json", ["require", "exports", "node_modules/@joelek/bedrock/dist/lib/index", "node_modules/@joelek/ts-autoguard/dist/lib-shared/guards"], function (require, exports, bedrock, guards) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/codecs/json", ["require", "exports", "node_modules/@joelek/bedrock/dist/lib/index", "node_modules/@joelek/autoguard/dist/lib-shared/guards"], function (require, exports, bedrock, guards) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -2461,7 +2624,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/json", ["requir
     ;
     exports.CODEC = new JSONCodec();
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/bedrock", "node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/json"], function (require, exports, bedrock, json) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/codecs/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/codecs/bedrock", "node_modules/@joelek/autoguard/dist/lib-shared/codecs/json"], function (require, exports, bedrock, json) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.json = exports.bedrock = void 0;
@@ -2470,21 +2633,47 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/index", ["requi
     exports.bedrock = bedrock;
     exports.json = json;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-shared/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/api", "node_modules/@joelek/ts-autoguard/dist/lib-shared/codecs/index", "node_modules/@joelek/ts-autoguard/dist/lib-shared/guards", "node_modules/@joelek/ts-autoguard/dist/lib-shared/serialization"], function (require, exports, api, codecs, guards, serialization) {
+define("node_modules/@joelek/autoguard/dist/lib-shared/tables", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.serialization = exports.guards = exports.codecs = exports.api = void 0;
+    exports.createValueToKeyMap = exports.createKeyToValueMap = exports.createValues = exports.createKeys = void 0;
+    function createKeys(entries) {
+        return entries.map(({ key }) => key);
+    }
+    exports.createKeys = createKeys;
+    ;
+    function createValues(entries) {
+        return entries.map(({ value }) => value);
+    }
+    exports.createValues = createValues;
+    ;
+    function createKeyToValueMap(entries) {
+        return entries.reduce((record, { key, value }) => (Object.assign(Object.assign({}, record), { [key]: value })), {});
+    }
+    exports.createKeyToValueMap = createKeyToValueMap;
+    ;
+    function createValueToKeyMap(entries) {
+        return entries.reduce((record, { key, value }) => (Object.assign(Object.assign({}, record), { [value]: key })), {});
+    }
+    exports.createValueToKeyMap = createValueToKeyMap;
+    ;
+});
+define("node_modules/@joelek/autoguard/dist/lib-shared/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/api", "node_modules/@joelek/autoguard/dist/lib-shared/codecs/index", "node_modules/@joelek/autoguard/dist/lib-shared/guards", "node_modules/@joelek/autoguard/dist/lib-shared/serialization", "node_modules/@joelek/autoguard/dist/lib-shared/tables"], function (require, exports, api, codecs, guards, serialization, tables) {
+    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.serialization = exports.guards = exports.codecs = exports.api = void 0;
+    exports.tables = exports.serialization = exports.guards = exports.codecs = exports.api = void 0;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.tables = exports.serialization = exports.guards = exports.codecs = exports.api = void 0;
     exports.api = api;
     exports.codecs = codecs;
     exports.guards = guards;
     exports.serialization = serialization;
+    exports.tables = tables;
 });
-define("build/lib/config/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/lib/config/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.Options = exports.Certificate = exports.Provider = exports.ProviderGlesys = exports.ProviderDynu = void 0;
     exports.ProviderDynu = autoguard.guards.Object.of({
@@ -2559,10 +2748,10 @@ define("build/lib/terminal", ["require", "exports"], function (require, exports)
     exports.stylize = stylize;
     ;
 });
-define("build/mod/asn1/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/asn1/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.Boolean = exports.UTCTime = exports.Date = exports.UTF8String = exports.Set = exports.Sequence = exports.OctetString = exports.ObjectIdentifier = exports.Null = exports.Integer = exports.BitString = exports.Node = exports.Type = exports.Form = exports.Kind = void 0;
     var Kind;
@@ -2574,15 +2763,25 @@ define("build/mod/asn1/schema/index", ["require", "exports", "node_modules/@joel
     })(Kind = exports.Kind || (exports.Kind = {}));
     ;
     (function (Kind) {
-        Kind.Key = autoguard.guards.Union.of(autoguard.guards.StringLiteral.of("UNIVERSAL"), autoguard.guards.StringLiteral.of("APPLICATION"), autoguard.guards.StringLiteral.of("CONTEXT"), autoguard.guards.StringLiteral.of("PRIVATE"));
-        Kind.Value = autoguard.guards.Union.of(autoguard.guards.NumberLiteral.of(0), autoguard.guards.NumberLiteral.of(1), autoguard.guards.NumberLiteral.of(2), autoguard.guards.NumberLiteral.of(3));
+        Kind.Entries = [
+            { key: "UNIVERSAL", value: 0 },
+            { key: "APPLICATION", value: 1 },
+            { key: "CONTEXT", value: 2 },
+            { key: "PRIVATE", value: 3 }
+        ];
+        Kind.Keys = autoguard.tables.createKeys(Kind.Entries);
+        Kind.Values = autoguard.tables.createValues(Kind.Entries);
+        Kind.KeyToValueMap = autoguard.tables.createKeyToValueMap(Kind.Entries);
+        Kind.ValueToKeyMap = autoguard.tables.createValueToKeyMap(Kind.Entries);
+        Kind.Key = autoguard.guards.Key.of(Kind.KeyToValueMap);
+        Kind.Value = autoguard.guards.Key.of(Kind.ValueToKeyMap);
         function keyFromValue(value) {
-            return Kind.Key.as(Kind[Kind.Value.as(value)]);
+            return Kind.ValueToKeyMap[Kind.Value.as(value)];
         }
         Kind.keyFromValue = keyFromValue;
         ;
         function valueFromKey(key) {
-            return Kind.Value.as(Kind[Kind.Key.as(key)]);
+            return Kind.KeyToValueMap[Kind.Key.as(key)];
         }
         Kind.valueFromKey = valueFromKey;
         ;
@@ -2595,15 +2794,23 @@ define("build/mod/asn1/schema/index", ["require", "exports", "node_modules/@joel
     })(Form = exports.Form || (exports.Form = {}));
     ;
     (function (Form) {
-        Form.Key = autoguard.guards.Union.of(autoguard.guards.StringLiteral.of("PRIMITIVE"), autoguard.guards.StringLiteral.of("CONSTRUCTED"));
-        Form.Value = autoguard.guards.Union.of(autoguard.guards.NumberLiteral.of(0), autoguard.guards.NumberLiteral.of(1));
+        Form.Entries = [
+            { key: "PRIMITIVE", value: 0 },
+            { key: "CONSTRUCTED", value: 1 }
+        ];
+        Form.Keys = autoguard.tables.createKeys(Form.Entries);
+        Form.Values = autoguard.tables.createValues(Form.Entries);
+        Form.KeyToValueMap = autoguard.tables.createKeyToValueMap(Form.Entries);
+        Form.ValueToKeyMap = autoguard.tables.createValueToKeyMap(Form.Entries);
+        Form.Key = autoguard.guards.Key.of(Form.KeyToValueMap);
+        Form.Value = autoguard.guards.Key.of(Form.ValueToKeyMap);
         function keyFromValue(value) {
-            return Form.Key.as(Form[Form.Value.as(value)]);
+            return Form.ValueToKeyMap[Form.Value.as(value)];
         }
         Form.keyFromValue = keyFromValue;
         ;
         function valueFromKey(key) {
-            return Form.Value.as(Form[Form.Key.as(key)]);
+            return Form.KeyToValueMap[Form.Key.as(key)];
         }
         Form.valueFromKey = valueFromKey;
         ;
@@ -2651,15 +2858,58 @@ define("build/mod/asn1/schema/index", ["require", "exports", "node_modules/@joel
     })(Type = exports.Type || (exports.Type = {}));
     ;
     (function (Type) {
-        Type.Key = autoguard.guards.Union.of(autoguard.guards.StringLiteral.of("END_OF_CONTENT"), autoguard.guards.StringLiteral.of("BOOLEAN"), autoguard.guards.StringLiteral.of("INTEGER"), autoguard.guards.StringLiteral.of("BIT_STRING"), autoguard.guards.StringLiteral.of("OCTET_STRING"), autoguard.guards.StringLiteral.of("NULL"), autoguard.guards.StringLiteral.of("OBJECT_IDENTIFIER"), autoguard.guards.StringLiteral.of("OBJECT_DESCRIPTOR"), autoguard.guards.StringLiteral.of("EXTERNAL"), autoguard.guards.StringLiteral.of("REAL"), autoguard.guards.StringLiteral.of("ENUMERATED"), autoguard.guards.StringLiteral.of("EMBEDDED_PDV"), autoguard.guards.StringLiteral.of("UTF8_STRING"), autoguard.guards.StringLiteral.of("RELATIVE_OID"), autoguard.guards.StringLiteral.of("TIME"), autoguard.guards.StringLiteral.of("0F_RESERVED"), autoguard.guards.StringLiteral.of("SEQUENCE"), autoguard.guards.StringLiteral.of("SET"), autoguard.guards.StringLiteral.of("NUMERIC_STRING"), autoguard.guards.StringLiteral.of("PRINTABLE_STRING"), autoguard.guards.StringLiteral.of("T61_STRING"), autoguard.guards.StringLiteral.of("VIDEOTEX_STRING"), autoguard.guards.StringLiteral.of("IA5_STRING"), autoguard.guards.StringLiteral.of("UTC_TIME"), autoguard.guards.StringLiteral.of("GENERALIZED_TIME"), autoguard.guards.StringLiteral.of("GRAPHIC_STRING"), autoguard.guards.StringLiteral.of("VISIBLE_STRING"), autoguard.guards.StringLiteral.of("GENERAL_STRING"), autoguard.guards.StringLiteral.of("UNIVERSAL_STRING"), autoguard.guards.StringLiteral.of("CHARACTER_STRING"), autoguard.guards.StringLiteral.of("BMP_STRING"), autoguard.guards.StringLiteral.of("DATE"), autoguard.guards.StringLiteral.of("TIME_OF_DAY"), autoguard.guards.StringLiteral.of("DATE_TIME"), autoguard.guards.StringLiteral.of("DURATION"), autoguard.guards.StringLiteral.of("OID_IRI"), autoguard.guards.StringLiteral.of("RELATIVE_OID_IRI"));
-        Type.Value = autoguard.guards.Union.of(autoguard.guards.NumberLiteral.of(0), autoguard.guards.NumberLiteral.of(1), autoguard.guards.NumberLiteral.of(2), autoguard.guards.NumberLiteral.of(3), autoguard.guards.NumberLiteral.of(4), autoguard.guards.NumberLiteral.of(5), autoguard.guards.NumberLiteral.of(6), autoguard.guards.NumberLiteral.of(7), autoguard.guards.NumberLiteral.of(8), autoguard.guards.NumberLiteral.of(9), autoguard.guards.NumberLiteral.of(10), autoguard.guards.NumberLiteral.of(11), autoguard.guards.NumberLiteral.of(12), autoguard.guards.NumberLiteral.of(13), autoguard.guards.NumberLiteral.of(14), autoguard.guards.NumberLiteral.of(15), autoguard.guards.NumberLiteral.of(16), autoguard.guards.NumberLiteral.of(17), autoguard.guards.NumberLiteral.of(18), autoguard.guards.NumberLiteral.of(19), autoguard.guards.NumberLiteral.of(20), autoguard.guards.NumberLiteral.of(21), autoguard.guards.NumberLiteral.of(22), autoguard.guards.NumberLiteral.of(23), autoguard.guards.NumberLiteral.of(24), autoguard.guards.NumberLiteral.of(25), autoguard.guards.NumberLiteral.of(26), autoguard.guards.NumberLiteral.of(27), autoguard.guards.NumberLiteral.of(28), autoguard.guards.NumberLiteral.of(29), autoguard.guards.NumberLiteral.of(30), autoguard.guards.NumberLiteral.of(31), autoguard.guards.NumberLiteral.of(32), autoguard.guards.NumberLiteral.of(33), autoguard.guards.NumberLiteral.of(34), autoguard.guards.NumberLiteral.of(35), autoguard.guards.NumberLiteral.of(36));
+        Type.Entries = [
+            { key: "END_OF_CONTENT", value: 0 },
+            { key: "BOOLEAN", value: 1 },
+            { key: "INTEGER", value: 2 },
+            { key: "BIT_STRING", value: 3 },
+            { key: "OCTET_STRING", value: 4 },
+            { key: "NULL", value: 5 },
+            { key: "OBJECT_IDENTIFIER", value: 6 },
+            { key: "OBJECT_DESCRIPTOR", value: 7 },
+            { key: "EXTERNAL", value: 8 },
+            { key: "REAL", value: 9 },
+            { key: "ENUMERATED", value: 10 },
+            { key: "EMBEDDED_PDV", value: 11 },
+            { key: "UTF8_STRING", value: 12 },
+            { key: "RELATIVE_OID", value: 13 },
+            { key: "TIME", value: 14 },
+            { key: "0F_RESERVED", value: 15 },
+            { key: "SEQUENCE", value: 16 },
+            { key: "SET", value: 17 },
+            { key: "NUMERIC_STRING", value: 18 },
+            { key: "PRINTABLE_STRING", value: 19 },
+            { key: "T61_STRING", value: 20 },
+            { key: "VIDEOTEX_STRING", value: 21 },
+            { key: "IA5_STRING", value: 22 },
+            { key: "UTC_TIME", value: 23 },
+            { key: "GENERALIZED_TIME", value: 24 },
+            { key: "GRAPHIC_STRING", value: 25 },
+            { key: "VISIBLE_STRING", value: 26 },
+            { key: "GENERAL_STRING", value: 27 },
+            { key: "UNIVERSAL_STRING", value: 28 },
+            { key: "CHARACTER_STRING", value: 29 },
+            { key: "BMP_STRING", value: 30 },
+            { key: "DATE", value: 31 },
+            { key: "TIME_OF_DAY", value: 32 },
+            { key: "DATE_TIME", value: 33 },
+            { key: "DURATION", value: 34 },
+            { key: "OID_IRI", value: 35 },
+            { key: "RELATIVE_OID_IRI", value: 36 }
+        ];
+        Type.Keys = autoguard.tables.createKeys(Type.Entries);
+        Type.Values = autoguard.tables.createValues(Type.Entries);
+        Type.KeyToValueMap = autoguard.tables.createKeyToValueMap(Type.Entries);
+        Type.ValueToKeyMap = autoguard.tables.createValueToKeyMap(Type.Entries);
+        Type.Key = autoguard.guards.Key.of(Type.KeyToValueMap);
+        Type.Value = autoguard.guards.Key.of(Type.ValueToKeyMap);
         function keyFromValue(value) {
-            return Type.Key.as(Type[Type.Value.as(value)]);
+            return Type.ValueToKeyMap[Type.Value.as(value)];
         }
         Type.keyFromValue = keyFromValue;
         ;
         function valueFromKey(key) {
-            return Type.Value.as(Type[Type.Key.as(key)]);
+            return Type.KeyToValueMap[Type.Key.as(key)];
         }
         Type.valueFromKey = valueFromKey;
         ;
@@ -2924,10 +3174,10 @@ define("build/mod/asn1/index", ["require", "exports", "build/mod/asn1/schema/ind
     exports.decodeUTCTime = decodeUTCTime;
     ;
 });
-define("build/mod/jwk/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/jwk/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.PrivateKey = exports.PublicKey = exports.RSAPrivateKey = exports.RSAPublicKey = exports.RSAKey = exports.ECPrivateKey = exports.ECPublicKey = exports.ECKey = exports.AssymetricKey = exports.Key = exports.Curve = exports.KeyType = void 0;
     var KeyType;
@@ -2938,15 +3188,24 @@ define("build/mod/jwk/schema/index", ["require", "exports", "node_modules/@joele
     })(KeyType = exports.KeyType || (exports.KeyType = {}));
     ;
     (function (KeyType) {
-        KeyType.Key = autoguard.guards.Union.of(autoguard.guards.StringLiteral.of("EC"), autoguard.guards.StringLiteral.of("RSA"), autoguard.guards.StringLiteral.of("oct"));
-        KeyType.Value = autoguard.guards.Union.of(autoguard.guards.NumberLiteral.of(0), autoguard.guards.NumberLiteral.of(1), autoguard.guards.NumberLiteral.of(2));
+        KeyType.Entries = [
+            { key: "EC", value: 0 },
+            { key: "RSA", value: 1 },
+            { key: "oct", value: 2 }
+        ];
+        KeyType.Keys = autoguard.tables.createKeys(KeyType.Entries);
+        KeyType.Values = autoguard.tables.createValues(KeyType.Entries);
+        KeyType.KeyToValueMap = autoguard.tables.createKeyToValueMap(KeyType.Entries);
+        KeyType.ValueToKeyMap = autoguard.tables.createValueToKeyMap(KeyType.Entries);
+        KeyType.Key = autoguard.guards.Key.of(KeyType.KeyToValueMap);
+        KeyType.Value = autoguard.guards.Key.of(KeyType.ValueToKeyMap);
         function keyFromValue(value) {
-            return KeyType.Key.as(KeyType[KeyType.Value.as(value)]);
+            return KeyType.ValueToKeyMap[KeyType.Value.as(value)];
         }
         KeyType.keyFromValue = keyFromValue;
         ;
         function valueFromKey(key) {
-            return KeyType.Value.as(KeyType[KeyType.Key.as(key)]);
+            return KeyType.KeyToValueMap[KeyType.Key.as(key)];
         }
         KeyType.valueFromKey = valueFromKey;
         ;
@@ -2960,15 +3219,24 @@ define("build/mod/jwk/schema/index", ["require", "exports", "node_modules/@joele
     })(Curve = exports.Curve || (exports.Curve = {}));
     ;
     (function (Curve) {
-        Curve.Key = autoguard.guards.Union.of(autoguard.guards.StringLiteral.of("P-256"), autoguard.guards.StringLiteral.of("P-384"), autoguard.guards.StringLiteral.of("P-521"));
-        Curve.Value = autoguard.guards.Union.of(autoguard.guards.NumberLiteral.of(0), autoguard.guards.NumberLiteral.of(1), autoguard.guards.NumberLiteral.of(2));
+        Curve.Entries = [
+            { key: "P-256", value: 0 },
+            { key: "P-384", value: 1 },
+            { key: "P-521", value: 2 }
+        ];
+        Curve.Keys = autoguard.tables.createKeys(Curve.Entries);
+        Curve.Values = autoguard.tables.createValues(Curve.Entries);
+        Curve.KeyToValueMap = autoguard.tables.createKeyToValueMap(Curve.Entries);
+        Curve.ValueToKeyMap = autoguard.tables.createValueToKeyMap(Curve.Entries);
+        Curve.Key = autoguard.guards.Key.of(Curve.KeyToValueMap);
+        Curve.Value = autoguard.guards.Key.of(Curve.ValueToKeyMap);
         function keyFromValue(value) {
-            return Curve.Key.as(Curve[Curve.Value.as(value)]);
+            return Curve.ValueToKeyMap[Curve.Value.as(value)];
         }
         Curve.keyFromValue = keyFromValue;
         ;
         function valueFromKey(key) {
-            return Curve.Value.as(Curve[Curve.Key.as(key)]);
+            return Curve.KeyToValueMap[Curve.Key.as(key)];
         }
         Curve.valueFromKey = valueFromKey;
         ;
@@ -3114,10 +3382,10 @@ define("build/mod/jwk/index", ["require", "exports", "crypto", "build/mod/asn1/i
     exports.computeThumbprint = computeThumbprint;
     ;
 });
-define("build/mod/pkcs5/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, asn1_1, asn1_2, asn1_3, asn1_4, asn1_5, asn1_6) {
+define("build/mod/pkcs5/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, asn1_1, asn1_2, asn1_3, asn1_4, asn1_5, asn1_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.EncryptedPrivateKeyInfo = exports.PBES2Identifier = exports.PBKDF2Identifier = exports.PBKDF2Identifier2 = exports.PBKDF2Identifier1 = exports.HMACSHA512256Identifier = exports.HMACSHA512224Identifier = exports.HMACSHA512Identifier = exports.HMACSHA384Identifier = exports.HMACSHA256Identifier = exports.HMACSHA224Identifier = exports.HMACSHA1Identifier = exports.AES256CBCIdentifier = exports.AES192CBCIdentifier = exports.AES128CBCIdentifier = exports.SHA512WithRSAEncryption = exports.SHA384WithRSAEncryption = exports.SHA256WithRSAEncryption = exports.ECDSAWithSHA512 = exports.ECDSAWithSHA384 = exports.ECDSAWithSHA256 = exports.AlgorithmIdentifier = exports.ASN1Sequence = exports.ASN1OctetString = exports.ASN1ObjectIdentifier = exports.ASN1Null = exports.ASN1Node = exports.ASN1Integer = void 0;
     exports.ASN1Integer = autoguard.guards.Reference.of(() => asn1_1.Integer);
@@ -4393,10 +4661,10 @@ define("build/mod/pkcs5/index", ["require", "exports", "build/mod/pkcs5/algorith
     exports.encrypt = encrypt;
     ;
 });
-define("build/mod/jws/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/jws/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.Body = exports.Protected = exports.SignatureAlgorithm = void 0;
     var SignatureAlgorithm;
@@ -4416,15 +4684,33 @@ define("build/mod/jws/schema/index", ["require", "exports", "node_modules/@joele
     })(SignatureAlgorithm = exports.SignatureAlgorithm || (exports.SignatureAlgorithm = {}));
     ;
     (function (SignatureAlgorithm) {
-        SignatureAlgorithm.Key = autoguard.guards.Union.of(autoguard.guards.StringLiteral.of("HS256"), autoguard.guards.StringLiteral.of("HS384"), autoguard.guards.StringLiteral.of("HS512"), autoguard.guards.StringLiteral.of("RS256"), autoguard.guards.StringLiteral.of("RS384"), autoguard.guards.StringLiteral.of("RS512"), autoguard.guards.StringLiteral.of("ES256"), autoguard.guards.StringLiteral.of("ES384"), autoguard.guards.StringLiteral.of("ES512"), autoguard.guards.StringLiteral.of("PS256"), autoguard.guards.StringLiteral.of("PS384"), autoguard.guards.StringLiteral.of("PS512"));
-        SignatureAlgorithm.Value = autoguard.guards.Union.of(autoguard.guards.NumberLiteral.of(0), autoguard.guards.NumberLiteral.of(1), autoguard.guards.NumberLiteral.of(2), autoguard.guards.NumberLiteral.of(3), autoguard.guards.NumberLiteral.of(4), autoguard.guards.NumberLiteral.of(5), autoguard.guards.NumberLiteral.of(6), autoguard.guards.NumberLiteral.of(7), autoguard.guards.NumberLiteral.of(8), autoguard.guards.NumberLiteral.of(9), autoguard.guards.NumberLiteral.of(10), autoguard.guards.NumberLiteral.of(11));
+        SignatureAlgorithm.Entries = [
+            { key: "HS256", value: 0 },
+            { key: "HS384", value: 1 },
+            { key: "HS512", value: 2 },
+            { key: "RS256", value: 3 },
+            { key: "RS384", value: 4 },
+            { key: "RS512", value: 5 },
+            { key: "ES256", value: 6 },
+            { key: "ES384", value: 7 },
+            { key: "ES512", value: 8 },
+            { key: "PS256", value: 9 },
+            { key: "PS384", value: 10 },
+            { key: "PS512", value: 11 }
+        ];
+        SignatureAlgorithm.Keys = autoguard.tables.createKeys(SignatureAlgorithm.Entries);
+        SignatureAlgorithm.Values = autoguard.tables.createValues(SignatureAlgorithm.Entries);
+        SignatureAlgorithm.KeyToValueMap = autoguard.tables.createKeyToValueMap(SignatureAlgorithm.Entries);
+        SignatureAlgorithm.ValueToKeyMap = autoguard.tables.createValueToKeyMap(SignatureAlgorithm.Entries);
+        SignatureAlgorithm.Key = autoguard.guards.Key.of(SignatureAlgorithm.KeyToValueMap);
+        SignatureAlgorithm.Value = autoguard.guards.Key.of(SignatureAlgorithm.ValueToKeyMap);
         function keyFromValue(value) {
-            return SignatureAlgorithm.Key.as(SignatureAlgorithm[SignatureAlgorithm.Value.as(value)]);
+            return SignatureAlgorithm.ValueToKeyMap[SignatureAlgorithm.Value.as(value)];
         }
         SignatureAlgorithm.keyFromValue = keyFromValue;
         ;
         function valueFromKey(key) {
-            return SignatureAlgorithm.Value.as(SignatureAlgorithm[SignatureAlgorithm.Key.as(key)]);
+            return SignatureAlgorithm.KeyToValueMap[SignatureAlgorithm.Key.as(key)];
         }
         SignatureAlgorithm.valueFromKey = valueFromKey;
         ;
@@ -4526,10 +4812,10 @@ define("build/mod/jws/index", ["require", "exports", "build/mod/jwk/index", "bui
     exports.verify = verify;
     ;
 });
-define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/jwk/index", "build/mod/jws/index"], function (require, exports, autoguard, jwk_1, jws_1) {
+define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/jwk/index", "build/mod/jws/index"], function (require, exports, autoguard, jwk_1, jws_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.FinalizeOrderPayload = exports.CreateOrderPayload = exports.CreateAccountPayload = exports.ProtectedWithKID = exports.ProtectedWithJWK = exports.Protected = exports.Order = exports.Identifier = exports.Directory = exports.ChallengeTLSALPN01 = exports.ChallengeDNS01 = exports.ChallengeHTTP01 = exports.Challenge = exports.Authorization = exports.Account = void 0;
     exports.Account = autoguard.guards.Object.of({
@@ -4755,7 +5041,7 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                     "replay-nonce": autoguard.guards.String
                 }, {}), autoguard.api.Headers)
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "payload": autoguard.api.Binary
             }),
             "finalizeChallenge": autoguard.guards.Object.of({
@@ -4764,7 +5050,7 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Challenge)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "finalizeOrder": autoguard.guards.Object.of({
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({
@@ -4772,7 +5058,7 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Order)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "getAccount": autoguard.guards.Object.of({
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({
@@ -4780,7 +5066,7 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Account)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "getAuthorization": autoguard.guards.Object.of({
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({
@@ -4788,7 +5074,7 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Authorization)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "getChallenge": autoguard.guards.Object.of({
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({
@@ -4796,12 +5082,12 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Challenge)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "getDirectory": autoguard.guards.Object.of({
                 "payload": autoguard.guards.Reference.of(() => exports.Directory)
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "getOrder": autoguard.guards.Object.of({
@@ -4810,7 +5096,7 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Order)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "newAccount": autoguard.guards.Object.of({
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({
@@ -4819,14 +5105,14 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Account)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             }),
             "newNonce": autoguard.guards.Object.of({
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({
                     "replay-nonce": autoguard.guards.String
                 }, {}), autoguard.api.Headers)
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "payload": autoguard.api.Binary
             }),
             "newOrder": autoguard.guards.Object.of({
@@ -4836,13 +5122,13 @@ define("build/mod/acme/api/index", ["require", "exports", "node_modules/@joelek/
                 }, {}), autoguard.api.Headers),
                 "payload": autoguard.guards.Reference.of(() => exports.Order)
             }, {
-                "status": autoguard.guards.Number
+                "status": autoguard.guards.Integer
             })
         };
     })(Autoguard = exports.Autoguard || (exports.Autoguard = {}));
     ;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exports", "fs", "http", "https", "path", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "node_modules/@joelek/ts-autoguard/dist/lib-shared/api"], function (require, exports, libfs, libhttp, libhttps, libpath, shared, api_1) {
+define("node_modules/@joelek/autoguard/dist/lib-server/api", ["require", "exports", "fs", "http", "https", "path", "node_modules/@joelek/autoguard/dist/lib-shared/index", "node_modules/@joelek/autoguard/dist/lib-shared/api"], function (require, exports, libfs, libhttp, libhttps, libpath, shared, api_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
@@ -4929,13 +5215,13 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
             let headers = this.request.headers;
             return Object.assign({}, headers);
         }
-        payload() {
+        payload(maxByteLength) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (this.collectedPayload !== undefined) {
                     return this.collectedPayload;
                 }
                 let payload = this.request.payload;
-                let collectedPayload = (this.collect ? yield shared.api.collectPayload(payload) : payload);
+                let collectedPayload = (this.collect ? yield shared.api.collectPayload(payload, maxByteLength) : payload);
                 this.collectedPayload = collectedPayload;
                 return collectedPayload;
             });
@@ -4952,12 +5238,20 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
             this.string = string;
             this.accepted = false;
         }
-        acceptComponent(component) {
+        acceptComponent(component, collect = true) {
             if (this.accepted) {
                 return false;
             }
-            this.accepted = component === this.string;
-            return this.accepted;
+            if (component === this.string) {
+                if (collect) {
+                    this.accepted = true;
+                }
+                return true;
+            }
+            return false;
+        }
+        acceptsComponent(component) {
+            return this.acceptComponent(component, false);
         }
         getValue() {
             return this.string;
@@ -4976,19 +5270,24 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
             this.guard = guard;
             this.values = new Array();
         }
-        acceptComponent(component) {
+        acceptComponent(component, collect = true) {
             if (this.values.length >= this.maxOccurences) {
                 return false;
             }
             try {
                 let value = shared.api.deserializeValue(component, this.plain);
                 if (this.guard.is(value)) {
-                    this.values.push(value);
+                    if (collect) {
+                        this.values.push(value);
+                    }
                     return true;
                 }
             }
             catch (error) { }
             return false;
+        }
+        acceptsComponent(component) {
+            return this.acceptComponent(component, false);
         }
         getValue() {
             if (this.maxOccurences === 1) {
@@ -5014,7 +5313,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
     exports.combineNodeRawHeaders = combineNodeRawHeaders;
     ;
     function makeNodeRequestHandler(options) {
-        return (raw, clientOptions) => {
+        return (raw, clientOptions, requestOptions) => {
             var _a;
             let urlPrefix = (_a = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.urlPrefix) !== null && _a !== void 0 ? _a : "";
             let lib = urlPrefix.startsWith("https:") ? libhttps : libhttp;
@@ -5064,35 +5363,43 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
     exports.makeNodeRequestHandler = makeNodeRequestHandler;
     ;
     function acceptsComponents(components, matchers) {
-        let currentMatcher = 0;
-        outer: for (let component of components) {
+        let i = 0;
+        for (let component of components) {
             let decoded = decodeURIComponent(component);
             if (decoded === undefined) {
                 throw `Expected component to be properly encoded!`;
             }
-            inner: for (let matcher of matchers.slice(currentMatcher)) {
-                if (matcher.acceptComponent(decoded)) {
-                    continue outer;
-                }
-                else {
-                    if (matcher.isSatisfied()) {
-                        currentMatcher += 1;
-                        continue inner;
+            let accepted = false;
+            for (let matcher of matchers.slice(i)) {
+                if (matcher.isSatisfied()) {
+                    if (!matcher.acceptsComponent(decoded)) {
+                        i += 1;
+                        continue;
                     }
-                    else {
-                        break outer;
+                    if (i + 1 < matchers.length) {
+                        let next_matcher = matchers[i + 1];
+                        if (next_matcher.acceptsComponent(decoded)) {
+                            i += 1;
+                            continue;
+                        }
                     }
                 }
+                if (!matcher.acceptsComponent(decoded)) {
+                    return false;
+                }
+                matcher.acceptComponent(decoded);
+                accepted = true;
+                break;
             }
-            break outer;
-        }
-        if (currentMatcher >= matchers.length) {
-            return false;
-        }
-        for (let matcher of matchers.slice(currentMatcher)) {
-            if (!matcher.isSatisfied()) {
+            if (!accepted) {
                 return false;
             }
+        }
+        if (i !== matchers.length - 1) {
+            return false;
+        }
+        if (!matchers[i].isSatisfied()) {
+            return false;
         }
         return true;
     }
@@ -5372,26 +5679,28 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
         if (!libfs.existsSync(fullPath) || !libfs.statSync(fullPath).isDirectory()) {
             throw 404;
         }
-        let entries = libfs.readdirSync(fullPath, { withFileTypes: true });
-        let directories = entries
-            .filter((entry) => entry.isDirectory())
-            .map((entry) => {
-            return {
-                name: entry.name
-            };
-        })
-            .sort((one, two) => one.name.localeCompare(two.name));
-        let files = entries
-            .filter((entry) => entry.isFile())
-            .map((entry) => {
-            let stat = libfs.statSync(libpath.join(fullPath, entry.name));
-            return {
-                name: entry.name,
-                size: stat.size,
-                timestamp: stat.mtime.valueOf()
-            };
-        })
-            .sort((one, two) => one.name.localeCompare(two.name));
+        let directories = [];
+        let files = [];
+        let entries = libfs.readdirSync(fullPath);
+        for (let entry of entries) {
+            let stat = libfs.statSync(libpath.join(fullPath, entry));
+            if (stat.isDirectory()) {
+                directories.push({
+                    name: entry
+                });
+                continue;
+            }
+            if (stat.isFile()) {
+                files.push({
+                    name: entry,
+                    size: stat.size,
+                    timestamp: stat.mtime.valueOf()
+                });
+                continue;
+            }
+        }
+        directories.sort((one, two) => one.name.localeCompare(two.name));
+        files.sort((one, two) => one.name.localeCompare(two.name));
         let components = pathSuffixParts;
         return {
             components,
@@ -5434,7 +5743,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/api", ["require", "exp
     exports.makeReadStreamResponse = makeReadStreamResponse;
     ;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-server/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "node_modules/@joelek/ts-autoguard/dist/lib-server/api"], function (require, exports, lib_shared_1, api) {
+define("node_modules/@joelek/autoguard/dist/lib-server/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "node_modules/@joelek/autoguard/dist/lib-server/api"], function (require, exports, lib_shared_1, api) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.api = void 0;
@@ -5461,7 +5770,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-server/index", ["require", "e
     __exportStar(lib_shared_1, exports);
     exports.api = api;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-client/api", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "node_modules/@joelek/ts-autoguard/dist/lib-shared/api"], function (require, exports, shared, api_2) {
+define("node_modules/@joelek/autoguard/dist/lib-client/api", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "node_modules/@joelek/autoguard/dist/lib-shared/api"], function (require, exports, shared, api_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
@@ -5521,13 +5830,13 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-client/api", ["require", "exp
             let headers = this.response.headers;
             return Object.assign({}, headers);
         }
-        payload() {
+        payload(maxByteLength) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (this.collectedPayload !== undefined) {
                     return this.collectedPayload;
                 }
                 let payload = this.response.payload;
-                let collectedPayload = (this.collect ? yield shared.api.collectPayload(payload) : payload);
+                let collectedPayload = (this.collect ? yield shared.api.collectPayload(payload, maxByteLength) : payload);
                 this.collectedPayload = collectedPayload;
                 return collectedPayload;
             });
@@ -5535,7 +5844,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-client/api", ["require", "exp
     }
     exports.ServerResponse = ServerResponse;
     ;
-    function xhr(raw, clientOptions) {
+    function xhr(raw, clientOptions, requestOptions) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             var _a;
             // @ts-ignore
@@ -5554,6 +5863,22 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-client/api", ["require", "exp
                 };
                 resolve(raw);
             };
+            if ((requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.onresponseprogess) !== undefined) {
+                xhr.onprogress = (event) => {
+                    var _a;
+                    if (event.lengthComputable) {
+                        (_a = requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.onresponseprogess) === null || _a === void 0 ? void 0 : _a.call(requestOptions, event.loaded / event.total);
+                    }
+                };
+            }
+            if ((requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.onrequestprogress) !== undefined) {
+                xhr.upload.onprogress = (event) => {
+                    var _a;
+                    if (event.lengthComputable) {
+                        (_a = requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.onrequestprogress) === null || _a === void 0 ? void 0 : _a.call(requestOptions, event.loaded / event.total);
+                    }
+                };
+            }
             let url = (_a = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.urlPrefix) !== null && _a !== void 0 ? _a : "";
             url += shared.api.combineComponents(raw.components);
             url += shared.api.combineParameters(raw.parameters);
@@ -5581,7 +5906,7 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-client/api", ["require", "exp
     exports.finalizeRequest = finalizeRequest;
     ;
 });
-define("node_modules/@joelek/ts-autoguard/dist/lib-client/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "node_modules/@joelek/ts-autoguard/dist/lib-client/api"], function (require, exports, lib_shared_2, api) {
+define("node_modules/@joelek/autoguard/dist/lib-client/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "node_modules/@joelek/autoguard/dist/lib-client/api"], function (require, exports, lib_shared_2, api) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.api = void 0;
@@ -5608,10 +5933,10 @@ define("node_modules/@joelek/ts-autoguard/dist/lib-client/index", ["require", "e
     __exportStar(lib_shared_2, exports);
     exports.api = api;
 });
-define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-client/index", "build/mod/acme/api/index"], function (require, exports, autoguard, shared) {
+define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-client/index", "build/mod/acme/api/index"], function (require, exports, autoguard, shared) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -5638,7 +5963,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.makeClient = void 0;
     const makeClient = (clientOptions) => ({
-        "downloadCertificate": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "downloadCertificate": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["downloadCertificate"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5655,7 +5980,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_h = (_g = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _g === void 0 ? void 0 : _g.slice()) !== null && _h !== void 0 ? _h : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/octet-stream"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5667,7 +5992,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, true);
             }
         }),
-        "finalizeChallenge": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "finalizeChallenge": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _j, _k, _l, _m, _o, _p, _q, _r;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["finalizeChallenge"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5684,7 +6009,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_r = (_q = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _q === void 0 ? void 0 : _q.slice()) !== null && _r !== void 0 ? _r : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5696,7 +6021,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "finalizeOrder": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "finalizeOrder": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _s, _t, _u, _v, _w, _x, _y, _z;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["finalizeOrder"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5713,7 +6038,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_z = (_y = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _y === void 0 ? void 0 : _y.slice()) !== null && _z !== void 0 ? _z : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5725,7 +6050,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "getAccount": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "getAccount": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _0, _1, _2, _3, _4, _5, _6, _7;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getAccount"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5742,7 +6067,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_7 = (_6 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _6 === void 0 ? void 0 : _6.slice()) !== null && _7 !== void 0 ? _7 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5754,7 +6079,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "getAuthorization": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "getAuthorization": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _8, _9, _10, _11, _12, _13, _14, _15;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getAuthorization"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5771,7 +6096,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_15 = (_14 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _14 === void 0 ? void 0 : _14.slice()) !== null && _15 !== void 0 ? _15 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5783,7 +6108,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "getChallenge": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "getChallenge": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _16, _17, _18, _19, _20, _21, _22, _23;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getChallenge"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5800,7 +6125,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_23 = (_22 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _22 === void 0 ? void 0 : _22.slice()) !== null && _23 !== void 0 ? _23 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5812,7 +6137,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "getDirectory": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "getDirectory": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _24, _25, _26, _27, _28, _29, _30, _31;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getDirectory"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5828,7 +6153,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_31 = (_30 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _30 === void 0 ? void 0 : _30.slice()) !== null && _31 !== void 0 ? _31 : [];
             defaultHeaders.push(["Content-Type", "application/octet-stream"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5839,7 +6164,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "getOrder": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "getOrder": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _32, _33, _34, _35, _36, _37, _38, _39;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["getOrder"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5856,7 +6181,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_39 = (_38 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _38 === void 0 ? void 0 : _38.slice()) !== null && _39 !== void 0 ? _39 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5868,7 +6193,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "newAccount": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "newAccount": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _40, _41, _42, _43, _44, _45, _46, _47;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newAccount"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5885,7 +6210,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_47 = (_46 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _46 === void 0 ? void 0 : _46.slice()) !== null && _47 !== void 0 ? _47 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5898,7 +6223,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "newNonce": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "newNonce": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _48, _49, _50, _51, _52, _53, _54, _55;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newNonce"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5914,7 +6239,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_55 = (_54 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _54 === void 0 ? void 0 : _54.slice()) !== null && _55 !== void 0 ? _55 : [];
             defaultHeaders.push(["Content-Type", "application/octet-stream"]);
             defaultHeaders.push(["Accept", "application/octet-stream"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5926,7 +6251,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, true);
             }
         }),
-        "newOrder": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "newOrder": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _56, _57, _58, _59, _60, _61, _62, _63;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["newOrder"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -5943,7 +6268,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_63 = (_62 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _62 === void 0 ? void 0 : _62.slice()) !== null && _63 !== void 0 ? _63 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -5959,7 +6284,7 @@ define("build/mod/acme/api/client", ["require", "exports", "node_modules/@joelek
     });
     exports.makeClient = makeClient;
 });
-define("build/mod/acme/handler", ["require", "exports", "crypto", "url", "node_modules/@joelek/ts-autoguard/dist/lib-server/index", "build/mod/acme/api/client", "build/mod/jwk/index", "build/mod/jws/index"], function (require, exports, libcrypto, liburl, autoguard, apiclient, jwk, jws) {
+define("build/mod/acme/handler", ["require", "exports", "crypto", "url", "node_modules/@joelek/autoguard/dist/lib-server/index", "build/mod/acme/api/client", "build/mod/jwk/index", "build/mod/jws/index"], function (require, exports, libcrypto, liburl, autoguard, apiclient, jwk, jws) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -6318,10 +6643,10 @@ define("build/mod/dns/index", ["require", "exports"], function (require, exports
     ;
     ;
 });
-define("build/mod/dynu/api/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/dynu/api/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.DomainRecord = exports.DomainRecordTXT = exports.DomainRecordGeneric = exports.DomainRecordBase = exports.DomainRecordStub = exports.DomainRecordStubTXT = exports.DomainRecordStubGeneric = exports.Domain = void 0;
     exports.Domain = autoguard.guards.Object.of({
@@ -6406,7 +6731,7 @@ define("build/mod/dynu/api/index", ["require", "exports", "node_modules/@joelek/
                     "domains": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => exports.Domain))
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "listDomainRecords": autoguard.guards.Object.of({
@@ -6414,35 +6739,35 @@ define("build/mod/dynu/api/index", ["require", "exports", "node_modules/@joelek/
                     "dnsRecords": autoguard.guards.Array.of(autoguard.guards.Reference.of(() => exports.DomainRecord))
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "createDomainRecord": autoguard.guards.Object.of({
                 "payload": autoguard.guards.Reference.of(() => exports.DomainRecord)
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "updateDomainRecord": autoguard.guards.Object.of({
                 "payload": autoguard.guards.Reference.of(() => exports.DomainRecord)
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "deleteDomainRecord": autoguard.guards.Object.of({
                 "payload": autoguard.guards.Object.of({}, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             })
         };
     })(Autoguard = exports.Autoguard || (exports.Autoguard = {}));
     ;
 });
-define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-client/index", "build/mod/dynu/api/index"], function (require, exports, autoguard, shared) {
+define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-client/index", "build/mod/dynu/api/index"], function (require, exports, autoguard, shared) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -6469,7 +6794,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.makeClient = void 0;
     const makeClient = (clientOptions) => ({
-        "listDomains": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "listDomains": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e, _f;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["listDomains"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -6485,7 +6810,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_f = (_e = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _e === void 0 ? void 0 : _e.slice()) !== null && _f !== void 0 ? _f : [];
             defaultHeaders.push(["Content-Type", "application/octet-stream"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -6496,7 +6821,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "listDomainRecords": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "listDomainRecords": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _g, _h, _j, _k, _l, _m, _o;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["listDomainRecords"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -6514,7 +6839,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_o = (_m = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _m === void 0 ? void 0 : _m.slice()) !== null && _o !== void 0 ? _o : [];
             defaultHeaders.push(["Content-Type", "application/octet-stream"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -6525,7 +6850,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "createDomainRecord": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "createDomainRecord": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _p, _q, _r, _s, _t, _u;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["createDomainRecord"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -6543,7 +6868,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_u = (_t = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _t === void 0 ? void 0 : _t.slice()) !== null && _u !== void 0 ? _u : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -6554,7 +6879,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "updateDomainRecord": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "updateDomainRecord": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _v, _w, _x, _y, _z, _0, _1;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["updateDomainRecord"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -6573,7 +6898,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_1 = (_0 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _0 === void 0 ? void 0 : _0.slice()) !== null && _1 !== void 0 ? _1 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -6584,7 +6909,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "deleteDomainRecord": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "deleteDomainRecord": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _2, _3, _4, _5, _6, _7, _8, _9;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["deleteDomainRecord"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -6603,7 +6928,7 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
             let defaultHeaders = (_9 = (_8 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _8 === void 0 ? void 0 : _8.slice()) !== null && _9 !== void 0 ? _9 : [];
             defaultHeaders.push(["Content-Type", "application/octet-stream"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -6617,10 +6942,10 @@ define("build/mod/dynu/api/client", ["require", "exports", "node_modules/@joelek
     });
     exports.makeClient = makeClient;
 });
-define("build/mod/dynu/config/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/dynu/config/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.Config = void 0;
     exports.Config = autoguard.guards.Object.of({
@@ -6636,7 +6961,7 @@ define("build/mod/dynu/config/index", ["require", "exports", "node_modules/@joel
     })(Autoguard = exports.Autoguard || (exports.Autoguard = {}));
     ;
 });
-define("build/mod/dynu/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-server/index", "build/mod/dynu/api/client", "build/mod/dynu/config/index"], function (require, exports, autoguard, api, config_1) {
+define("build/mod/dynu/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-server/index", "build/mod/dynu/api/client", "build/mod/dynu/config/index"], function (require, exports, autoguard, api, config_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
@@ -6847,10 +7172,10 @@ define("build/mod/ec/index", ["require", "exports", "crypto", "build/mod/jwk/ind
     exports.generatePrivateKeyBuffer = generatePrivateKeyBuffer;
     ;
 });
-define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.DomainRecord = exports.DomainRecordType = exports.DomainRecordHost = exports.Domain = exports.RegistrarInfo = exports.DomainPrice = void 0;
     exports.DomainPrice = autoguard.guards.Object.of({
@@ -6962,7 +7287,7 @@ define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joele
                     }, {})
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "listDomainRecords": autoguard.guards.Object.of({
@@ -6972,7 +7297,7 @@ define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joele
                     }, {})
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "createDomainRecord": autoguard.guards.Object.of({
@@ -6982,7 +7307,7 @@ define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joele
                     }, {})
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "updateDomainRecord": autoguard.guards.Object.of({
@@ -6992,7 +7317,7 @@ define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joele
                     }, {})
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             }),
             "deleteDomainRecord": autoguard.guards.Object.of({
@@ -7000,17 +7325,17 @@ define("build/mod/glesys/api/index", ["require", "exports", "node_modules/@joele
                     "response": autoguard.guards.Object.of({}, {})
                 }, {})
             }, {
-                "status": autoguard.guards.Number,
+                "status": autoguard.guards.Integer,
                 "headers": autoguard.guards.Intersection.of(autoguard.guards.Object.of({}, {}), autoguard.api.Headers)
             })
         };
     })(Autoguard = exports.Autoguard || (exports.Autoguard = {}));
     ;
 });
-define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-client/index", "build/mod/glesys/api/index"], function (require, exports, autoguard, shared) {
+define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-client/index", "build/mod/glesys/api/index"], function (require, exports, autoguard, shared) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -7037,7 +7362,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.makeClient = void 0;
     const makeClient = (clientOptions) => ({
-        "listDomains": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "listDomains": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e, _f;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["listDomains"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -7054,7 +7379,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
             let defaultHeaders = (_f = (_e = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _e === void 0 ? void 0 : _e.slice()) !== null && _f !== void 0 ? _f : [];
             defaultHeaders.push(["Content-Type", "application/octet-stream"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -7065,7 +7390,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "listDomainRecords": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "listDomainRecords": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _g, _h, _j, _k, _l;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["listDomainRecords"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -7082,7 +7407,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
             let defaultHeaders = (_l = (_k = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _k === void 0 ? void 0 : _k.slice()) !== null && _l !== void 0 ? _l : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -7093,7 +7418,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "createDomainRecord": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "createDomainRecord": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _m, _o, _p, _q, _r;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["createDomainRecord"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -7110,7 +7435,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
             let defaultHeaders = (_r = (_q = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _q === void 0 ? void 0 : _q.slice()) !== null && _r !== void 0 ? _r : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -7121,7 +7446,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "updateDomainRecord": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "updateDomainRecord": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _s, _t, _u, _v, _w;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["updateDomainRecord"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -7138,7 +7463,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
             let defaultHeaders = (_w = (_v = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _v === void 0 ? void 0 : _v.slice()) !== null && _w !== void 0 ? _w : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -7149,7 +7474,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
                 return new autoguard.api.ServerResponse(response, false);
             }
         }),
-        "deleteDomainRecord": (request) => __awaiter(void 0, void 0, void 0, function* () {
+        "deleteDomainRecord": (request, requestOptions) => __awaiter(void 0, void 0, void 0, function* () {
             var _x, _y, _z, _0, _1;
             let guard = autoguard.api.wrapMessageGuard(shared.Autoguard.Requests["deleteDomainRecord"], clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.debugMode);
             guard.as(request, "request");
@@ -7166,7 +7491,7 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
             let defaultHeaders = (_1 = (_0 = clientOptions === null || clientOptions === void 0 ? void 0 : clientOptions.defaultHeaders) === null || _0 === void 0 ? void 0 : _0.slice()) !== null && _1 !== void 0 ? _1 : [];
             defaultHeaders.push(["Content-Type", "application/json; charset=utf-8"]);
             defaultHeaders.push(["Accept", "application/json; charset=utf-8"]);
-            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions);
+            let raw = yield requestHandler(autoguard.api.finalizeRequest({ method, components, parameters, headers, payload }, defaultHeaders), clientOptions, requestOptions);
             {
                 let status = raw.status;
                 let headers = {};
@@ -7180,10 +7505,10 @@ define("build/mod/glesys/api/client", ["require", "exports", "node_modules/@joel
     });
     exports.makeClient = makeClient;
 });
-define("build/mod/glesys/config/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
+define("build/mod/glesys/config/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index"], function (require, exports, autoguard) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.Config = void 0;
     exports.Config = autoguard.guards.Object.of({
@@ -7200,7 +7525,7 @@ define("build/mod/glesys/config/index", ["require", "exports", "node_modules/@jo
     })(Autoguard = exports.Autoguard || (exports.Autoguard = {}));
     ;
 });
-define("build/mod/glesys/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-server/index", "build/mod/glesys/api/client", "build/mod/glesys/config/index"], function (require, exports, autoguard, api, config_2) {
+define("build/mod/glesys/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-server/index", "build/mod/glesys/api/client", "build/mod/glesys/config/index"], function (require, exports, autoguard, api, config_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
@@ -7640,10 +7965,10 @@ define("build/mod/pem/index", ["require", "exports", "crypto"], function (requir
     exports.serialize = serialize;
     ;
 });
-define("build/mod/pkcs1/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, asn1_1, asn1_2) {
+define("build/mod/pkcs1/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, asn1_1, asn1_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.RSAPrivateKey = exports.RSAPublicKey = exports.OtherPrimeInfos = exports.OtherPrimeInfo = exports.ASN1Sequence = exports.ASN1Integer = void 0;
     exports.ASN1Integer = autoguard.guards.Reference.of(() => asn1_1.Integer);
@@ -7799,10 +8124,10 @@ define("build/mod/pkcs1/index", ["require", "exports", "build/mod/asn1/index", "
     exports.serializeRSAPrivateKey = serializeRSAPrivateKey;
     ;
 });
-define("build/mod/pkcs8/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/pkcs5/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, pkcs5_1, asn1_1, asn1_2, asn1_3, asn1_4, asn1_5, asn1_6) {
+define("build/mod/pkcs8/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/pkcs5/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, pkcs5_1, asn1_1, asn1_2, asn1_3, asn1_4, asn1_5, asn1_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.RSAPrivateKey = exports.RSAPublicKey = exports.RSAIdentifier = exports.ECPrivateKey = exports.ECPublicKey = exports.ECIdentifier = exports.ECCurve = exports.ECCurveSecp521r1 = exports.ECCurveSecp384r1 = exports.ECCurvePrime256v1 = exports.PrivateKeyInfo = exports.PublicKeyInfo = exports.PKCS5AlgorithmIdentifier = exports.ASN1Sequence = exports.ASN1OctetString = exports.ASN1ObjectIdentifier = exports.ASN1Null = exports.ASN1Integer = exports.ASN1BitString = void 0;
     exports.ASN1BitString = autoguard.guards.Reference.of(() => asn1_1.BitString);
@@ -7966,10 +8291,10 @@ define("build/mod/pkcs8/index", ["require", "exports", "build/mod/asn1/index", "
     exports.serializeRSAPrivateKey = serializeRSAPrivateKey;
     ;
 });
-define("build/mod/pkcs10/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/pkcs5/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/pkcs8/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, pkcs5_1, asn1_1, asn1_2, asn1_3, asn1_4, asn1_5, asn1_6, asn1_7, pkcs8_1, asn1_8, asn1_9, asn1_10) {
+define("build/mod/pkcs10/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/pkcs5/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/pkcs8/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, pkcs5_1, asn1_1, asn1_2, asn1_3, asn1_4, asn1_5, asn1_6, asn1_7, pkcs8_1, asn1_8, asn1_9, asn1_10) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.CertificationRequest = exports.CertificationRequestInfo = exports.ExtensionRequests = exports.Extensions = exports.Extension = exports.SubjectAlternativeNameExtension = exports.Extension2 = exports.Extension1 = exports.CRIAttribute = exports.Name = exports.RDNSequence = exports.RelativeDistinguishedName = exports.CommonName = exports.AttributeTypeAndValue = exports.ASN1Boolean = exports.ASN1UTF8String = exports.ASN1Sequence = exports.ASN1OctetString = exports.ASN1ObjectIdentifier = exports.ASN1Set = exports.ASN1Node = exports.ASN1Null = exports.ASN1Integer = exports.ASN1BitString = void 0;
     exports.ASN1BitString = autoguard.guards.Reference.of(() => asn1_1.BitString);
@@ -8174,10 +8499,10 @@ define("build/mod/pkcs10/index", ["require", "exports", "crypto", "build/mod/asn
     exports.createCertificateRequest = createCertificateRequest;
     ;
 });
-define("build/mod/sec1/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/asn1/index", "build/mod/pkcs8/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, asn1_1, pkcs8_1, asn1_2, asn1_3, asn1_4) {
+define("build/mod/sec1/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/asn1/index", "build/mod/pkcs8/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, asn1_1, pkcs8_1, asn1_2, asn1_3, asn1_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.ECPrivateKey = exports.ASN1Sequence = exports.ASN1OctetString = exports.ASN1Integer = exports.ASN1BitString = void 0;
     exports.ASN1BitString = autoguard.guards.Reference.of(() => asn1_1.BitString);
@@ -8349,10 +8674,10 @@ define("build/mod/sec1/index", ["require", "exports", "build/mod/asn1/index", "b
     exports.serializeECPrivateKey = serializeECPrivateKey;
     ;
 });
-define("build/mod/x509/schema/index", ["require", "exports", "node_modules/@joelek/ts-autoguard/dist/lib-shared/index", "build/mod/pkcs5/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/pkcs10/index", "build/mod/pkcs10/index", "build/mod/asn1/index", "build/mod/pkcs10/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/pkcs8/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, pkcs5_1, asn1_1, asn1_2, pkcs10_1, pkcs10_2, asn1_3, pkcs10_3, asn1_4, asn1_5, asn1_6, asn1_7, pkcs8_1, asn1_8, asn1_9, asn1_10, asn1_11) {
+define("build/mod/x509/schema/index", ["require", "exports", "node_modules/@joelek/autoguard/dist/lib-shared/index", "build/mod/pkcs5/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/pkcs10/index", "build/mod/pkcs10/index", "build/mod/asn1/index", "build/mod/pkcs10/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/pkcs8/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index", "build/mod/asn1/index"], function (require, exports, autoguard, pkcs5_1, asn1_1, asn1_2, pkcs10_1, pkcs10_2, asn1_3, pkcs10_3, asn1_4, asn1_5, asn1_6, asn1_7, pkcs8_1, asn1_8, asn1_9, asn1_10, asn1_11) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // This file was auto-generated by @joelek/ts-autoguard. Edit at own risk.
+    // This file was auto-generated by @joelek/autoguard. Edit at own risk.
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Autoguard = exports.Certificate = exports.TBSCertificate = exports.BasicConstraintsExtension = exports.AuthorityKeyIdentifierExtension = exports.SubjectKeyIdentifierExtension = exports.Validity = exports.CertificateSerialNumber = exports.Version = exports.ASN1Boolean = exports.ASN1UTCTime = exports.ASN1UTF8String = exports.ASN1Set = exports.ASN1Sequence = exports.ASN1OctetString = exports.ASN1ObjectIdentifier = exports.ASN1Node = exports.ASN1Null = exports.ASN1Integer = exports.ASN1BitString = void 0;
     exports.ASN1BitString = autoguard.guards.Reference.of(() => asn1_1.BitString);

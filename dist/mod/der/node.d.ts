@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as asn1 from "../asn1";
 import * as parsing from "../parsing";
 export declare function parse(parser: parsing.Parser): asn1.Node;

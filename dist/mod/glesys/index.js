@@ -24,7 +24,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeStandardClient = exports.makeClient = void 0;
-const autoguard = require("@joelek/ts-autoguard/dist/lib-server");
+const autoguard = require("@joelek/autoguard/dist/lib-server");
 const api = require("./api/client");
 __exportStar(require("./config"), exports);
 const URL_PREFIX = "https://api.glesys.com";

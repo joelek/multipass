@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 export declare const DomainPrice: autoguard.serialization.MessageGuard<DomainPrice>;
 export type DomainPrice = autoguard.guards.Object<{
     "amount": autoguard.guards.Number;
@@ -114,7 +114,7 @@ export declare namespace Autoguard {
         [A in keyof typeof Guards]: ReturnType<typeof Guards[A]["as"]>;
     };
     const Requests: {
-        listDomains: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
+        listDomains: autoguard.guards.ObjectGuard<import("@joelek/stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
                 [x: string]: autoguard.api.JSON;
             };

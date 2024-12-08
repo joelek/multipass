@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 import { Integer } from "../../asn1";
 import { Sequence } from "../../asn1";
 export declare const ASN1Integer: autoguard.serialization.MessageGuard<ASN1Integer>;

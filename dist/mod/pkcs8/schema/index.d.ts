@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 import { AlgorithmIdentifier } from "../../pkcs5";
 import { BitString } from "../../asn1";
 import { Integer } from "../../asn1";

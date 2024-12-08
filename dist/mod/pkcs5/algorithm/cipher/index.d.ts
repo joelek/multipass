@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as schema from "../../schema";
 import { Algorithm } from "../algorithm";
 export interface CipherAlgorithm extends Algorithm {

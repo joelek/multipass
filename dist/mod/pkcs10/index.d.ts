@@ -1,5 +1,6 @@
 /// <reference types="node" />
 /// <reference types="node" />
+/// <reference types="node" />
 import * as libcrypto from "crypto";
 import * as pkcs5 from "../pkcs5";
 export * from "./schema";

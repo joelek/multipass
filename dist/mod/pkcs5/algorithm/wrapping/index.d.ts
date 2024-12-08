@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as cipher from "../cipher";
 import * as derivation from "../derivation";
 import * as schema from "../../schema";

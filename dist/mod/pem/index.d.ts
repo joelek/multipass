@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 export type Header = {
     key: string;
     value: string;

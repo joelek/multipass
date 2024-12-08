@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 import { AssymetricKey } from "../../jwk";
 export declare const Account: autoguard.serialization.MessageGuard<Account>;
 export type Account = autoguard.guards.Object<{
@@ -366,7 +366,7 @@ export declare namespace Autoguard {
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
-        getDirectory: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
+        getDirectory: autoguard.guards.ObjectGuard<import("@joelek/stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
                 [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;
@@ -408,7 +408,7 @@ export declare namespace Autoguard {
                 path?: autoguard.guards.Array<string> | undefined;
             };
         }>;
-        newNonce: autoguard.guards.ObjectGuard<import("@joelek/ts-stdlib/dist/lib/routing").MessageMap<unknown>, {
+        newNonce: autoguard.guards.ObjectGuard<import("@joelek/stdlib/dist/lib/routing").MessageMap<unknown>, {
             options: {
                 [x: string]: autoguard.api.JSON;
                 path?: autoguard.guards.Array<string> | undefined;

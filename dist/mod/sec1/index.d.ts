@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as asn1 from "../asn1";
 import * as jwk from "../jwk";
 import * as pkcs8 from "../pkcs8";

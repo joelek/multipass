@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as algorithm from "./algorithm";
 export * from "./algorithm";
 export * from "./schema";

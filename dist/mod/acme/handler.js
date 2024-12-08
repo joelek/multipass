@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Handler = void 0;
 const libcrypto = require("crypto");
 const liburl = require("url");
-const autoguard = require("@joelek/ts-autoguard/dist/lib-server");
+const autoguard = require("@joelek/autoguard/dist/lib-server");
 const apiclient = require("./api/client");
 const jwk = require("../jwk");
 const jws = require("../jws");

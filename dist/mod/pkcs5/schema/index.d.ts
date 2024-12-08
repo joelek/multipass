@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-shared";
+import * as autoguard from "@joelek/autoguard/dist/lib-shared";
 import { Integer } from "../../asn1";
 import { Node } from "../../asn1";
 import { Null } from "../../asn1";
