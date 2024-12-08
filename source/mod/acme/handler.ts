@@ -1,6 +1,6 @@
 import * as libcrypto from "crypto";
 import * as liburl from "url";
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
+import * as autoguard from "@joelek/autoguard/dist/lib-server";
 import * as api from "./api";
 import * as apiclient from "./api/client";
 import * as jwk from "../jwk";

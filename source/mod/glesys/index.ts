@@ -1,4 +1,4 @@
-import * as autoguard from "@joelek/ts-autoguard/dist/lib-server";
+import * as autoguard from "@joelek/autoguard/dist/lib-server";
 import * as api from "./api/client";
 import * as config from "./config";
 import * as dns from "../dns";

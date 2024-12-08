@@ -3,10 +3,10 @@
 		"multipass": "./dist/cli/index.bundle.js"
 	},
 	"dependencies": {
-		"@joelek/ts-autoguard": "github:joelek/ts-autoguard#semver:^5.11"
+		"@joelek/autoguard": "github:joelek/autoguard#semver:^5.11"
 	},
 	"devDependencies": {
-		"@joelek/ts-bundle": "github:joelek/ts-bundle#semver:^1.3",
+		"@joelek/tsb": "github:joelek/tsb#semver:^1.3",
 		"@types/node": "^16.7",
 		"typescript": "^4.0"
 	},
