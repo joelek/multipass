@@ -15,8 +15,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 define("build/app", [], {
     "name": "@joelek/multipass",
-    "timestamp": 1733661017740,
-    "version": "1.2.2"
+    "timestamp": 1733669080228,
+    "version": "1.2.3"
 });
 define("node_modules/@joelek/autoguard/dist/lib-shared/serialization", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -453,7 +453,7 @@ define("node_modules/@joelek/autoguard/dist/lib-shared/guards", ["require", "exp
             this.record = record;
         }
         as(subject, path = "") {
-            if ((subject != null) && (subject.constructor === globalThis.String)) {
+            if ((subject != null) && (subject.constructor === globalThis.String || subject.constructor === globalThis.Number)) {
                 let string = subject;
                 if (string in this.record) {
                     return string;
