@@ -30,5 +30,5 @@
 		"postversion": "git push && git push --tags",
 		"test": ""
 	},
-	"version": "1.2.3"
+	"version": "1.2.4"
 }
