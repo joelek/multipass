@@ -26,7 +26,7 @@ guard Domain: {
 	"primarynameserver"?: string,
 	"recordcount"?: number,
 	"refresh"?: number,
-	"registrarinfo"?: RegistrarInfo,
+	"registrarinfo"?: RegistrarInfo | null,
 	"responsibleperson"?: string,
 	"retry"?: number,
 	"ttl"?: number,

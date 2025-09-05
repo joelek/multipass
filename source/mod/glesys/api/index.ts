@@ -46,7 +46,10 @@ export const Domain: autoguard.serialization.MessageGuard<Domain> = autoguard.gu
 	"primarynameserver": autoguard.guards.String,
 	"recordcount": autoguard.guards.Number,
 	"refresh": autoguard.guards.Number,
-	"registrarinfo": autoguard.guards.Reference.of(() => RegistrarInfo),
+	"registrarinfo": autoguard.guards.Union.of(
+		autoguard.guards.Reference.of(() => RegistrarInfo),
+		autoguard.guards.Null
+	),
 	"responsibleperson": autoguard.guards.String,
 	"retry": autoguard.guards.Number,
 	"ttl": autoguard.guards.Number,
@@ -65,7 +68,10 @@ export type Domain = autoguard.guards.Object<{
 	"primarynameserver": autoguard.guards.String,
 	"recordcount": autoguard.guards.Number,
 	"refresh": autoguard.guards.Number,
-	"registrarinfo": autoguard.guards.Reference<RegistrarInfo>,
+	"registrarinfo": autoguard.guards.Union<[
+		autoguard.guards.Reference<RegistrarInfo>,
+		autoguard.guards.Null
+	]>,
 	"responsibleperson": autoguard.guards.String,
 	"retry": autoguard.guards.Number,
 	"ttl": autoguard.guards.Number,
