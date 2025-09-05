@@ -29,7 +29,7 @@ exports.Domain = autoguard.guards.Object.of({
     "primarynameserver": autoguard.guards.String,
     "recordcount": autoguard.guards.Number,
     "refresh": autoguard.guards.Number,
-    "registrarinfo": autoguard.guards.Reference.of(() => exports.RegistrarInfo),
+    "registrarinfo": autoguard.guards.Union.of(autoguard.guards.Reference.of(() => exports.RegistrarInfo), autoguard.guards.Null),
     "responsibleperson": autoguard.guards.String,
     "retry": autoguard.guards.Number,
     "ttl": autoguard.guards.Number,

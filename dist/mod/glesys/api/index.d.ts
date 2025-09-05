@@ -28,7 +28,10 @@ export type Domain = autoguard.guards.Object<{
     "primarynameserver": autoguard.guards.String;
     "recordcount": autoguard.guards.Number;
     "refresh": autoguard.guards.Number;
-    "registrarinfo": autoguard.guards.Reference<RegistrarInfo>;
+    "registrarinfo": autoguard.guards.Union<[
+        autoguard.guards.Reference<RegistrarInfo>,
+        autoguard.guards.Null
+    ]>;
     "responsibleperson": autoguard.guards.String;
     "retry": autoguard.guards.Number;
     "ttl": autoguard.guards.Number;
@@ -93,7 +96,7 @@ export declare namespace Autoguard {
                 expire?: string | undefined;
                 tld?: string | undefined;
                 invoicenumber?: string | undefined;
-            } | undefined;
+            } | null | undefined;
             responsibleperson?: string | undefined;
             retry?: number | undefined;
             ttl?: number | undefined;
@@ -209,7 +212,7 @@ export declare namespace Autoguard {
                             expire?: string | undefined;
                             tld?: string | undefined;
                             invoicenumber?: string | undefined;
-                        } | undefined;
+                        } | null | undefined;
                         responsibleperson?: string | undefined;
                         retry?: number | undefined;
                         ttl?: number | undefined;
