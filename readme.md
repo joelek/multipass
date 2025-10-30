@@ -98,6 +98,27 @@ Credentials for the DNS provider use the following JSON format.
 
 Please note that GleSYS employs a whitelisting system for access keys to their API. You must explicitly allow the hostname or IP of the machine running Multipass for all keys handed to Multipass. You can create access keys and configure access control through their control panel.
 
+#### Loopia
+
+https://loopia.se/
+
+Credentials for the DNS provider may be configured using the `--dns=<string>` argument.
+
+```
+multipass --dns=loopia:<username>:<password>:<account>
+```
+
+Credentials for the DNS provider use the following JSON format.
+
+```
+{
+	"type": "loopia",
+	"username": string,
+	"password": string,
+	"account"?: string
+}
+```
+
 ### Multiple hostnames
 
 Multipass can be used to obtain a single TLS certificate for multiple hostnames through the use of a certificate extension named Subject Alternative Name (SAN). The extension is commonly used when a single certificate is needed for the apex domain as well as for certain subdomains like `www` or `mail`.

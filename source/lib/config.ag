@@ -9,7 +9,14 @@ guard ProviderGlesys: {
 	"key": string
 };
 
-guard Provider: ProviderDynu | ProviderGlesys;
+guard ProviderLoopia: {
+	"type": "loopia",
+	"username": string,
+	"password": string,
+	"account"?: string
+};
+
+guard Provider: ProviderDynu | ProviderGlesys | ProviderLoopia;
 
 guard Certificate: {
 	"hostnames": string[],

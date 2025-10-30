@@ -3,7 +3,8 @@
 		"multipass": "./dist/cli/index.bundle.js"
 	},
 	"dependencies": {
-		"@joelek/autoguard": "github:joelek/autoguard#semver:^5.11"
+		"@joelek/autoguard": "github:joelek/autoguard#semver:^5.11",
+		"@joelek/stdlib": "github:joelek/stdlib#semver:^1.6"
 	},
 	"devDependencies": {
 		"@joelek/tsb": "github:joelek/tsb#semver:^1.3",

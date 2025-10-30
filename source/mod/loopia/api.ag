@@ -1,0 +1,169 @@
+route sendRequest(): POST:/RPCSERV <= binary => binary;
+
+guard Status:
+	"OK" |
+	"AUTH_ERROR" |
+	"DOMAIN_OCCUPIED" |
+	"RATE_LIMITED" |
+	"BAD_INDATA" |
+	"UNKNOWN_ERROR" |
+	"INSUFFICIENT_FUNDS";
+
+# --------------------------------------------------------------------------------
+
+guard Domain: {
+	"domain": string,
+	"paid": boolean,
+	"registered": boolean,
+	"reference_no": integer,
+	"renewal_status": "NORMAL" | "DEACTIVATED" | "NOT_HANDLED_BY_LOOPIA",
+	"expiration_date": string
+};
+
+guard getDomainsRequest: {
+	methodName: "getDomains",
+	parameters: [
+		string,
+		string,
+		string
+	]
+};
+
+guard getDomainsResponse: {
+	parameters: [
+		Domain[]
+	]
+};
+
+# --------------------------------------------------------------------------------
+
+guard getSubdomainsRequest: {
+	methodName: "getSubdomains",
+	parameters: [
+		string,
+		string,
+		string,
+		string
+	]
+};
+
+guard getSubdomainsResponse: {
+	parameters: [
+		string[]
+	]
+};
+
+guard addSubdomainRequest: {
+	methodName: "addSubdomain",
+	parameters: [
+		string,
+		string,
+		string,
+		string,
+		string
+	]
+};
+
+guard addSubdomainResponse: {
+	parameters: [
+		Status
+	]
+};
+
+guard removeSubdomainRequest: {
+	methodName: "removeSubdomain",
+	parameters: [
+		string,
+		string,
+		string,
+		string,
+		string
+	]
+};
+
+guard removeSubdomainResponse: {
+	parameters: [
+		Status
+	]
+};
+
+# --------------------------------------------------------------------------------
+
+guard Record: {
+	type: string,
+	ttl: integer,
+	priority: integer,
+	rdata: string,
+	record_id: integer
+};
+
+guard getZoneRecordsRequest: {
+	methodName: "getZoneRecords",
+	parameters: [
+		string,
+		string,
+		string,
+		string,
+		string
+	]
+};
+
+guard getZoneRecordsResponse: {
+	parameters: [
+		Record[]
+	]
+};
+
+guard addZoneRecordRequest: {
+	methodName: "addZoneRecord",
+	parameters: [
+		string,
+		string,
+		string,
+		string,
+		string,
+		Record
+	]
+};
+
+guard addZoneRecordResponse: {
+	parameters: [
+		Status
+	]
+};
+
+guard updateZoneRecordRequest: {
+	methodName: "updateZoneRecord",
+	parameters: [
+		string,
+		string,
+		string,
+		string,
+		string,
+		Record
+	]
+};
+
+guard updateZoneRecordResponse: {
+	parameters: [
+		Status
+	]
+};
+
+guard removeZoneRecordRequest: {
+	methodName: "removeZoneRecord",
+	parameters: [
+		string,
+		string,
+		string,
+		string,
+		string,
+		integer
+	]
+};
+
+guard removeZoneRecordResponse: {
+	parameters: [
+		Status
+	]
+};

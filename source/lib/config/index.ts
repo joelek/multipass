@@ -24,14 +24,32 @@ export type ProviderGlesys = autoguard.guards.Object<{
 	"key": autoguard.guards.String
 }, {}>;
 
+export const ProviderLoopia: autoguard.serialization.MessageGuard<ProviderLoopia> = autoguard.guards.Object.of({
+	"type": autoguard.guards.StringLiteral.of("loopia"),
+	"username": autoguard.guards.String,
+	"password": autoguard.guards.String
+}, {
+	"account": autoguard.guards.String
+});
+
+export type ProviderLoopia = autoguard.guards.Object<{
+	"type": autoguard.guards.StringLiteral<"loopia">,
+	"username": autoguard.guards.String,
+	"password": autoguard.guards.String
+}, {
+	"account": autoguard.guards.String
+}>;
+
 export const Provider: autoguard.serialization.MessageGuard<Provider> = autoguard.guards.Union.of(
 	autoguard.guards.Reference.of(() => ProviderDynu),
-	autoguard.guards.Reference.of(() => ProviderGlesys)
+	autoguard.guards.Reference.of(() => ProviderGlesys),
+	autoguard.guards.Reference.of(() => ProviderLoopia)
 );
 
 export type Provider = autoguard.guards.Union<[
 	autoguard.guards.Reference<ProviderDynu>,
-	autoguard.guards.Reference<ProviderGlesys>
+	autoguard.guards.Reference<ProviderGlesys>,
+	autoguard.guards.Reference<ProviderLoopia>
 ]>;
 
 export const Certificate: autoguard.serialization.MessageGuard<Certificate> = autoguard.guards.Object.of({
@@ -76,6 +94,7 @@ export namespace Autoguard {
 	export const Guards = {
 		"ProviderDynu": autoguard.guards.Reference.of(() => ProviderDynu),
 		"ProviderGlesys": autoguard.guards.Reference.of(() => ProviderGlesys),
+		"ProviderLoopia": autoguard.guards.Reference.of(() => ProviderLoopia),
 		"Provider": autoguard.guards.Reference.of(() => Provider),
 		"Certificate": autoguard.guards.Reference.of(() => Certificate),
 		"Options": autoguard.guards.Reference.of(() => Options)

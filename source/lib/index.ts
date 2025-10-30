@@ -10,6 +10,7 @@ import { dns } from "../mod";
 import { dynu } from "../mod";
 import { key } from "../mod";
 import { glesys } from "../mod";
+import { loopia } from "../mod";
 import { parsing } from "../mod";
 import { pem } from "../mod";
 import { pkcs10 } from "../mod";
@@ -54,6 +55,9 @@ async function makeClient(credentials: config.Provider): Promise<dns.Client> {
 	}
 	if (config.ProviderGlesys.is(credentials)) {
 		return glesys.makeStandardClient(credentials);
+	}
+	if (config.ProviderLoopia.is(credentials)) {
+		return loopia.makeStandardClient(credentials);
 	}
 	throw `Expected code to be unreachable!`;
 };
