@@ -10,10 +10,19 @@ export type ProviderGlesys = autoguard.guards.Object<{
     "account": autoguard.guards.String;
     "key": autoguard.guards.String;
 }, {}>;
+export declare const ProviderLoopia: autoguard.serialization.MessageGuard<ProviderLoopia>;
+export type ProviderLoopia = autoguard.guards.Object<{
+    "type": autoguard.guards.StringLiteral<"loopia">;
+    "username": autoguard.guards.String;
+    "password": autoguard.guards.String;
+}, {
+    "account": autoguard.guards.String;
+}>;
 export declare const Provider: autoguard.serialization.MessageGuard<Provider>;
 export type Provider = autoguard.guards.Union<[
     autoguard.guards.Reference<ProviderDynu>,
-    autoguard.guards.Reference<ProviderGlesys>
+    autoguard.guards.Reference<ProviderGlesys>,
+    autoguard.guards.Reference<ProviderLoopia>
 ]>;
 export declare const Certificate: autoguard.serialization.MessageGuard<Certificate>;
 export type Certificate = autoguard.guards.Object<{
@@ -45,6 +54,12 @@ export declare namespace Autoguard {
             account: string;
             key: string;
         }>;
+        ProviderLoopia: autoguard.guards.ReferenceGuard<{
+            type: "loopia";
+            username: string;
+            password: string;
+            account?: string | undefined;
+        }>;
         Provider: autoguard.guards.ReferenceGuard<{
             type: "dynu";
             key: string;
@@ -52,6 +67,11 @@ export declare namespace Autoguard {
             type: "glesys";
             account: string;
             key: string;
+        } | {
+            type: "loopia";
+            username: string;
+            password: string;
+            account?: string | undefined;
         }>;
         Certificate: autoguard.guards.ReferenceGuard<{
             hostnames: autoguard.guards.Array<string>;
@@ -70,6 +90,11 @@ export declare namespace Autoguard {
                 type: "glesys";
                 account: string;
                 key: string;
+            } | {
+                type: "loopia";
+                username: string;
+                password: string;
+                account?: string | undefined;
             }>;
             certificates: autoguard.guards.Array<{
                 hostnames: autoguard.guards.Array<string>;

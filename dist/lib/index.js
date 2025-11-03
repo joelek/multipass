@@ -38,6 +38,7 @@ const mod_6 = require("../mod");
 const mod_7 = require("../mod");
 const mod_8 = require("../mod");
 const mod_9 = require("../mod");
+const mod_10 = require("../mod");
 __exportStar(require("./config"), exports);
 const LETS_ENCRYPT_STAGING = "https://acme-staging-v02.api.letsencrypt.org/directory";
 const LETS_ENCRYPT = "https://acme-v02.api.letsencrypt.org/directory";
@@ -80,6 +81,9 @@ function makeClient(credentials) {
         }
         if (config.ProviderGlesys.is(credentials)) {
             return mod_6.glesys.makeStandardClient(credentials);
+        }
+        if (config.ProviderLoopia.is(credentials)) {
+            return mod_7.loopia.makeStandardClient(credentials);
         }
         throw `Expected code to be unreachable!`;
     });
@@ -275,7 +279,7 @@ function processEntry(acmeUrl, entry, clients) {
                 }));
             }
             if (order.payload.status === "ready") {
-                let csr = mod_9.pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), certificateKey);
+                let csr = mod_10.pkcs10.createCertificateRequest(order.payload.identifiers.map((identifier) => identifier.value), certificateKey);
                 console.log(`Requesting certificate to be issued...`);
                 yield handler.finalizeOrder(account.url, order.payload.finalize, {
                     csr: csr.toString("base64url")
@@ -345,12 +349,12 @@ function getValidityFromCertificate(path) {
     if (!libfs.existsSync(path)) {
         return;
     }
-    let document = mod_8.pem.parse(libfs.readFileSync(path, "utf-8"));
+    let document = mod_9.pem.parse(libfs.readFileSync(path, "utf-8"));
     let section = document.sections.find((section) => section.label === "CERTIFICATE");
     if (section == null) {
         throw `Expected a CERTIFICATE label!`;
     }
-    let node = mod_3.der.node.parse(new mod_7.parsing.Parser(section.buffer));
+    let node = mod_3.der.node.parse(new mod_8.parsing.Parser(section.buffer));
     let datesNode = mod_2.asn1.Sequence.as(mod_2.asn1.Sequence.as(mod_2.asn1.Sequence.as(node).data[0]).data[4]);
     let notBeforeNode = mod_2.asn1.UTCTime.as(datesNode.data[0]);
     let notAfterNode = mod_2.asn1.UTCTime.as(datesNode.data[1]);

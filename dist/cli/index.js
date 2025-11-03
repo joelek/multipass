@@ -44,6 +44,14 @@ function run() {
                     key: parts[2]
                 });
             }
+            else if ((parts = /^--dns=loopia[:]([^:]*)[:]([^:]*)(?:[:]([^:]*))?$/.exec(arg)) != null) {
+                options.providers.push({
+                    type: "loopia",
+                    username: parts[1],
+                    password: parts[2],
+                    account: parts[3]
+                });
+            }
             else if ((parts = /^--hostname=(.*)$/.exec(arg)) != null) {
                 certificate.hostnames.push(parts[1]);
             }
