@@ -15,8 +15,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 define("build/app", [], {
     "name": "@joelek/multipass",
-    "timestamp": 1762207504096,
-    "version": "1.2.5"
+    "timestamp": 1762207604448,
+    "version": "1.3.0"
 });
 define("node_modules/@joelek/autoguard/dist/lib-shared/serialization", ["require", "exports"], function (require, exports) {
     "use strict";
